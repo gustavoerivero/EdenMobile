@@ -86,7 +86,7 @@ const LoginForm = () => {
         shadow={8}
         alignItems='center'
         justifyContent='center'
-        my={5}
+        my={10}
       >
         <VStack
           alignItems='center'

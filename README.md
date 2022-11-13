@@ -1,7 +1,20 @@
 
-# Eden: Play Service
+<h1 align="center">
+  <img src="./public/assets/eden.png" alt="Eden" width="400" height="150" />
+</h1>
 
-Eden: Play Service is an information system structured by three components, 
+![dependencies](https://img.shields.io/depfu/dependencies/github/gustavoerivero/EdenMobile)
+![nodeV](https://img.shields.io/node/v/react-native)
+![size](https://img.shields.io/github/repo-size/gustavoerivero/EdenMobile)
+![version](https://img.shields.io/github/package-json/v/gustavoerivero/EdenMobile)
+![license](https://img.shields.io/github/license/gustavoerivero/EdenMobile)
+![collabs](https://img.shields.io/github/contributors/gustavoerivero/EdenMobile)
+![lastcommit](https://img.shields.io/github/last-commit/gustavoerivero/EdenMobile)
+![languages](https://img.shields.io/github/languages/count/gustavoerivero/EdenMobile)
+![porc](https://img.shields.io/github/languages/top/gustavoerivero/EdenMobile)
+
+
+"Edén: Servicio de juegos" is an information system structured by three components, 
 including a CRM, an information portal and a mobile application. Eden is a 
 logistic and information management system for the administration of social 
 and sports clubs, which supports especially the sports disciplines of "bolas 
@@ -110,9 +123,8 @@ To know the documentation used for the development of the application, you can v
 
 
 ## Authors 💻
-The project has been conceived, designed and developed by students of 
-the last semester of Computer Engineering of the Universidad Centroccidental 
-"Lisandro Alvarado" of the LXIII class.
+
+The project has been conceived, designed and developed by students of the last semester of Computer Engineering of the Universidad Centroccidental "Lisandro Alvarado" of the LXIII promotion grouped under the name of "Eurus".
 
 ### Thoteam ✒️
 However, for the development of the mobile application, the development was 
@@ -121,3 +133,19 @@ carried out by the Thoteam subgroup, formed by;
 *  @gustavoerivero  - [gustavoerivero](https://github.com/gustavoerivero)
 *  @joseriveroc - [joseriveroc](https://github.com/joseriveroc)
 *  @luisv98   - [luisv98](https://github.com/luisv98)
+
+---
+
+<p align="center">
+ <a href="http://www.ucla.edu.ve/">
+  <img src="./public/assets/ucla.png" alt="UCLA" width="45" height="50" />
+ </a>
+ <a href="http://dcyt.ucla.edu.ve/">
+  <img src="./public/assets/dcyt.png" alt="DCYT" width="65" height="50" />
+ </a>
+ <img src="./public/assets/eurus.png" alt="Eurus" width="100" height="50" />
+ <img src="./public/assets/thoteam.png" alt="Thoteam" width="175" height="50" />
+</p>
+
+---
+⌨️ made with❤️ by [Thoteam] 

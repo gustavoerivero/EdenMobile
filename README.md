@@ -3,14 +3,15 @@
   <img src="./public/assets/eden.png" alt="Eden" width="400" height="150" />
 </h1>
 
-
 ![dependencies](https://img.shields.io/depfu/dependencies/github/gustavoerivero/EdenMobile)
 ![nodeV](https://img.shields.io/node/v/react-native)
-![languages](https://img.shields.io/github/languages/count/gustavoerivero/EdenMobile)
 ![size](https://img.shields.io/github/repo-size/gustavoerivero/EdenMobile)
 ![license](https://img.shields.io/github/license/gustavoerivero/EdenMobile)
 ![version](https://img.shields.io/github/package-json/v/gustavoerivero/EdenMobile)
-[![All Contributors](https://img.shields.io/github/all-contributors/gustavoerivero/EdenMobile/dev)](#contributors)
+![collabs](https://img.shields.io/github/contributors/gustavoerivero/EdenMobile)
+![lastcommit](https://img.shields.io/github/last-commit/gustavoerivero/EdenMobile)
+![languages](https://img.shields.io/github/languages/count/gustavoerivero/EdenMobile)
+![porc](https://img.shields.io/github/languages/top/gustavoerivero/EdenMobile)
 
 
 "Edén: Servicio de juegos" is an information system structured by three components, 

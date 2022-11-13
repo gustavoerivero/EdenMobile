@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { Input } from 'native-base'
 
 import colors from '../styled-components/colors'
 
-const StyledField = ({ style = {}, ...props }) => {
+const StyledField = ({ style = {}, ...props }, ref) => {
   const inputStyle = {
     ...style
   }
@@ -25,4 +25,4 @@ const StyledField = ({ style = {}, ...props }) => {
   )
 }
 
-export default StyledField
+export default forwardRef(StyledField)

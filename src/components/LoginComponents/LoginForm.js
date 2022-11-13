@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
 import { TouchableOpacity } from 'react-native'
 
@@ -8,12 +8,10 @@ import {
   Text,
   VStack,
   Stack,
-  Image,
   FormControl,
   WarningOutlineIcon,
   Button,
   Divider,
-  Link,
   HStack,
 } from 'native-base'
 
@@ -32,7 +30,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import { emailValidator, passwordValidator } from '../../utilities/functions'
 
-import EdenLogo from '../../assets/logo/eden.png'
+import Eden from '../../assets/logo/eden.svg'
 
 import colors from '../../styled-components/colors'
 import StyledLink from '../Link'
@@ -71,6 +69,8 @@ const LoginForm = () => {
 
   const [show, setShow] = useState(false)
 
+  const ref = useRef()
+
   return (
     <View
       alignItems='center'
@@ -86,15 +86,13 @@ const LoginForm = () => {
         shadow={8}
         alignItems='center'
         justifyContent='center'
-        my={10}
+        my={5}
       >
         <VStack
           alignItems='center'
           maxW='90%'
         >
-          <Stack
-            pb={3}
-          >
+          <Stack>
             <Text
               fontSize='lg'
               bold
@@ -104,19 +102,14 @@ const LoginForm = () => {
             </Text>
           </Stack>
           <Stack>
-            <Image
-              source={EdenLogo}
-              alt='Logo Eden'
-              size='md'
-              w='250'
-            />
+            <Eden width={275} height={125} />
           </Stack>
 
           <VStack
-            maxW='75%'
+            maxW='80%'
           >
             <Stack
-              pt={7}
+              pt={5}
             >
               <Text
                 textAlign='center'
@@ -146,9 +139,10 @@ const LoginForm = () => {
                     Correo electrónico
                   </FormControl.Label>
                   <StyledField
+                    ref={ref}
                     placeholder='Correo electrónico'
                     onChangeText={onChange}
-                    borderColor={(!emailValidator(value) && value !== '') ? 'red.500' : null}
+                    borderColor={(!emailValidator(value) && value !== '') ? 'red.500' : emailValidator(value) && value !== '' ? colors.primary : null}
                     InputLeftElement={
                       <Stack
                         pl={2}
@@ -156,7 +150,9 @@ const LoginForm = () => {
                         <Icon
                           name='person'
                           size={20}
-                          color={(!emailValidator(value) && value !== '') ? colors.error.primary : colors.textField.placeholder}
+                          color={(!emailValidator(value) && value !== '') ? colors.error.primary :
+                            emailValidator(value) && value !== '' ? colors.primary : colors.textField.placeholder
+                          }
                         />
                       </Stack>
                     }
@@ -189,11 +185,12 @@ const LoginForm = () => {
                     Contraseña
                   </FormControl.Label>
                   <StyledField
+                    ref={ref}
                     placeholder='Contraseña'
                     onChangeText={onChange}
                     secureTextEntry={!show}
                     {...field}
-                    borderColor={(!passwordValidator(value) && value !== '') ? 'red.500' : null}
+                    borderColor={(!passwordValidator(value) && value !== '') ? 'red.500' : passwordValidator(value) && value !== '' ? colors.primary : null}
                     InputLeftElement={
                       <Stack
                         pl={2}
@@ -201,7 +198,9 @@ const LoginForm = () => {
                         <Icon
                           name='lock-closed'
                           size={20}
-                          color={(!passwordValidator(value) && value !== '') ? colors.error.primary : colors.textField.placeholder}
+                          color={(!passwordValidator(value) && value !== '') ? colors.error.primary :
+                            passwordValidator(value) && value !== '' ? colors.primary : colors.textField.placeholder
+                          }
                         />
                       </Stack>
                     }

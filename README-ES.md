@@ -1,6 +1,6 @@
 
 <h1 align="center">
-  <img src="./public/assets/eden.png" alt="Eden" width="400" height="150" />
+  <img src="./public/assets/eden.svg" alt="Eden" width="400" height="150" />
 </h1>
 
 ![dependencies](https://img.shields.io/depfu/dependencies/github/gustavoerivero/EdenMobile)

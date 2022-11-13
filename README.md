@@ -13,6 +13,16 @@
 ![languages](https://img.shields.io/github/languages/count/gustavoerivero/EdenMobile)
 ![porc](https://img.shields.io/github/languages/top/gustavoerivero/EdenMobile)
 
+<div align="center">
+  <table>
+      <tr>
+          <!-- Do not translate this table -->
+          <td><a href="./README.md"> English </a></td>
+          <td><a href="./README-ES.md"> Spanish </a></td>
+      </tr>
+  </table>
+</div>
+
 
 "Edén: Servicio de juegos" is an information system structured by three components, 
 including a CRM, an information portal and a mobile application. Eden is a 

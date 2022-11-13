@@ -1,9 +1,9 @@
 const colors = {
   base: '#f4f4f4',
-  primary: '#bef002',
+  primary: '#00C28D',
   secondary: '#066598',
-  bgPrimary: '#e9fce6',
-  bgSecondary: '#31383E',
+  bgPrimary: '#152C43',
+  bgSecondary: '#016F6C',
   error: {
     primary: '#d95f5f',
     secondary: '#f52556',
@@ -21,13 +21,13 @@ const colors = {
     secondary: 'rgba(42,53,60, .75)',
   },
   button: {
-    bgPrimary: '#87c326',
-    bgSecondary: '#066598',
-    fontPrimary: '#31383E',
-    fontSecondary: '#e9fce6'
+    bgPrimary: '#48CBC5',
+    bgSecondary: '#00C28D',
+    fontPrimary: '#1E9C98',
+    fontSecondary: '#80DCDA'
   },
   link: {
-    color: '#87c326'
+    color: '#2CA29F'
   }
 }
 

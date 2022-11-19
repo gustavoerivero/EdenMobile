@@ -3,6 +3,7 @@ import { ScrollView, VStack } from 'native-base'
 
 import LoginForm from '../../components/LoginComponents/LoginForm'
 import Background from '../../components/Background'
+import colors from '../../styled-components/colors'
 
 const LoginPage = ({ navigation }) => {
 
@@ -13,12 +14,15 @@ const LoginPage = ({ navigation }) => {
         minHeight: '100%'
       }}
     >
-      <Background>
+      <Background
+        topColor={colors.bgPrimary}
+        bottomColor={colors.secondary}
+      >
         <VStack
           justifyContent='center'
           my={5}
         >
-          <LoginForm />
+          <LoginForm navigation={navigation} />
         </VStack>
       </Background>
     </ScrollView>

@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import LoginPage from '../pages/Login/LoginPage'
 
+import BottomNavigation from './BottomNavigation'
+
 import useAuthContext from '../hooks/useAuthContext'
 
 import colors from '../styled-components/colors'
@@ -16,7 +18,17 @@ const stackRoutes = [
     options: {
       headerShown: false
     }
-  }
+  },
+
+  {
+    name: 'SignIn',
+    component: BottomNavigation,
+    requireAuth: false,
+    options: {
+      headerShown: false,
+    }
+  },
+
 ]
 
 const StackNavigation = () => {

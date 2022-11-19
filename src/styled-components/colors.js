@@ -4,6 +4,9 @@ const colors = {
   secondary: '#066598',
   bgPrimary: '#152C43',
   bgSecondary: '#016F6C',
+  white: '#ffffff',
+  gray: '#6B6D79',
+  gray1: '#ecf0f3',
   error: {
     primary: '#d95f5f',
     secondary: '#f52556',
@@ -25,6 +28,10 @@ const colors = {
     bgSecondary: '#00C28D',
     fontPrimary: '#1E9C98',
     fontSecondary: '#80DCDA'
+  },
+  navBar: {
+    activeColor: '#48CBC5',
+    inactiveColor: '#6B6D79'
   },
   link: {
     color: '#2CA29F'

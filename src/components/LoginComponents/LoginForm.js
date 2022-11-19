@@ -35,7 +35,7 @@ import Eden from '../../assets/logo/eden.svg'
 import colors from '../../styled-components/colors'
 import StyledLink from '../Link'
 
-const LoginForm = () => {
+const LoginForm = ({ navigation }) => {
 
   const { showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
@@ -238,7 +238,7 @@ const LoginForm = () => {
             <Button
               isLoading={isLoading}
               isDisabled={isLoading || !isValid}
-              onPress={handleSubmit(onSubmit)}
+              onPress={() => navigation?.navigate('SignIn')}
               style={{
                 backgroundColor: colors.button.bgPrimary,
               }}

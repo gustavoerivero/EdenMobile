@@ -2,8 +2,6 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import Svg, { Defs, Rect, LinearGradient, Stop } from 'react-native-svg'
 
-import colors from '../styled-components/colors';
-
 const Background = ({ topColor, bottomColor, children }) => {
   return (
     <View style={{ flex: 1 }}>

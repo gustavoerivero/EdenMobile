@@ -35,7 +35,13 @@ const colors = {
   },
   link: {
     color: '#2CA29F'
-  }
+  },
+  infoCard: {
+    topColor: 'rgba(244, 244, 244, 0)',
+    middleColor: 'rgba(21, 44, 67, .2)',
+    middleBottomColor: 'rgba(21, 44, 67, .5)',
+    bottomColor: 'rgba(0, 0, 0, 1)',
+  },
 }
 
 export default colors

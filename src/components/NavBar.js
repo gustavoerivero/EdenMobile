@@ -1,9 +1,9 @@
-import { HStack } from 'native-base'
 import React from 'react'
+import { HStack } from 'native-base'
 
 import Eden from '../assets/logo/eden.svg'
 
-const NavBar = ({ navigation }) => {
+const NavBar = () => {
   return (
     <HStack
       justifyContent='flex-end'

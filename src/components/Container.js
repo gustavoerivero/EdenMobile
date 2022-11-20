@@ -3,16 +3,20 @@ import { ScrollView } from 'react-native'
 import colors from '../styled-components/colors'
 import NavBar from './NavBar'
 import Background from './Background'
+import styles from './styled-components/styles'
+import StatusBar from './StatusBar'
 
-const Container = ({ navigation, children }) => {
+const Container = ({ statusBarStyle, statusBarColor, hiddenStatusBar, children }) => {
   return (
     <ScrollView
       minH='100%'
-      contentContainerStyle={{
-        minHeight: '100%',
-        backgroundColor: colors.gray
-      }}
+      contentContainerStyle={styles.containerOut}
     >
+      <StatusBar 
+        backgroundColor={statusBarColor}
+        hidden={hiddenStatusBar}
+        statusBarStyle={statusBarStyle}
+      />
       <Background
         topColor={colors.white}
         bottomColor={colors.gray1}

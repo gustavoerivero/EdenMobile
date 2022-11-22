@@ -20,8 +20,9 @@ const colors = {
     text: '#2A353C',
   },
   text: {
-    primary: '#2A353C',
+    primary: '#1F202A',
     secondary: 'rgba(42,53,60, .75)',
+    description: '#6B6D79'
   },
   button: {
     bgPrimary: '#48CBC5',
@@ -42,6 +43,9 @@ const colors = {
     middleBottomColor: 'rgba(21, 44, 67, .5)',
     bottomColor: 'rgba(0, 0, 0, 1)',
   },
+  icon: {
+    primary: '#48CBC5'
+  }
 }
 
 export default colors

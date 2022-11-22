@@ -3,6 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import colors from '../styled-components/colors'
 
 import HomePage from '../pages/Main/HomePage'
+import CalendarPage from '../pages/Main/CalendarPage'
+import PostPage from '../pages/Main/PostPage'
+import NotificationPage from '../pages/Main/NotificationPage'
+import UserPage from '../pages/Main/UserPage'
 
 import { View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -17,7 +21,7 @@ const bottomRoutes = [
     component: HomePage,
     Icon: ({ color, size }) => (
       <Icon
-        name='home-outline'
+        name={color === colors.navBar.activeColor ? 'home' : 'home-outline'}
         color={color}
         size={size}
       />
@@ -25,10 +29,10 @@ const bottomRoutes = [
   },
   {
     name: 'Calendar',
-    component: HomePage,
+    component: CalendarPage,
     Icon: ({ color, size }) => (
       <Icon
-        name='calendar-outline'
+        name={color === colors.navBar.activeColor ? 'calendar' : 'calendar-outline'}
         color={color}
         size={size}
       />
@@ -36,13 +40,13 @@ const bottomRoutes = [
   },
   {
     name: 'Post',
-    component: HomePage,
-    Icon: ({ size }) => (
+    component: PostPage,
+    Icon: ({ color, size }) => (
       <View
         style={styles.postPage}
       >
         <Icon
-          name='clipboard-outline'
+          name={color === colors.navBar.activeColor ? 'clipboard' : 'clipboard-outline'}
           color='#f4f4f4'
           size={size}
         />
@@ -51,10 +55,10 @@ const bottomRoutes = [
   },
   {
     name: 'Notification',
-    component: HomePage,
+    component: NotificationPage,
     Icon: ({ color, size }) => (
       <Icon
-        name='notifications-outline'
+        name={color === colors.navBar.activeColor ? 'notifications' : 'notifications-outline'}
         color={color}
         size={size}
       />
@@ -62,10 +66,10 @@ const bottomRoutes = [
   },
   {
     name: 'Profile',
-    component: HomePage,
+    component: UserPage,
     Icon: ({ color, size }) => (
       <Icon
-        name='person-outline'
+        name={color === colors.navBar.activeColor ? 'person' : 'person-outline'}
         color={color}
         size={size}
       />

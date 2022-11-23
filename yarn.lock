@@ -1869,10 +1869,10 @@
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.6.tgz#fa700318528db93f05144b1be4b691b9c1dd1abe"
   integrity sha512-pNJ8R9JMga6SXOw6wGVN0tjmE6vegwPmJBL45SEMX2fqTfAk2ykDnlJHodRpHpAgsv0DaI8qX76z3A+aqKSU0w==
 
-"@react-navigation/material-top-tabs@^6.3.0":
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/@react-navigation/material-top-tabs/-/material-top-tabs-6.3.0.tgz#ac49389155a3c1cb7a82119491e2059a7557718e"
-  integrity sha512-nv9c3WbmzuwYZqDkinP375aTYzQIXkCzAmpHRsVH3AjpF2Qc62oKDjWuSMFdRn3VPe3LAH/0P6yUzQSX/800yQ==
+"@react-navigation/material-top-tabs@^6.3.1":
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/material-top-tabs/-/material-top-tabs-6.3.1.tgz#a122d71ba4ef7ebb29447a348aae6bd60ad23d5e"
+  integrity sha512-OJpKp3kxvz1GJ/DFHVufqhpSKnKS1alCyYq5Gpqomw+12HMJ49s01GGKkVNBkVeXjxoDOrrqrQkE31gfS/8YeQ==
   dependencies:
     color "^4.2.3"
     warn-once "^0.1.0"

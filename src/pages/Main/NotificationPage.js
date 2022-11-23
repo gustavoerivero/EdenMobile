@@ -1,17 +1,17 @@
 import React from 'react'
-import { ScrollView, VStack } from 'native-base'
+import { VStack } from 'native-base'
+import Container from '../../components/Container'
 
 const NotificationPage = ({ navigation }) => {
 
   return (
-    <ScrollView
-      minH='100%'
-      contentContainerStyle={{
-        minHeight: '100%'
-      }}
-    >
-      
-    </ScrollView>
+    <Container>
+      <VStack
+        minH='100%'
+      >
+
+      </VStack>
+    </Container>
   )
 
 }

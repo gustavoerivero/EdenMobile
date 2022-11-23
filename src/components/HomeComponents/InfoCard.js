@@ -1,26 +1,34 @@
-import { Box, VStack, Divider, Text } from 'native-base'
+import { Box, VStack, Text } from 'native-base'
 import React from 'react'
 import { ImageBackground, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+
+import { cutText } from '../../utilities/functions'
+
 import colors from '../../styled-components/colors'
 
 import styles from './styled-components/styles'
 
-const InfoCard = ({ title = '', description = '', image = '' }) => {
-
-  /**
-   * Method to trim text strings under a maximum character limit.
-   * @param {String} text Text string to cut out.
-   * @param {Number} maxLength Maximum text length permitted.
-   * @returns {String} Clipped text string.
-   */
-  const cutText = (text = '', maxLength = 255) => {
-    return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text
-  }
+const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = '', location = '', area = '',description = '', image = '' }) => {
 
   return (
-    <Box border="1" borderRadius="lg" bgColor='white' shadow={1} minH={160} >
-      <TouchableOpacity>
+    <Box id={id} border='1' borderRadius='lg' bgColor='white' shadow={1} minH={160} >
+      <TouchableOpacity
+        onPress={() => {
+          if (type === 3)
+            navigation?.navigate('EventPage', {
+              id: id,
+              type: type,
+              title: title,
+              date: date,
+              hour: hour,
+              location: location,
+              area: area,
+              description: description,
+              image: image,
+            })
+        }}
+      >
 
         <ImageBackground
           source={{
@@ -52,7 +60,7 @@ const InfoCard = ({ title = '', description = '', image = '' }) => {
                 color='white'
                 textAlign='right'
               >
-                {cutText(description.toLowerCase(), 45)}
+                {cutText(date.toLowerCase(), 45)}
               </Text>
             </VStack>
           </LinearGradient>

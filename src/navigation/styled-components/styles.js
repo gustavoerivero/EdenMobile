@@ -16,7 +16,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
-  }
+  },
+
+  stackStyles: {
+    headerStyle: {
+      backgroundColor: colors.primary,
+    },
+    headerTintColor: colors.secondary,
+  },
 })
 
 export default styles

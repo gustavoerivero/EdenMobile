@@ -1,12 +1,11 @@
 import React from 'react'
+import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import { HStack, Stack } from 'native-base'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { HStack, Stack, Text } from 'native-base'
+import useConnection from '../hooks/useConnection'
 
 import Eden from '../assets/logo/eden.svg'
-import useConnection from '../hooks/useConnection'
-import { ActivityIndicator, TouchableOpacity, useWindowDimensions } from 'react-native'
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import colors from '../styled-components/colors'
 
 const NavBar = ({ hidden = false }) => {

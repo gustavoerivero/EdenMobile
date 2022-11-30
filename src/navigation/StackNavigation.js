@@ -8,6 +8,8 @@ import BottomNavigation from './BottomNavigation'
 import useAuthContext from '../hooks/useAuthContext'
 
 import styles from './styled-components/styles'
+import CreoleBallsTournamentPage from '../pages/CreoleBalls/CreoleBallsTournamentPage'
+import CreoleBallsListPage from '../pages/CreoleBalls/CreoleBallsListPage'
 
 const Stack = createNativeStackNavigator()
 
@@ -33,6 +35,24 @@ const stackRoutes = [
   {
     name: 'EventPage',
     component: EventPage,
+    requireAuth: true,
+    options: {
+      headerShown: false,
+    }
+  },
+
+  {
+    name: 'CreoleBallsTournamentPage',
+    component: CreoleBallsTournamentPage,
+    requireAuth: true,
+    options: {
+      headerShown: false,
+    }
+  },
+
+  {
+    name: 'CreoleBallsListPage',
+    component: CreoleBallsListPage,
     requireAuth: true,
     options: {
       headerShown: false,

@@ -49,6 +49,9 @@ const colors = {
   connection: {
     backgroundColor: '#D9D9D9',
     iconColor: '#6B6D79'
+  },
+  divider: {
+    primary: '#48CBC5'
   }
 }
 

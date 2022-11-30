@@ -9,12 +9,31 @@ import colors from '../../styled-components/colors'
 
 import styles from './styled-components/styles'
 
-const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = '', location = '', area = '',description = '', image = '' }) => {
+const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = '', location = '', area = '', description = '', image = '' }) => {
 
   return (
-    <Box id={id} border='1' borderRadius='lg' bgColor='white' shadow={1} minH={160} >
+    <Box
+      id={id}
+      border='1'
+      borderRadius='lg'
+      bgColor='white'
+      shadow={1}
+      minH={160}
+    >
       <TouchableOpacity
         onPress={() => {
+          if (type === 1)
+            navigation?.navigate('CreoleBallsTournamentPage', {
+              id: id,
+              type: type,
+              title: title,
+              date: date,
+              hour: hour,
+              location: location,
+              area: area,
+              description: description,
+              image: image,
+            })
           if (type === 3)
             navigation?.navigate('EventPage', {
               id: id,

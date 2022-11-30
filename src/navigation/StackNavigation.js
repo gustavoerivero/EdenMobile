@@ -8,6 +8,8 @@ import BottomNavigation from './BottomNavigation'
 import useAuthContext from '../hooks/useAuthContext'
 
 import styles from './styled-components/styles'
+import CreoleBallsTournamentPage from '../pages/CreoleBalls/CreoleBallsTournamentPage'
+import CreoleBallsListPage from '../pages/CreoleBalls/CreoleBallsListPage'
 
 const Stack = createNativeStackNavigator()
 
@@ -24,7 +26,7 @@ const stackRoutes = [
   {
     name: 'SignIn',
     component: BottomNavigation,
-    requireAuth: false,
+    requireAuth: true,
     options: {
       headerShown: false,
     }
@@ -33,7 +35,25 @@ const stackRoutes = [
   {
     name: 'EventPage',
     component: EventPage,
-    requireAuth: false,
+    requireAuth: true,
+    options: {
+      headerShown: false,
+    }
+  },
+
+  {
+    name: 'CreoleBallsTournamentPage',
+    component: CreoleBallsTournamentPage,
+    requireAuth: true,
+    options: {
+      headerShown: false,
+    }
+  },
+
+  {
+    name: 'CreoleBallsListPage',
+    component: CreoleBallsListPage,
+    requireAuth: true,
     options: {
       headerShown: false,
     }
@@ -52,18 +72,16 @@ const StackNavigation = () => {
       initialRouteName={stackRoutes[0].name}
       screenOptions={styles.stackStyles}
     >
-      {
-        stackRoutes
-          .filter(({ requireAuth }) => requireAuth === isAuthenticated)
-          .map(({ name, component, options }) => (
-            <Stack.Screen
-              key={name}
-              name={name}
-              component={component}
-              options={options}
-            />
-          ))
-      }
+      {stackRoutes
+        .filter(({ requireAuth }) => requireAuth === isAuthenticated)
+        .map(({ name, component, options }) => (
+          <Stack.Screen
+            key={name}
+            name={name}
+            component={component}
+            options={options}
+          />
+        ))}
     </Stack.Navigator>
   )
 

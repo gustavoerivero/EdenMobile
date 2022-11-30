@@ -17,10 +17,13 @@ import {
 
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { setSession } from '../../services/jwt'
 
 import StyledField from '../StyledField'
 
 import { loginDefaultValues, loginSchema } from '../../utilities/formValidations/loginValidation'
+
+import { loginData } from '../../adapters/User'
 
 import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
@@ -40,6 +43,8 @@ const LoginForm = ({ navigation }) => {
   const { showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
+  const { dispatch } = useAuthContext()
+
   const {
     control,
     handleSubmit,
@@ -56,6 +61,25 @@ const LoginForm = ({ navigation }) => {
 
     try {
       console.log('Hello moto')
+
+      const response = { id: '15263415', ...loginData(value) }
+      
+      console.log(response)
+
+      const token = '1253642'
+
+      if (token) {
+        setSession(response.id, token)
+        dispatch({
+          type: 'LOGIN',
+          payload: {
+            user: {
+              token: token,
+              id: response.id
+            }            
+          }
+        })
+      }
 
       reset(loginDefaultValues)
     } catch (error) {
@@ -238,7 +262,7 @@ const LoginForm = ({ navigation }) => {
             <Button
               isLoading={isLoading}
               isDisabled={isLoading || !isValid}
-              onPress={() => navigation?.navigate('SignIn')}
+              onPress={handleSubmit(onSubmit)}
               style={{
                 backgroundColor: colors.button.bgPrimary,
               }}

@@ -12,7 +12,14 @@ import styles from './styled-components/styles'
 const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = '', location = '', area = '',description = '', image = '' }) => {
 
   return (
-    <Box id={id} border='1' borderRadius='lg' bgColor='white' shadow={1} minH={160} >
+    <Box 
+      id={id} 
+      border='1' 
+      borderRadius='lg' 
+      bgColor='white' 
+      shadow={1} 
+      minH={160} 
+    >
       <TouchableOpacity
         onPress={() => {
           if (type === 3)

@@ -45,6 +45,10 @@ const colors = {
   },
   icon: {
     primary: '#48CBC5'
+  },
+  connection: {
+    backgroundColor: '#D9D9D9',
+    iconColor: '#6B6D79'
   }
 }
 

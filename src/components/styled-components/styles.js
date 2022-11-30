@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
     marginBottom: 8
-  }
+  },
+
 })
 
 export default styles

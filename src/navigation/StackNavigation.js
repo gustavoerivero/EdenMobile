@@ -24,7 +24,7 @@ const stackRoutes = [
   {
     name: 'SignIn',
     component: BottomNavigation,
-    requireAuth: false,
+    requireAuth: true,
     options: {
       headerShown: false,
     }
@@ -33,7 +33,7 @@ const stackRoutes = [
   {
     name: 'EventPage',
     component: EventPage,
-    requireAuth: false,
+    requireAuth: true,
     options: {
       headerShown: false,
     }
@@ -52,18 +52,16 @@ const StackNavigation = () => {
       initialRouteName={stackRoutes[0].name}
       screenOptions={styles.stackStyles}
     >
-      {
-        stackRoutes
-          .filter(({ requireAuth }) => requireAuth === isAuthenticated)
-          .map(({ name, component, options }) => (
-            <Stack.Screen
-              key={name}
-              name={name}
-              component={component}
-              options={options}
-            />
-          ))
-      }
+      {stackRoutes
+        .filter(({ requireAuth }) => requireAuth === isAuthenticated)
+        .map(({ name, component, options }) => (
+          <Stack.Screen
+            key={name}
+            name={name}
+            component={component}
+            options={options}
+          />
+        ))}
     </Stack.Navigator>
   )
 

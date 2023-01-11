@@ -7,27 +7,29 @@ const useConnection = () => {
 
   const recognizeConnection = () => {
 
-      NetInfo.fetch()
-        .then(state => {
+    NetInfo.fetch()
+      .then(state => {
 
-          console.group(`Connection Details: `)
-          console.log(`Connection type: ${state.type}`)
-          console.log(`Is connected? ${state.isConnected}`)
-          console.groupEnd()
+        /*
+        console.group(`Connection Details: `)
+        console.log(`Connection type: ${state.type}`)
+        console.log(`Is connected? ${state.isConnected}`)
+        console.groupEnd()
+        */
 
-          if (state.isConnected) {
-            setIsConnected(true)
-          }
+        if (state.isConnected) {
+          setIsConnected(true)
+        }
 
-          else {
-            setIsConnected(false)
-          }
-
-        })
-        .catch(error => {
+        else {
           setIsConnected(false)
-          console.log(`Connection error: ${error}`)
-        })
+        }
+
+      })
+      .catch(error => {
+        setIsConnected(false)
+        console.log(`Connection error: ${error}`)
+      })
 
   }
 

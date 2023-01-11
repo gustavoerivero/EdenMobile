@@ -12,54 +12,11 @@ import colors from '../../styled-components/colors'
 
 import NotFound from '../../components/NotFound'
 
-const HomePage = ({ navigation }) => {
+import { getEvents } from '../../services/events/EventsService'
 
-  const data = [
-    {
-      id: 1,
-      type: 3,
-      title: 'Torneo Magistral de voleyball playero',
-      date: '26 noviembre, 2022',
-      hour: 'Sábado, 6:00PM - 11:00PM',
-      location: 'Cancha de voleyball',
-      area: 'Zona deportiva',
-      description: 'Torneo magistral de voleyball playero en la cancha de voleyball de concreto porque falta la cancha de voleyball playero...',
-      image: 'https://imagenes.elpais.com/resizer/L-x86NTaSVVBr9YZnnn1driudPw=/980x0/cloudfront-eu-central-1.images.arcpublishing.com/prisa/CNK6AU3UNFB2REUA4VXS233FKE.jpg'
-    },
-    {
-      id: 2,
-      type: 3,
-      title: 'Juegos interclub',
-      date: '01 diciembre a 07 diciembre, 2022',
-      hour: 'Jueves a miércoles, 6:00PM - 11:00PM',
-      location: 'Domo deportivo',
-      area: 'Zona deportiva',
-      description: 'Torneo multidisciplinario de juegos deportivos entre diversos clubes socio-deportivos.',
-      image: 'https://warwick.ac.uk/services/sport/find-your-active.jpg'
-    },
-    {
-      id: 3,
-      type: 1,
-      title: 'Torneo de bolas criollas',
-      date: '09 diciembre, 2022',
-      hour: 'Viernes, 6:00PM - 11:00PM',
-      location: 'Cancha de bolas criollas',
-      area: 'Zona deportiva',
-      description: 'Viernes 09 de diciembre',
-      image: 'https://http2.mlstatic.com/D_NQ_NP_655547-MLV25593228224_052017-O.webp'
-    },
-    {
-      id: 4,
-      type: 2,
-      title: 'Torneo de dominó',
-      date: '12 diciembre, 2022',
-      hour: 'Lunes, 6:00PM - 11:00PM',
-      location: 'Caney de zonas de estar',
-      area: 'Zona recreativa',
-      description: 'Lunes 12 de diciembre',
-      image: 'https://patasdegallo.com/wp-content/uploads/2016/12/capacidad-mental.jpg'
-    },
-  ]
+import { formatDate, getHour } from '../../utilities/functions'
+
+const HomePage = ({ navigation }) => {
 
   const wait = (timeOut) => {
     return new Promise(resolve => setTimeout(resolve, timeOut))
@@ -67,26 +24,94 @@ const HomePage = ({ navigation }) => {
 
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isNextPage, setIsNextPage] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
   const layout = useWindowDimensions()
 
   const onRefresh = useCallback(() => {
+    setIsNextPage(true)
+    setCurrentPage(1)
     setRefreshing(true)
     wait(2000).then(() => setRefreshing(false))
   }, [])
 
+  const getData = () => {
+
+    if (isNextPage) {
+
+      startLoading()
+
+      getEvents(currentPage)
+        .then(res => {
+          const { data, status } = res
+
+          setEvents(status === 200 ? data?.data?.data : [])
+
+          console.log(data?.data?.data)
+
+          console.log(events)
+
+          setIsNextPage(data?.links?.next ? true : false)
+          console.log(`Events: ${events}`)
+          console.log(`Next page: ${isNextPage}`)
+        })
+        .catch(error => {
+          console.log(`Event error: ${error}`)
+        })
+        .finally(() => {
+          stopLoading()
+        })
+
+    }
+
+  }
+
   useFocusEffect(
     useCallback(() => {
-      if (events?.length === 0) startLoading()
-
-      setEvents(data)
-
-      if (events?.length !== 0) stopLoading()
-
-    }, [])
+      getData()
+    }, [currentPage])
   )
+
+  const renderItem = ({ item }) => {
+
+
+
+    return (
+      <Stack
+        py={2}
+      >
+        <InfoCard
+          key={item?.id}
+          id={item?.id}
+          type={item?.tipo || ""}
+          title={item?.nombre || ""}
+          date={formatDate(item?.creado) || ""}
+          hour={getHour(item?.creado) || ""}
+          description={item?.descripcion || ""}
+          location={item?.instalacion?.nombre || ""}
+          area={item?.area?.nombre || ""}
+          image={`https://medinajosedev.com/storage/${item?.imagen_principal}` || ""}
+          navigation={navigation}
+        />
+      </Stack>
+    )
+  }
+
+  const renderLoader = () => {
+    return (
+      isLoading &&
+      <Stack my={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+        <ActivityIndicator size='large' color={colors.primary} />
+      </Stack>
+    )
+  }
+
+  const loadMoreItem = () => {
+    setCurrentPage(currentPage + 1)
+  }
 
   return (
     <Container>
@@ -95,7 +120,11 @@ const HomePage = ({ navigation }) => {
         px={3}
         height={layout.height}
       >
-        {events?.length > 0 || !isLoading ? (
+        {!events || events?.length === 0 ? (
+          <NotFound
+            text='Aún no se han publicado eventos en el club.'
+          />  
+        ) : events?.length > 0 || !isLoading ? (
           <FlatList
             refreshControl={
               <RefreshControl
@@ -107,29 +136,9 @@ const HomePage = ({ navigation }) => {
             data={events}
             maxH={layout.height * .80}
             keyExtractor={item => item?.id}
-            renderItem={({ item }) => (
-              <Stack
-                py={2}
-              >
-                <InfoCard
-                  key={item?.id}
-                  id={item?.id}
-                  type={item?.type}
-                  title={item?.title}
-                  date={item?.date}
-                  hour={item?.hour}
-                  description={item?.description}
-                  location={item?.location}
-                  area={item?.area}
-                  image={item?.image}
-                  navigation={navigation}
-                />
-              </Stack>
-            )}
-          />
-        ) : events?.length === 0 ? (
-          <NotFound 
-            text='Aún no se han publicado eventos en el club.'
+            renderItem={renderItem}
+            ListFooterComponent={renderLoader}
+            onEndReached={loadMoreItem}
           />
         ) : (
           <Stack

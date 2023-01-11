@@ -93,13 +93,18 @@ const CreoleBallsListPage = ({ navigation, route }) => {
         justifyContent='space-between'
       >
         <Stack>
-          <Text
-            fontSize='2xl'
-            bold
-            color={colors.text.primary}
+          <Stack
+            minH={layout.height * .1}
+            maxH={layout.height * .1}
           >
-            {tournament.title}
-          </Text>
+            <Text
+              fontSize='2xl'
+              bold
+              color={colors.text.primary}
+            >
+              {tournament.title}
+            </Text>
+          </Stack>
           {events?.length > 0 || !isLoading ? (
             <FlatList
               refreshControl={
@@ -110,15 +115,15 @@ const CreoleBallsListPage = ({ navigation, route }) => {
               }
               showsVerticalScrollIndicator={false}
               data={events}
-              minH={layout.height * .8}
-              maxH={layout.height * .8}
+              minH={layout.height * .75}
+              maxH={layout.height * .75}
               keyExtractor={item => item?.id}
               renderItem={({ item }) => (
                 <Stack
                   key={item.id}
                   p={1}
                 >
-                  <CreoleGameCard 
+                  <CreoleGameCard
                     id={item.id}
                     teamA={item.teamA}
                     teamB={item.teamB}

@@ -22,7 +22,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
     >
       <TouchableOpacity
         onPress={() => {
-          if (type === 1)
+          if (type === 'D')
             navigation?.navigate('CreoleBallsTournamentPage', {
               id: id,
               type: type,
@@ -34,7 +34,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
               description: description,
               image: image,
             })
-          if (type === 3)
+          if (type === 'N')
             navigation?.navigate('EventPage', {
               id: id,
               type: type,
@@ -79,7 +79,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
                 color='white'
                 textAlign='right'
               >
-                {cutText(date.toLowerCase(), 45)}
+                {cutText(date, 45)}
               </Text>
             </VStack>
           </LinearGradient>

@@ -22,9 +22,48 @@ const cutText = (text = '', maxLength = 255) => {
   return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text
 }
 
+/**
+ * Method for reformatting the date supplied. The new format 
+ * takes the form "dd/MM/yyyy".
+ * @param {String} date Date to be formatted.
+ * @returns {String} Date with new format.
+ */
+const formatDate = (date) => {
+  try {
+    let newDate = date.split('T')[0]
+    newDate = newDate.split('-')
+    return `${newDate[2]}/${newDate[1]}/${newDate[0]}`
+  } catch (error) {
+    console.log(`Error trying to format the date: ${error}`)
+    return null
+  }
+}
+
+const getHour = (date) => {
+  try {
+    let hourData = date.split('T')[1]
+    hourData = hourData.split(':')
+  
+    let hour = Number(hourData[0])
+    let minute = Number(hourData[1])
+
+    let time = hour <= 12
+
+    hour = hour > 12 ? hour - 12 : hour
+
+    return `${hour}:${minute} ${time ? 'A.M.' : 'P.M.'}`
+
+  } catch (error) {
+    console.log(`Error trying to get hour: ${error}`)
+    return null
+  }
+}
+
 module.exports = {
   emailValidator,
   passwordValidator,
   phoneValidator,
   cutText,
+  formatDate,
+  getHour,
 }

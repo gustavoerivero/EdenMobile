@@ -31,7 +31,7 @@
     "native-base": "^3.4.25",
     "react": "18.1.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.41.5",
+    "react-hook-form": "^7.42.1",
     "react-native": "0.70.5",
     "react-native-ionicons": "^4.6.5",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",

@@ -1,16 +1,27 @@
 import React from 'react'
-import { VStack } from 'native-base'
+import { ScrollView } from 'native-base'
 import Container from '../../components/Container'
+
+import useAuthContext from '../../hooks/useAuthContext'
+import LoginForm from '../../components/LoginComponents/LoginForm'
 
 const UserPage = ({ navigation }) => {
 
+  const {
+    state: { isAuthenticated },
+  } = useAuthContext()
+
   return (
-    <Container>
-      <VStack
+    <Container
+      hiddenNavBar={!isAuthenticated}
+    >
+      <ScrollView
         minH='100%'
       >
-
-      </VStack>
+        {!isAuthenticated &&
+          <LoginForm />
+        }
+      </ScrollView>
     </Container>
   )
 

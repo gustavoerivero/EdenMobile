@@ -103,11 +103,8 @@ const LoginForm = ({ navigation }) => {
       minH='100%'
     >
       <Box
-        bg={colors.base}
         minH='85%'
         minW='90%'
-        rounded={25}
-        shadow={8}
         alignItems='center'
         justifyContent='center'
         my={10}

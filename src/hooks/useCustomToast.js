@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native'
 import { useToast, Avatar, Text, HStack } from 'native-base'
-import Icon from 'react-native-ionicons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import colors from '../styled-components/colors'
 
 const { width } = Dimensions.get('window')
@@ -19,7 +19,7 @@ const Toast = ({ id, text = 'r', color = colors.primary, bgColor = colors.secund
   >
     <Avatar bgColor={color}>
       <Icon
-        name='information-circle-outline'
+        name='information-outline'
         size={6}
         color='white'
       />

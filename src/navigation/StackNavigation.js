@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import LoginPage from '../pages/Login/LoginPage'
 import EventPage from '../pages/Events/EventPage'
 
+import LoginBottomNavigation from './LoginBottomNavigation'
 import BottomNavigation from './BottomNavigation'
 
 import useAuthContext from '../hooks/useAuthContext'
@@ -16,13 +16,12 @@ const Stack = createNativeStackNavigator()
 const stackRoutes = [
   {
     name: 'Login',
-    component: LoginPage,
+    component: LoginBottomNavigation,
     requireAuth: false,
     options: {
-      headerShown: false
+      headerShown: false,
     }
   },
-
   {
     name: 'SignIn',
     component: BottomNavigation,
@@ -35,7 +34,7 @@ const stackRoutes = [
   {
     name: 'EventPage',
     component: EventPage,
-    requireAuth: true,
+    requireAuth: false,
     options: {
       headerShown: false,
     }
@@ -44,7 +43,7 @@ const stackRoutes = [
   {
     name: 'CreoleBallsTournamentPage',
     component: CreoleBallsTournamentPage,
-    requireAuth: true,
+    requireAuth: false,
     options: {
       headerShown: false,
     }
@@ -53,7 +52,7 @@ const stackRoutes = [
   {
     name: 'CreoleBallsListPage',
     component: CreoleBallsListPage,
-    requireAuth: true,
+    requireAuth: false,
     options: {
       headerShown: false,
     }

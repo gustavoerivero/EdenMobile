@@ -77,8 +77,6 @@ const HomePage = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
 
-
-
     return (
       <Stack
         py={2}

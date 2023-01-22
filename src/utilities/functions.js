@@ -43,7 +43,7 @@ const getHour = (date) => {
   try {
     let hourData = date.split('T')[1]
     hourData = hourData.split(':')
-  
+
     let hour = Number(hourData[0])
     let minute = Number(hourData[1])
 
@@ -59,6 +59,37 @@ const getHour = (date) => {
   }
 }
 
+const getDate = (date) => {
+
+  try {
+
+    const months = [
+      'Enero', 'Febrero', 'Marzo',
+      'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre',
+      'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
+    const days = [
+      'Lunes', 'Martes', 'Miércoles', 'Jueves',
+      'Viernes', 'Sábado', 'Domingo'
+    ]
+
+    const d = new Date(date)
+
+    return {
+      dayWeek: days[d.getDay()],
+      day: d.getDate() + 1,
+      month: months[d.getMonth()].toLowerCase(),
+      year: d.getFullYear()
+    } 
+
+  } catch (error) {
+    console.log(`Error trying to get date: ${error}`)
+    return null
+  }
+}
+
 module.exports = {
   emailValidator,
   passwordValidator,
@@ -66,4 +97,5 @@ module.exports = {
   cutText,
   formatDate,
   getHour,
+  getDate,
 }

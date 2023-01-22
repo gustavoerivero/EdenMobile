@@ -4,8 +4,6 @@ import colors from '../styled-components/colors'
 
 import HomePage from '../pages/Main/HomePage'
 import CalendarPage from '../pages/Main/CalendarPage'
-import PostPage from '../pages/Main/PostPage'
-import NotificationPage from '../pages/Main/NotificationPage'
 import UserPage from '../pages/Main/UserPage'
 
 import { View } from 'react-native'
@@ -16,17 +14,6 @@ import styles from './styled-components/styles'
 const Tab = createBottomTabNavigator()
 
 const bottomRoutes = [
-  {
-    name: 'Post',
-    component: PostPage,
-    Icon: ({ color, size }) => (
-      <Icon
-        name={color === colors.navBar.activeColor ? 'clipboard' : 'clipboard-outline'}
-        color={color}
-        size={size}
-      />
-    )
-  },
   {
     name: 'Calendar',
     component: CalendarPage,
@@ -54,17 +41,6 @@ const bottomRoutes = [
     )
   },
   {
-    name: 'Notification',
-    component: NotificationPage,
-    Icon: ({ color, size }) => (
-      <Icon
-        name={color === colors.navBar.activeColor ? 'notifications' : 'notifications-outline'}
-        color={color}
-        size={size}
-      />
-    )
-  },
-  {
     name: 'Profile',
     component: UserPage,
     Icon: ({ color, size }) => (
@@ -77,7 +53,7 @@ const bottomRoutes = [
   },
 ]
 
-const BottomNavigation = () => {
+const LoginBottomNavigation = () => {
 
   return (
     <Tab.Navigator
@@ -95,7 +71,7 @@ const BottomNavigation = () => {
       }}
     >
       {bottomRoutes
-       .map(({ name, component, Icon }) => (
+      .map(({ name, component, Icon }) => (
           <Tab.Screen
             key={name}
             name={name}
@@ -110,4 +86,4 @@ const BottomNavigation = () => {
   )
 }
 
-export default BottomNavigation
+export default LoginBottomNavigation

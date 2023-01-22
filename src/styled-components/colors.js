@@ -52,6 +52,13 @@ const colors = {
   },
   divider: {
     primary: '#48CBC5'
+  },
+  notification: {
+    backgroundColor: 'white',
+    active: 'rgba(72, 203, 197, 1)',
+    inactive: '#6B6D79',
+    textActive: 'black',
+    textInactive: '#6B6D79'
   }
 }
 

@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react'
-import { useWindowDimensions, RefreshControl, ActivityIndicator } from 'react-native'
+import { useWindowDimensions, RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { Button, Divider, FlatList, Stack, Text, VStack } from 'native-base'
+import { Divider, FlatList, HStack, Stack, Text, VStack } from 'native-base'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import useLoading from '../../hooks/useLoading'
@@ -93,18 +94,36 @@ const CreoleBallsListPage = ({ navigation, route }) => {
         justifyContent='space-between'
       >
         <Stack>
-          <Stack
+          <HStack
             minH={layout.height * .1}
             maxH={layout.height * .1}
+            pr={1}
+            space={2}
           >
+            <Stack
+              pt={1}
+            >
+              <TouchableOpacity
+                onPress={() => navigation?.goBack()}
+              >
+                <Icon
+                  name='arrow-back-outline'
+                  color={colors.text.description}
+                  size={30}
+                />
+              </TouchableOpacity>
+            </Stack>
+
             <Text
               fontSize='2xl'
               bold
               color={colors.text.primary}
+              alignContent='center'
             >
+
               {tournament.title}
             </Text>
-          </Stack>
+          </HStack>
           {events?.length > 0 || !isLoading ? (
             <FlatList
               refreshControl={
@@ -125,8 +144,10 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                 >
                   <CreoleGameCard
                     id={item.id}
+                    title={tournament.title}
                     teamA={item.teamA}
                     teamB={item.teamB}
+                    navigation={navigation}
                   />
                 </Stack>
               )}
@@ -157,14 +178,12 @@ const CreoleBallsListPage = ({ navigation, route }) => {
             bgColor={colors.divider.primary}
             borderRadius={50}
           />
-          <Button
-            style={styles.button}
-            shadow={5}
-            rounded={5}
-            onPress={() => navigation?.goBack()}
+          <Stack
+            minH={layout.height * .05}
+            maxH={layout.height * .05}
           >
-            Regresar
-          </Button>
+
+          </Stack>
         </VStack>
 
       </VStack>

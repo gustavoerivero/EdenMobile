@@ -5,7 +5,7 @@ import colors from '../styled-components/colors'
 
 const { width } = Dimensions.get('window')
 
-const Toast = ({ id, text = 'r', color = colors.primary, bgColor = colors.secundary}) => (
+const Toast = ({ id = 0, text = 'Hello World!', color = colors.primary, bgColor = colors.secundary}) => (
   <HStack
     id={id}
     h='20'
@@ -19,8 +19,8 @@ const Toast = ({ id, text = 'r', color = colors.primary, bgColor = colors.secund
   >
     <Avatar bgColor={color}>
       <Icon
-        name='information-outline'
-        size={6}
+        name='information'
+        size={30}
         color='white'
       />
     </Avatar>

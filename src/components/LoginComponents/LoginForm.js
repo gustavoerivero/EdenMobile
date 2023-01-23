@@ -40,7 +40,7 @@ import StyledLink from '../Link'
 
 const LoginForm = ({ navigation }) => {
 
-  const { showErrorToast } = useCustomToast()
+  const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
   const { dispatch } = useAuthContext()
@@ -69,6 +69,7 @@ const LoginForm = ({ navigation }) => {
       const token = '1253642'
 
       if (token) {
+        showSuccessToast('¡Bienvenido!')
         setSession(response.id, token)
         dispatch({
           type: 'LOGIN',

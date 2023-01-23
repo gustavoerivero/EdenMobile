@@ -81,6 +81,7 @@ const BottomNavigation = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName='Home'
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.navBar.activeColor,

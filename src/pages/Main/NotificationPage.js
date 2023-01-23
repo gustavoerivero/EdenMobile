@@ -63,7 +63,7 @@ const NotificationPage = ({ navigation }) => {
 
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [events, setEvents] = useState(started)
+  const [notification, setEvents] = useState(started)
   const [currentPage, setCurrentPage] = useState(1)
   const [isNextPage, setIsNextPage] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -82,7 +82,7 @@ const NotificationPage = ({ navigation }) => {
     if (isNextPage) {
 
       startLoading()
-
+/*
       getEvents(currentPage)
         .then(res => {
           const { data, status } = res
@@ -91,10 +91,10 @@ const NotificationPage = ({ navigation }) => {
 
           console.log(data?.data?.data)
 
-          console.log(events)
+          console.log(notification)
 
           setIsNextPage(data?.links?.next ? true : false)
-          console.log(`Events: ${events}`)
+          console.log(`Events: ${notification}`)
           console.log(`Next page: ${isNextPage}`)
         })
         .catch(error => {
@@ -103,6 +103,7 @@ const NotificationPage = ({ navigation }) => {
         .finally(() => {
           stopLoading()
         })
+        */
 
     }
 
@@ -154,11 +155,11 @@ const NotificationPage = ({ navigation }) => {
         py={2}
         alignItems='center'
       >
-        {!events || events?.length === 0 ? (
+        {!notification || notification?.length === 0 ? (
           <NotFound
             text='Aún no se han publicado eventos en el club.'
           />
-        ) : events?.length > 0 || !isLoading ? (
+        ) : notification?.length > 0 || !isLoading ? (
           <FlatList
             refreshControl={
               <RefreshControl
@@ -167,7 +168,7 @@ const NotificationPage = ({ navigation }) => {
               />
             }
             showsVerticalScrollIndicator={false}
-            data={events}
+            data={notification}
             minW={layout.width}
             maxH={layout.height * .85}
             keyExtractor={item => item?.id}

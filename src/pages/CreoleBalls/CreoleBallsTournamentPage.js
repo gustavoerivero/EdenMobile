@@ -280,25 +280,6 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                 space={5}
               >
                 <Tooltip
-                  label='Compártelo'
-                  placement='bottom right'
-                  _text={{ color: 'black' }}
-                  openDelay={200}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log(`Share button is pressed`)
-                    }}
-                  >
-                    <Icon
-                      name='share-social-outline'
-                      color={colors.icon.primary}
-                      size={40}
-                    />
-                  </TouchableOpacity>
-                </Tooltip>
-
-                <Tooltip
                   label='Juegos'
                   placement='bottom right'
                   _text={{ color: 'black' }}

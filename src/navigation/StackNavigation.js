@@ -10,61 +10,71 @@ import useAuthContext from '../hooks/useAuthContext'
 import styles from './styled-components/styles'
 import CreoleBallsTournamentPage from '../pages/CreoleBalls/CreoleBallsTournamentPage'
 import CreoleBallsListPage from '../pages/CreoleBalls/CreoleBallsListPage'
+import PlayerRoster from '../pages/CreoleBalls/PlayerRoster'
 
 const Stack = createNativeStackNavigator()
-
-const stackRoutes = [
-  {
-    name: 'Login',
-    component: LoginBottomNavigation,
-    requireAuth: false,
-    options: {
-      headerShown: false,
-    }
-  },
-  {
-    name: 'SignIn',
-    component: BottomNavigation,
-    requireAuth: true,
-    options: {
-      headerShown: false,
-    }
-  },
-
-  {
-    name: 'EventPage',
-    component: EventPage,
-    requireAuth: false,
-    options: {
-      headerShown: false,
-    }
-  },
-
-  {
-    name: 'CreoleBallsTournamentPage',
-    component: CreoleBallsTournamentPage,
-    requireAuth: false,
-    options: {
-      headerShown: false,
-    }
-  },
-
-  {
-    name: 'CreoleBallsListPage',
-    component: CreoleBallsListPage,
-    requireAuth: false,
-    options: {
-      headerShown: false,
-    }
-  },
-
-]
 
 const StackNavigation = () => {
 
   const {
     state: { isAuthenticated },
   } = useAuthContext()
+
+  const stackRoutes = [
+    {
+      name: 'Login',
+      component: LoginBottomNavigation,
+      requireAuth: false,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'SignIn',
+      component: BottomNavigation,
+      requireAuth: true,
+      options: {
+        headerShown: false,
+      }
+    },
+  
+    {
+      name: 'EventPage',
+      component: EventPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+
+    {
+      name: 'CreoleBallsTournamentPage',
+      component: CreoleBallsTournamentPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+  
+    {
+      name: 'CreoleBallsListPage',
+      component: CreoleBallsListPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'PlayerRoster',
+      component: PlayerRoster,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+
+  
+  ]
 
   return (
     <Stack.Navigator

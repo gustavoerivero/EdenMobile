@@ -57,6 +57,7 @@ const LoginBottomNavigation = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName='Home'
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.navBar.activeColor,
@@ -71,7 +72,7 @@ const LoginBottomNavigation = () => {
       }}
     >
       {bottomRoutes
-      .map(({ name, component, Icon }) => (
+        .map(({ name, component, Icon }) => (
           <Tab.Screen
             key={name}
             name={name}

@@ -7,6 +7,7 @@ const colors = {
   white: '#ffffff',
   gray: '#6B6D79',
   gray1: '#ecf0f3',
+  gray2: '#d4d4d8',
   error: {
     primary: '#d95f5f',
     secondary: '#f52556',
@@ -54,11 +55,20 @@ const colors = {
     primary: '#48CBC5'
   },
   notification: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     active: 'rgba(72, 203, 197, 1)',
     inactive: '#6B6D79',
-    textActive: 'black',
+    textActive: '#000000',
     textInactive: '#6B6D79'
+  },
+  creoleRoster: {
+    backgroundColor: '#ECF0F3',
+    checkboxColor: '#48CBC5',
+    checkboxBackgroundColor: '#FFFFFF',
+    checkboxInactiveBorderColor: '#6B6D79',
+    textColor: '#6B6D79',
+    titleTextColor: '#48CBC5',
+    teamTextColor: '#6B6D79'
   }
 }
 

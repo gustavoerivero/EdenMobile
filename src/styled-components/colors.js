@@ -8,6 +8,7 @@ const colors = {
   gray: '#6B6D79',
   gray1: '#ecf0f3',
   gray2: '#d4d4d8',
+  gray3: '#ECF0F3',
   error: {
     primary: '#d95f5f',
     secondary: '#f52556',

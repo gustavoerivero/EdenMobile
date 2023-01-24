@@ -1,17 +1,20 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import EventPage from '../pages/Events/EventPage'
-
 import LoginBottomNavigation from './LoginBottomNavigation'
 import BottomNavigation from './BottomNavigation'
+import EventPage from '../pages/Events/EventPage'
 
 import useAuthContext from '../hooks/useAuthContext'
 
 import styles from './styled-components/styles'
+
 import CreoleBallsTournamentPage from '../pages/CreoleBalls/CreoleBallsTournamentPage'
 import CreoleBallsListPage from '../pages/CreoleBalls/CreoleBallsListPage'
 import PlayerRoster from '../pages/CreoleBalls/PlayerRoster'
 import StartedGamePage from '../pages/CreoleBalls/StartedGamePage'
+import ColorTeamPage from '../pages/CreoleBalls/ColorTeamPage'
+import PlayTeamAPage from '../pages/CreoleBalls/PlayTeamAPage'
+import PlayTeamBPage from '../pages/CreoleBalls/PlayTeamBPage'
 
 const Stack = createNativeStackNavigator()
 
@@ -76,6 +79,30 @@ const StackNavigation = () => {
     {
       name: 'StartedGamePage',
       component: StartedGamePage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'ColorTeamPage',
+      component: ColorTeamPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'PlayTeamAPage',
+      component: PlayTeamAPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'PlayTeamBPage',
+      component: PlayTeamBPage,
       requireAuth: isAuthenticated,
       options: {
         headerShown: false,

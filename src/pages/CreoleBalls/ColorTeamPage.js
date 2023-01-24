@@ -7,42 +7,14 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const StartedGamePage = ({ navigation, route }) => {
+const ColorTeamPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
   const game = route?.params
 
-  const [coinPressed, setCoinPressed] = useState(false)
-  const [shoot, setShoot] = useState(false)
-  const [coinTeam, setCoinTeam] = useState(false)
-
-  const coinThrow = () => {
-
-    const throws = Math.round(Math.random() * 6)
-    setShoot(true)
-    setCoinPressed(true)
-
-    const coinShoot = setInterval(() =>
-      setCoinTeam(Math.random() < .5 ? true : false)
-      , throws * 100)
-
-    setTimeout(() => {
-      clearInterval(coinShoot)
-      setCoinPressed(false)
-      setTimeout(() => {
-        navigation?.navigate('ColorTeamPage', {
-          selectedTeam: coinTeam ? game?.teamA : game?.teamB,
-          initialTeam: coinTeam ? game?.teamA : game?.teamB,
-          teamA: game?.teamA,
-          teamB: game?.teamB,
-          rosterA: game?.rosterA,
-          rosterB: game?.rosterB,
-        })
-      }, 5000)
-    }, throws * 500)
-
-  }
+  const [isColorSelected, setIsColorSelected] = useState(false)
+  const [colorSelected, setColorSelected] = useState(false)
 
   return (
     <Container
@@ -175,14 +147,48 @@ const StartedGamePage = ({ navigation, route }) => {
             alignItems='center'
             mt={10}
             mb={5}
-            pb={10}
+          >
+            <Box
+              borderRadius={10}
+              bgColor={colors.creoleStartGame.backgroundIconColor}
+              w='150'
+              h='150'
+              justifyContent='center'
+              alignItems='center'
+            >
+              <Icon
+                name='people'
+                color={!isColorSelected ?
+                  colors.creoleStartGame.scoreColor :
+                  colorSelected ?
+                    colors.creoleStartGame.teamAColor :
+                    colors.creoleStartGame.teamBColor
+                }
+                size={120}
+              />
+            </Box>
+            <Text
+              bold
+              fontSize='md'
+              color={colors.creoleStartGame.teamSelectedTextColor}
+              textAlign='center'
+              pt={1}
+            >
+              {game?.initialTeam}
+            </Text>
+          </Stack>
+
+          <Stack
+            alignItems='center'
+            mt={5}
+            mb={5}
           >
             <Text
               bold
               fontSize='lg'
-              color={colors.creoleStartGame.text}
+              color={colors.creoleStartGame.scoreColor}
             >
-              ¿Quién comienza el juego?
+              Color del equipo
             </Text>
           </Stack>
 
@@ -196,172 +202,104 @@ const StartedGamePage = ({ navigation, route }) => {
             <VStack>
               <TouchableOpacity
                 onPress={() => {
-                  setShoot(true)
-                  setCoinTeam(true)
+                  setIsColorSelected(true)
+                  setColorSelected(true)
                 }}
-                disabled={coinPressed}
               >
                 <Box
                   borderRadius={10}
-                  bgColor={colors.creoleStartGame.backgroundIconColor}
+                  bgColor={colors.creoleStartGame.teamAColor}
                   w='100'
                   h='100'
                   justifyContent='center'
                   alignItems='center'
                 >
-                  <Icon
-                    name='people'
-                    color={!shoot ?
-                      colors.creoleStartGame.scoreColor :
-                      coinTeam ?
-                        colors.creoleStartGame.teamAColor :
-                        colors.creoleStartGame.scoreColor
-                    }
-                    size={80}
-                  />
                 </Box>
               </TouchableOpacity>
               <Text
                 bold
                 fontSize='md'
-                color={colors.creoleStartGame.teamSelectedTextColor}
+                color={colors.creoleStartGame.scoreColor}
                 textAlign='center'
                 pt={1}
               >
-                {game.teamA}
+                Rojo
               </Text>
             </VStack>
 
             <VStack>
               <TouchableOpacity
                 onPress={() => {
-                  setShoot(true)
-                  setCoinTeam(false)
+                  setIsColorSelected(true)
+                  setColorSelected(false)
                 }}
-                disabled={coinPressed}
               >
                 <Box
                   borderRadius={10}
-                  bgColor={colors.creoleStartGame.backgroundIconColor}
+                  bgColor={colors.creoleStartGame.teamBColor}
                   w='100'
                   h='100'
                   justifyContent='center'
                   alignItems='center'
                 >
-                  <Icon
-                    name='people'
-
-                    color={!shoot ?
-                      colors.creoleStartGame.scoreColor :
-                      !coinTeam ?
-                        colors.creoleStartGame.teamBColor :
-                        colors.creoleStartGame.scoreColor
-                    }
-                    size={80}
-                  />
                 </Box>
               </TouchableOpacity>
               <Text
                 bold
                 fontSize='md'
-                color={colors.creoleStartGame.teamSelectedTextColor}
+                color={colors.creoleStartGame.scoreColor}
                 textAlign='center'
                 pt={1}
               >
-                {game.teamB}
+                Verde
               </Text>
             </VStack>
 
           </HStack>
 
-          <VStack
-            alignItems='center'
-            space={3}
-            py={5}
-          >
-            <Button
-              w={layout.width * .6}
-              h={layout.height * .055}
-              borderRadius={10}
-              shadow={3}
-              justifyContent='center'
-              alignItems='center'
-              bgColor={!coinPressed && shoot ? colors.button.bgPrimary : colors.gray2}
-              _pressed={colors.bgSecondary}
-              onPress={() => {
-                navigation?.navigate('ColorTeamPage', {
-                  selectedTeam: coinTeam ? game?.teamA : game?.teamB,
-                  initialTeam: coinTeam ? game?.teamA : game?.teamB,
-                  teamA: game?.teamA,
-                  teamB: game?.teamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                })
-              }}
-              disabled={coinPressed || !shoot}
-            >
-              <Text
-                bold
-                fontSize='md'
-                color={!coinPressed && shoot ? colors.white : colors.gray}
-              >
-                Comenzar con selección
-              </Text>
-            </Button>
-
-            <Text
-              bold
-              fontSize='lg'
-              color={colors.creoleStartGame.teamSelectedTextColor}
-            >
-              o
-            </Text>
-            <Button
-              w={layout.width * .6}
-              h={layout.height * .055}
-              borderRadius={10}
-              shadow={3}
-              justifyContent='center'
-              alignItems='center'
-              bgColor={!coinPressed ? colors.button.bgPrimary : colors.gray2}
-              onPress={() => coinThrow()}
-              disabled={coinPressed}
-            >
-              <Text
-                bold
-                fontSize='md'
-                color={!coinPressed ? colors.white : colors.gray}
-              >
-                Lanzar la moneda
-              </Text>
-            </Button>
-          </VStack>
         </Stack>
 
         <VStack
           space={2}
           px={5}
+          alignItems='center'
+          minH={layout.height * .05}
         >
           <Divider
             bgColor={colors.divider.primary}
             borderRadius={50}
           />
-          <Stack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
+          <Button
+            w={layout.width * .6}
+            h={layout.height * .055}
+            borderRadius={10}
+            shadow={3}
             justifyContent='center'
             alignItems='center'
+            bgColor={isColorSelected ? colors.button.bgPrimary : colors.gray2}
+            _pressed={colors.bgSecondary}
+            onPress={() => {
+              navigation?.navigate('PlayTeamAPage', {
+                selectedTeam: game?.selectedTeam,
+                initialTeam: game?.initialTeam,
+                teamA: game?.teamA,
+                colorTeamA: colorSelected ? colors.creoleStartGame.teamAColor : colors.creoleStartGame.teamBColor,
+                teamB: game?.teamB,
+                colorTeamB: !colorSelected ? colors.creoleStartGame.teamAColor : colors.creoleStartGame.teamBColor,
+                rosterA: game?.rosterA,
+                rosterB: game?.rosterB,
+              })              
+            }}
+            disabled={!isColorSelected}
           >
-            {shoot &&
-              <Text
-                bold
-                fontSize='xl'
-                color={colors.creoleStartGame.text}
-              >
-                {coinTeam ? game.teamA : game.teamB}
-              </Text>
-            }
-          </Stack>
+            <Text
+              bold
+              fontSize='md'
+              color={isColorSelected ? colors.white : colors.gray}
+            >
+              Comenzar con selección
+            </Text>
+          </Button>
         </VStack>
 
       </VStack>
@@ -369,4 +307,4 @@ const StartedGamePage = ({ navigation, route }) => {
   )
 }
 
-export default StartedGamePage
+export default ColorTeamPage

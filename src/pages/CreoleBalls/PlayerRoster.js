@@ -74,7 +74,7 @@ const PlayerRoster = ({ navigation, route }) => {
     })
   }
 
-  const [teamA, setTeamA] = useState('Apucla')
+  const [teamA, setTeamA] = useState(game?.teamA || '')
 
   const [firstTeam, setFirstTeam] = useState([
     {
@@ -111,7 +111,7 @@ const PlayerRoster = ({ navigation, route }) => {
     }
   ])
 
-  const [teamB, setTeamB] = useState('DCyTeam')
+  const [teamB, setTeamB] = useState(game?.teamB || '')
   const [secondTeam, setSecondTeam] = useState([
     {
       id: 1,

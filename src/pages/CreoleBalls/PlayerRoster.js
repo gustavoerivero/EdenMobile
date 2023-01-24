@@ -74,6 +74,8 @@ const PlayerRoster = ({ navigation, route }) => {
     })
   }
 
+  const [teamA, setTeamA] = useState('Apucla')
+
   const [firstTeam, setFirstTeam] = useState([
     {
       id: 1,
@@ -108,6 +110,8 @@ const PlayerRoster = ({ navigation, route }) => {
       name: 'Félix Rivas'
     }
   ])
+
+  const [teamB, setTeamB] = useState('DCyTeam')
   const [secondTeam, setSecondTeam] = useState([
     {
       id: 1,
@@ -198,7 +202,7 @@ const PlayerRoster = ({ navigation, route }) => {
           <RosterTeam
             id={1}
             teamID={1}
-            name='Apucla'
+            name={teamA}
             team={firstTeam}
             roster={firstRoster}
 
@@ -209,7 +213,7 @@ const PlayerRoster = ({ navigation, route }) => {
           <RosterTeam
             id={2}
             teamID={2}
-            name='DCyTeam'
+            name={teamB}
             team={secondTeam}
             roster={secondRoster}
 
@@ -243,6 +247,12 @@ const PlayerRoster = ({ navigation, route }) => {
               disabled={firstRoster.length !== 8 || secondRoster.length !== 8}
               onPress={() => {
                 console.log('Is pressed')
+                navigation?.navigate('StartedGamePage', {
+                  teamA: teamA,
+                  teamB: teamB,
+                  rosterA: firstRoster,
+                  rosterB: secondRoster
+                })
               }}
             >
               <Text

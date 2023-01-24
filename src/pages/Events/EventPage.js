@@ -200,28 +200,9 @@ const EventPage = ({ navigation, route }) => {
               w={layout.width}
               h={12}
               px={10}
-              justifyContent='space-between'
+              justifyContent='flex-end'
               alignItems='center'
             >
-              <Tooltip
-                label='Compártelo'
-                placement='bottom right'
-                _text={{ color: 'black' }}
-                openDelay={200}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    console.log(`Share button is pressed`)
-                  }}
-                >
-                  <Icon
-                    name='share-social-outline'
-                    color={colors.icon.primary}
-                    size={40}
-                  />
-                </TouchableOpacity>
-              </Tooltip>
-
               <Button
                 borderRadius={10}
                 backgroundColor={colors.icon.primary}

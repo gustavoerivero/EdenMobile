@@ -11,6 +11,7 @@ import styles from './styled-components/styles'
 import CreoleBallsTournamentPage from '../pages/CreoleBalls/CreoleBallsTournamentPage'
 import CreoleBallsListPage from '../pages/CreoleBalls/CreoleBallsListPage'
 import PlayerRoster from '../pages/CreoleBalls/PlayerRoster'
+import StartedGamePage from '../pages/CreoleBalls/StartedGamePage'
 
 const Stack = createNativeStackNavigator()
 
@@ -67,6 +68,14 @@ const StackNavigation = () => {
     {
       name: 'PlayerRoster',
       component: PlayerRoster,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'StartedGamePage',
+      component: StartedGamePage,
       requireAuth: isAuthenticated,
       options: {
         headerShown: false,

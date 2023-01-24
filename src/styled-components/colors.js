@@ -68,7 +68,16 @@ const colors = {
     checkboxInactiveBorderColor: '#6B6D79',
     textColor: '#6B6D79',
     titleTextColor: '#48CBC5',
-    teamTextColor: '#6B6D79'
+    teamTextColor: '#6B6D79',
+  },
+  creoleStartGame: {
+    timeColor: '#016F6C',
+    teamAColor: '#FF9A9A',
+    teamBColor: '#8AC28C',
+    scoreColor: '#6D6E70',
+    text: '#1F202A',
+    teamSelectedTextColor: '#48CBC5',
+    backgroundIconColor: '#ECF0F3'
   }
 }
 

@@ -23,24 +23,28 @@ const StartedGamePage = ({ navigation, route }) => {
     setShoot(true)
     setCoinPressed(true)
 
-    const coinShoot = setInterval(() =>
-      setCoinTeam(Math.random() < .5 ? true : false)
-      , throws * 100)
+    let coin = coinTeam
+
+    const coinShoot = setInterval(() => {
+      coin = Math.random() < .5
+      setCoinTeam(coin)
+    }, throws * 100)
 
     setTimeout(() => {
       clearInterval(coinShoot)
       setCoinPressed(false)
-      setTimeout(() => {
-        navigation?.navigate('ColorTeamPage', {
-          selectedTeam: coinTeam ? game?.teamA : game?.teamB,
-          initialTeam: coinTeam ? game?.teamA : game?.teamB,
-          teamA: game?.teamA,
-          teamB: game?.teamB,
-          rosterA: game?.rosterA,
-          rosterB: game?.rosterB,
-        })
-      }, 5000)
     }, throws * 500)
+
+    setTimeout(() => {
+      navigation?.navigate('ColorTeamPage', {
+        selectedTeam: coin ? game?.teamA : game?.teamB,
+        initialTeam: coin ? game?.teamA : game?.teamB,
+        teamA: game?.teamA,
+        teamB: game?.teamB,
+        rosterA: game?.rosterA,
+        rosterB: game?.rosterB,
+      })
+    }, 5000)
 
   }
 

@@ -7,47 +7,6 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const PlayerTeam = ({ item }) => {
-
-  return (
-    <Stack
-      minW='100%'
-      maxW='100%'
-      justifyContent='center'
-      alignItems='center'
-      py={2}
-    >
-      <Stack
-        shadow={5}
-        minW='85%'
-        h={39}
-        borderRadius={10}
-      >
-        <TouchableOpacity
-          activeOpacity={.9}
-        >
-          <Box
-            bgColor={colors.gray3}
-            justifyContent='center'
-            alignItems='center'
-            borderRadius={10}
-            h={39}
-          >
-            <Text
-              bold
-              fontSize='md'
-              color={colors.gray}
-              textAlign='center'
-            >
-              {item.name}
-            </Text>
-          </Box>
-        </TouchableOpacity>
-      </Stack>
-    </Stack >
-  )
-}
-
 const PlayTeamBPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
@@ -237,7 +196,56 @@ const PlayTeamBPage = ({ navigation, route }) => {
             minH='52%'
             maxH='50%'
             keyExtractor={item => item?.id}
-            renderItem={PlayerTeam}
+            renderItem={({ item }) =>
+              <Stack
+                minW='100%'
+                maxW='100%'
+                justifyContent='center'
+                alignItems='center'
+                py={2}
+              >
+                <Stack
+                  shadow={5}
+                  minW='85%'
+                  h={39}
+                  borderRadius={10}
+                >
+                  <TouchableOpacity
+                    activeOpacity={.9}
+                    onPress={() => {
+                      navigation?.navigate('PlayerShootDataPage', {
+                        selectedTeam: game?.teamA === game?.selectedTeam ? game?.teamA : game?.teamB,
+                        selectedPlayer: item.id,
+                        initialTeam: game?.initialTeam,
+                        teamA: game?.teamA,
+                        colorTeamA: game?.colorTeamA,
+                        teamB: game?.teamB,
+                        colorTeamB: game?.colorTeamB,
+                        rosterA: game?.rosterA,
+                        rosterB: game?.rosterB,
+                      })
+                    }}
+                  >
+                    <Box
+                      bgColor={colors.gray3}
+                      justifyContent='center'
+                      alignItems='center'
+                      borderRadius={10}
+                      h={39}
+                    >
+                      <Text
+                        bold
+                        fontSize='md'
+                        color={colors.gray}
+                        textAlign='center'
+                      >
+                        {item.name}
+                      </Text>
+                    </Box>
+                  </TouchableOpacity>
+                </Stack>
+              </Stack >
+            }
           />
 
           <Stack

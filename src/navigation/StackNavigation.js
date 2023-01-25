@@ -15,6 +15,7 @@ import StartedGamePage from '../pages/CreoleBalls/StartedGamePage'
 import ColorTeamPage from '../pages/CreoleBalls/ColorTeamPage'
 import PlayTeamAPage from '../pages/CreoleBalls/PlayTeamAPage'
 import PlayTeamBPage from '../pages/CreoleBalls/PlayTeamBPage'
+import PlayerShootDataPage from '../pages/CreoleBalls/PlayerShootDataPage'
 
 const Stack = createNativeStackNavigator()
 
@@ -103,6 +104,14 @@ const StackNavigation = () => {
     {
       name: 'PlayTeamBPage',
       component: PlayTeamBPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'PlayerShootDataPage',
+      component: PlayerShootDataPage,
       requireAuth: isAuthenticated,
       options: {
         headerShown: false,

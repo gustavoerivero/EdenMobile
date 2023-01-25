@@ -78,7 +78,8 @@ const colors = {
     scoreColor: '#6D6E70',
     text: '#1F202A',
     teamSelectedTextColor: '#48CBC5',
-    backgroundIconColor: '#ECF0F3'
+    backgroundIconColor: '#ECF0F3',
+    selectedShoot: '#48CBC5',
   }
 }
 

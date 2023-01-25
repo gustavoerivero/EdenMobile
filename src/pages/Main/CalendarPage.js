@@ -94,7 +94,7 @@ const CalendarPage = ({ navigation }) => {
     if (isNextPage) {
 
       startLoading()
-
+/*
       getEvents(currentPage)
         .then(res => {
           const { data, status } = res
@@ -115,7 +115,7 @@ const CalendarPage = ({ navigation }) => {
         .finally(() => {
           stopLoading()
         })
-
+*/
     }
 
   }

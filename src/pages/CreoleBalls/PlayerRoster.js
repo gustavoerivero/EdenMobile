@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import colors from '../../styled-components/colors'
 import RosterTeam from '../../components/CreoleBallsComponents/RosterTeam'
+import { firstTeamData } from './data/teamA'
+import { secondTeamData } from './data/teamB'
 
 const rosterReducer = (state, action) => {
   switch (action.type) {
@@ -74,82 +76,12 @@ const PlayerRoster = ({ navigation, route }) => {
     })
   }
 
-  const [firstTeam, setFirstTeam] = useState([
-    {
-      id: 1,
-      name: 'Alberto Alvarez'
-    },
-    {
-      id: 2,
-      name: 'Gonzalo Gonzalaz'
-    },
-    {
-      id: 3,
-      name: 'Pedro Pérez'
-    },
-    {
-      id: 4,
-      name: 'Ricardo Rodríguez'
-    },
-    {
-      id: 5,
-      name: 'William Pérez'
-    },
-    {
-      id: 6,
-      name: 'Luis Lares'
-    },
-    {
-      id: 7,
-      name: 'Andrés Corrales'
-    },
-    {
-      id: 8,
-      name: 'Félix Rivas'
-    }
-  ])
-  const [secondTeam, setSecondTeam] = useState([
-    {
-      id: 1,
-      name: 'Cristiano Ronaldo'
-    },
-    {
-      id: 2,
-      name: 'Lionel Messi'
-    },
-    {
-      id: 3,
-      name: 'Salomón Rondón'
-    },
-    {
-      id: 4,
-      name: 'Kun Agüero'
-    },
-    {
-      id: 5,
-      name: 'Iker Casillas'
-    },
-    {
-      id: 6,
-      name: 'Manuel Neuer'
-    },
-    {
-      id: 7,
-      name: 'Tony Kross'
-    },
-    {
-      id: 8,
-      name: 'Luis Suárez'
-    },
-    {
-      id: 9,
-      name: 'David Beckham'
-    },
-    {
-      id: 10,
-      name: 'Adrián Anzola'
-    },
-  ])
+  const [teamA, setTeamA] = useState(game?.teamA || '')
+
+  const [firstTeam, setFirstTeam] = useState(firstTeamData || [])
+
+  const [teamB, setTeamB] = useState(game?.teamB || '')
+  const [secondTeam, setSecondTeam] = useState(secondTeamData || [])
 
   return (
     <Container
@@ -198,7 +130,7 @@ const PlayerRoster = ({ navigation, route }) => {
           <RosterTeam
             id={1}
             teamID={1}
-            name='Apucla'
+            name={teamA}
             team={firstTeam}
             roster={firstRoster}
 
@@ -209,7 +141,7 @@ const PlayerRoster = ({ navigation, route }) => {
           <RosterTeam
             id={2}
             teamID={2}
-            name='DCyTeam'
+            name={teamB}
             team={secondTeam}
             roster={secondRoster}
 
@@ -243,6 +175,12 @@ const PlayerRoster = ({ navigation, route }) => {
               disabled={firstRoster.length !== 8 || secondRoster.length !== 8}
               onPress={() => {
                 console.log('Is pressed')
+                navigation?.navigate('StartedGamePage', {
+                  teamA: teamA,
+                  teamB: teamB,
+                  rosterA: firstRoster,
+                  rosterB: secondRoster
+                })
               }}
             >
               <Text

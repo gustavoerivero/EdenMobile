@@ -16,38 +16,38 @@ const games = [
   {
     id: 1,
     date: '01/12/2022',
-    teamA: 'Equipo 1',
-    teamB: 'Equipo 2'
+    teamA: 'Apucla',
+    teamB: 'DCyTeam'
   },
   {
     id: 2,
     date: '01/12/2022',
-    teamA: 'Equipo 1',
-    teamB: 'Equipo 2'
+    teamA: 'Agronórmicos',
+    teamB: 'Ballysteam'
   },
   {
     id: 3,
     date: '01/12/2022',
-    teamA: 'Equipo 1',
-    teamB: 'Equipo 2'
+    teamA: 'UCLArt',
+    teamB: 'Econiteam'
   },
   {
     id: 4,
     date: '01/12/2022',
-    teamA: 'Equipo 1',
-    teamB: 'Equipo 2'
+    teamA: 'Criomed',
+    teamB: 'Conteam'
   },
   {
     id: 5,
     date: '01/12/2022',
-    teamA: 'Equipo 1',
-    teamB: 'Equipo 2'
+    teamA: 'Tetrateam',
+    teamB: 'CEDYTeam'
   },
   {
     id: 6,
     date: '01/12/2022',
-    teamA: 'Equipo 1',
-    teamB: 'Equipo 2'
+    teamA: 'Anteam',
+    teamB: 'Osys'
   },
 ]
 

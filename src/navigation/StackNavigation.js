@@ -1,16 +1,24 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import EventPage from '../pages/Events/EventPage'
-
 import LoginBottomNavigation from './LoginBottomNavigation'
 import BottomNavigation from './BottomNavigation'
+import EventPage from '../pages/Events/EventPage'
 
 import useAuthContext from '../hooks/useAuthContext'
 
 import styles from './styled-components/styles'
+
 import CreoleBallsTournamentPage from '../pages/CreoleBalls/CreoleBallsTournamentPage'
 import CreoleBallsListPage from '../pages/CreoleBalls/CreoleBallsListPage'
 import PlayerRoster from '../pages/CreoleBalls/PlayerRoster'
+import StartedGamePage from '../pages/CreoleBalls/StartedGamePage'
+import ColorTeamPage from '../pages/CreoleBalls/ColorTeamPage'
+import PlayTeamAPage from '../pages/CreoleBalls/PlayTeamAPage'
+import PlayTeamBPage from '../pages/CreoleBalls/PlayTeamBPage'
+import PlayerShootDataPage from '../pages/CreoleBalls/PlayerShootDataPage'
+import ScoreSetPage from '../pages/CreoleBalls/ScoreSetPage'
+import RoundNextPage from '../pages/CreoleBalls/RoundNextPage'
+import CreoleResult from '../pages/CreoleBalls/CreoleResult'
 
 const Stack = createNativeStackNavigator()
 
@@ -72,7 +80,70 @@ const StackNavigation = () => {
         headerShown: false,
       }
     },
-
+    {
+      name: 'StartedGamePage',
+      component: StartedGamePage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'ColorTeamPage',
+      component: ColorTeamPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'PlayTeamAPage',
+      component: PlayTeamAPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'PlayTeamBPage',
+      component: PlayTeamBPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'PlayerShootDataPage',
+      component: PlayerShootDataPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'ScoreSetPage',
+      component: ScoreSetPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'RoundNextPage',
+      component: RoundNextPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'CreoleResult',
+      component: CreoleResult,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
   
   ]
 

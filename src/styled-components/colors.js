@@ -8,6 +8,7 @@ const colors = {
   gray: '#6B6D79',
   gray1: '#ecf0f3',
   gray2: '#d4d4d8',
+  gray3: '#ECF0F3',
   error: {
     primary: '#d95f5f',
     secondary: '#f52556',
@@ -68,7 +69,19 @@ const colors = {
     checkboxInactiveBorderColor: '#6B6D79',
     textColor: '#6B6D79',
     titleTextColor: '#48CBC5',
-    teamTextColor: '#6B6D79'
+    teamTextColor: '#6B6D79',
+  },
+  creoleStartGame: {
+    timeColor: '#016F6C',
+    teamAColor: '#FF9A9A',
+    teamBColor: '#8AC28C',
+    scoreColor: '#6D6E70',
+    text: '#1F202A',
+    teamSelectedTextColor: '#48CBC5',
+    backgroundIconColor: '#ECF0F3',
+    selectedShoot: '#48CBC5',
+    winner: '#C0F2F3',
+    textWinner: '#054D50'
   }
 }
 

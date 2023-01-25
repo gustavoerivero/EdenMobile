@@ -71,15 +71,15 @@ const getDate = (date) => {
     ]
 
     const days = [
-      'Lunes', 'Martes', 'Miércoles', 'Jueves',
-      'Viernes', 'Sábado', 'Domingo'
+      'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves',
+      'Viernes', 'Sábado'
     ]
 
     const d = new Date(date)
 
     return {
       dayWeek: days[d.getDay()],
-      day: d.getDate() + 1,
+      day: d.getDate(),
       month: months[d.getMonth()].toLowerCase(),
       year: d.getFullYear()
     } 

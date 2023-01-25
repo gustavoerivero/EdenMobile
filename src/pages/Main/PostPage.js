@@ -111,14 +111,12 @@ const PostPage = ({ navigation }) => {
         .then(res => {
           const { data, status } = res
 
-          setEvents(status === 200 ? data?.data?.data : [])
+          const games = data?.data?.data.filter(game => game?.tipo === 'D' || game?.tipo === 'B')
 
-          console.log(data?.data?.data)
-
-          console.log(events)
+          setEvents(status === 200 ? games : [])
 
           setIsNextPage(data?.links?.next ? true : false)
-          console.log(`Events: ${events}`)
+          console.log(`Events: ${games}`)
           console.log(`Next page: ${isNextPage}`)
         })
         .catch(error => {
@@ -155,7 +153,7 @@ const PostPage = ({ navigation }) => {
           description={item?.descripcion || ""}
           location={item?.instalacion?.nombre || ""}
           area={item?.area?.nombre || ""}
-          image={item?.image /*`https://medinajosedev.com/storage/${item?.imagen_principal}` || ""*/}
+          image={`https://medinajosedev.com/storage/${item?.imagen_principal}` || ""}
           navigation={navigation}
         />
       </Stack>

@@ -14,7 +14,7 @@ import NotFound from '../../components/NotFound'
 
 import { getEvents } from '../../services/events/EventsService'
 
-import { formatDate, getHour } from '../../utilities/functions'
+import { formatDate, getHour, getDate } from '../../utilities/functions'
 import useCustomToast from '../../hooks/useCustomToast'
 
 const HomePage = ({ navigation }) => {
@@ -140,6 +140,8 @@ const HomePage = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
 
+    const { dayWeek, day, month, year } = getDate(item?.creado)
+
     return (
       <Stack
         py={2}
@@ -149,12 +151,13 @@ const HomePage = ({ navigation }) => {
           id={item?.id}
           type={item?.tipo || ""}
           title={item?.nombre || ""}
-          date={formatDate(item?.creado) || ""}
+          date={`${dayWeek}, ${day} de ${month} de ${year}` || ""}
           hour={getHour(item?.creado) || ""}
           description={item?.descripcion || ""}
           location={item?.instalacion?.nombre || ""}
           area={item?.area?.nombre || ""}
-          image={item?.image /*`https://medinajosedev.com/storage/${item?.imagen_principal}` || ""*/}
+          image={`https://medinajosedev.com/storage/${item?.imagen_principal}` || ""}
+          tournament={item?.torneo}
           navigation={navigation}
         />
       </Stack>

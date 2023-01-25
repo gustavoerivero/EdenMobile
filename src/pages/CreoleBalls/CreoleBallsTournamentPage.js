@@ -286,6 +286,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                   openDelay={200}
                 >
                   <TouchableOpacity
+                    disabled={false /*!event.tournament*/}
                     onPress={() => {
                       console.log(`Game list button is pressed`)
                       navigation?.navigate('CreoleBallsListPage', {
@@ -303,7 +304,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                   >
                     <Icon
                       name='list-circle-outline'
-                      color={colors.icon.primary}
+                      color={event.tournament ? colors.icon.primary : colors.gray}
                       size={40}
                     />
                   </TouchableOpacity>

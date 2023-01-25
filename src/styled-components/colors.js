@@ -80,6 +80,8 @@ const colors = {
     teamSelectedTextColor: '#48CBC5',
     backgroundIconColor: '#ECF0F3',
     selectedShoot: '#48CBC5',
+    winner: '#C0F2F3',
+    textWinner: '#054D50'
   }
 }
 

@@ -13,10 +13,6 @@ const PlayerShootDataPage = ({ navigation, route }) => {
 
   const game = route?.params
 
-  const selectedRoster = game?.selectedTeam === game?.teamA ? game?.rosterA.find(member => member.id === game?.selectedPlayer) : game?.rosterB.find(member => member.id === game?.selectedPlayer)
-
-  const [player, setPlayer] = useState(selectedRoster)
-
   const [shoot, setShoot] = useState(0)
   const [firstShoot, setFirstShoot] = useState(null)
   const [secondShoot, setSecondShoot] = useState(null)
@@ -111,7 +107,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.selectedTeam === game?.teamA ? game?.colorTeamA : game?.colorTeamB}
+                color={game?.colorTeamA}
               >
                 {`${game?.teamA.slice(0, 3).toUpperCase()}`}
               </Text>
@@ -120,7 +116,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {game?.scoreTeamA}
               </Text>
             </HStack>
 
@@ -135,12 +131,12 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {game?.scoreTeamB}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.selectedTeam !== game?.teamA ? game?.colorTeamA : game?.colorTeamB}
+                color={game?.colorTeamB}
               >
                 {`${game?.teamB.slice(0, 3).toUpperCase()}`}
               </Text>
@@ -211,10 +207,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('A')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('A')
                   }
                 }}
@@ -241,10 +237,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('B')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('B')
                   }
                 }}
@@ -271,10 +267,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('M')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('M')
                   }
                 }}
@@ -307,10 +303,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('a')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('a')
                   }
                 }}
@@ -337,10 +333,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('b')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('b')
                   }
                 }}
@@ -367,10 +363,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('m')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('m')
                   }
                 }}
@@ -403,10 +399,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('N')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('N')
                   }
                 }}
@@ -433,10 +429,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot) {
+                  if (!firstShoot || shoot === 0) {
                     setFirstShoot('F')
                   }
-                  if (firstShoot && !secondShoot) {
+                  if ((firstShoot && !secondShoot) || shoot === 1) {
                     setSecondShoot('F')
                   }
                 }}
@@ -552,16 +548,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(game?.selectedTeam !== game?.initialTeam ? 'PlayTeamAPage' : 'PlayTeamBPage', {
-                  selectedTeam: game?.selectedTeam !== game?.initialTeam ? game?.teamA : game?.teamB,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                })
+                setShoot(1)
               }}
             >
               <Text
@@ -569,7 +556,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.white}
               >
-                Siguiente lanzamiento {game?.selectedTeam === game?.teamA ? 'true' : 'false'}
+                Siguiente lanzamiento
               </Text>
             </Button>
           </Stack>
@@ -608,6 +595,8 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   colorTeamA: game?.colorTeamA,
                   teamB: game?.teamB,
                   colorTeamB: game?.colorTeamB,
+                  scoreTeamA: game?.scoreTeamA,
+                  scoreTeamB: game?.scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
                 })
@@ -638,6 +627,8 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   colorTeamA: game?.colorTeamA,
                   teamB: game?.teamB,
                   colorTeamB: game?.colorTeamB,
+                  scoreTeamA: game?.scoreTeamA,
+                  scoreTeamB: game?.scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
                 })

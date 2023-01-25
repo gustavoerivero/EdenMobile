@@ -16,6 +16,9 @@ import ColorTeamPage from '../pages/CreoleBalls/ColorTeamPage'
 import PlayTeamAPage from '../pages/CreoleBalls/PlayTeamAPage'
 import PlayTeamBPage from '../pages/CreoleBalls/PlayTeamBPage'
 import PlayerShootDataPage from '../pages/CreoleBalls/PlayerShootDataPage'
+import ScoreSetPage from '../pages/CreoleBalls/ScoreSetPage'
+import RoundNextPage from '../pages/CreoleBalls/RoundNextPage'
+import CreoleResult from '../pages/CreoleBalls/CreoleResult'
 
 const Stack = createNativeStackNavigator()
 
@@ -117,7 +120,30 @@ const StackNavigation = () => {
         headerShown: false,
       }
     },
-
+    {
+      name: 'ScoreSetPage',
+      component: ScoreSetPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'RoundNextPage',
+      component: RoundNextPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+    {
+      name: 'CreoleResult',
+      component: CreoleResult,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
   
   ]
 

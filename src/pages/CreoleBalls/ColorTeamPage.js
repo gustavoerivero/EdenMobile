@@ -286,6 +286,8 @@ const ColorTeamPage = ({ navigation, route }) => {
                 colorTeamA: colorSelected ? colors.creoleStartGame.teamAColor : colors.creoleStartGame.teamBColor,
                 teamB: game?.teamB,
                 colorTeamB: !colorSelected ? colors.creoleStartGame.teamAColor : colors.creoleStartGame.teamBColor,
+                scoreTeamA: 0,
+                scoreTeamB: 0,
                 rosterA: game?.rosterA,
                 rosterB: game?.rosterB,
               })              

@@ -103,7 +103,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.initialTeam === game?.teamA ? game?.colorTeamA : game?.colorTeamB}
+                color={game?.colorTeamA}
               >
                 {`${game?.teamA.slice(0, 3).toUpperCase()}`}
               </Text>
@@ -112,7 +112,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {game?.scoreTeamA}
               </Text>
             </HStack>
 
@@ -127,12 +127,12 @@ const PlayTeamBPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {game?.scoreTeamB}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.initialTeam === game?.teamB ? game?.colorTeamA : game?.colorTeamB}
+                color={game?.colorTeamB}
               >
                 {`${game?.teamB.slice(0, 3).toUpperCase()}`}
               </Text>
@@ -214,13 +214,15 @@ const PlayTeamBPage = ({ navigation, route }) => {
                     activeOpacity={.9}
                     onPress={() => {
                       navigation?.navigate('PlayerShootDataPage', {
-                        selectedTeam: game?.teamA === game?.selectedTeam ? game?.teamA : game?.teamB,
+                        selectedTeam: game?.selectedTeam,
                         selectedPlayer: item.id,
                         initialTeam: game?.initialTeam,
                         teamA: game?.teamA,
                         colorTeamA: game?.colorTeamA,
                         teamB: game?.teamB,
                         colorTeamB: game?.colorTeamB,
+                        scoreTeamA: game?.scoreTeamA,
+                        scoreTeamB: game?.scoreTeamB,
                         rosterA: game?.rosterA,
                         rosterB: game?.rosterB,
                       })
@@ -316,7 +318,18 @@ const PlayTeamBPage = ({ navigation, route }) => {
               bgColor={colors.gray3}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                console.log('Select team')
+                navigation?.navigate('CreoleResult', {
+                  selectedTeam: game?.selectedTeam,
+                  initialTeam: game?.initialTeam,
+                  teamA: game?.teamA,
+                  colorTeamA: game?.colorTeamA,
+                  teamB: game?.teamB,
+                  colorTeamB: game?.colorTeamB,
+                  scoreTeamA: game?.scoreTeamA,
+                  scoreTeamB: game?.scoreTeamB,
+                  rosterA: game?.rosterA,
+                  rosterB: game?.rosterB,
+                })
               }}
             >
               <Text
@@ -337,7 +350,18 @@ const PlayTeamBPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                console.log('Select team')
+                navigation?.navigate('ScoreSetPage', {
+                  selectedTeam: game?.selectedTeam,
+                  initialTeam: game?.initialTeam,
+                  teamA: game?.teamA,
+                  colorTeamA: game?.colorTeamA,
+                  teamB: game?.teamB,
+                  colorTeamB: game?.colorTeamB,
+                  scoreTeamA: game?.scoreTeamA,
+                  scoreTeamB: game?.scoreTeamB,
+                  rosterA: game?.rosterA,
+                  rosterB: game?.rosterB,
+                })
               }}
             >
               <Text

@@ -6,11 +6,20 @@ import StatusBar from './StatusBar'
 
 import colors from '../styled-components/colors'
 
-const Container = ({ statusBarStyle, statusBarColor, hiddenStatusBar, hiddenNavBar, children }) => {
+const Container = ({
+  statusBarStyle = 'default',
+  statusBarColor = colors.bgSecondary,
+  hiddenStatusBar = false,
+  hiddenNavBar = false,
+  backgroundTopColor = colors.white,
+  backgroundBottomColor = colors.gray1,
+  children
+}) => {
+
   return (
     <Background
-      topColor={colors.white}
-      bottomColor={colors.gray1}
+      topColor={backgroundTopColor}
+      bottomColor={backgroundBottomColor}
     >
       <StatusBar
         backgroundColor={statusBarColor}

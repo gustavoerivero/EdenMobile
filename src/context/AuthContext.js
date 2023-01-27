@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }) => {
     const initialize = async () => {
       try {
         const accessID = await AsyncStorage.getItem('@id')
+        const accessUser = await AsyncStorage.getItem('@user')
         const accessToken = await AsyncStorage.getItem('@token')
 
         if (!accessToken) {
@@ -68,7 +69,7 @@ export const AuthProvider = ({ children }) => {
           return
         }
 
-        await setSession(accessID, accessToken)
+        await setSession(accessID, accessToken, accessUser)
 
         dispatch({
           type: 'INITIALIZE',
@@ -77,6 +78,7 @@ export const AuthProvider = ({ children }) => {
             user: {
               id: accessID,
               token: accessToken,
+              user: accessUser
             },
           },
         })

@@ -70,14 +70,20 @@ const LoginForm = ({ navigation }) => {
 
       if (token) {
         showSuccessToast('¡Bienvenido!')
-        setSession(response.id, token)
+        const data = {
+          name: 'Gustavo Rivero',
+          role: 'Director del Club',
+          description: '25 años'
+        }
+        setSession(response.id, token, data)
         dispatch({
           type: 'LOGIN',
           payload: {
             user: {
               token: token,
-              id: response.id
-            }            
+              id: response.id,
+              user: data
+            }
           }
         })
       }

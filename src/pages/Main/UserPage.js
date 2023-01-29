@@ -11,6 +11,7 @@ import colors from '../../styled-components/colors'
 import CreoleProfileCard from '../../components/ProfileComponents/CreoleProfileCard'
 import DominoesProfileCard from '../../components/ProfileComponents/DominoesProfileCard'
 import ContactCard from '../../components/ProfileComponents/ContactCard'
+import Modal from '../../components/Modal'
 
 const UserPage = ({ navigation }) => {
 

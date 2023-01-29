@@ -18,6 +18,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 8
   },
+  modalBackground: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 
 })
 

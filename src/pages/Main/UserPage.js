@@ -38,10 +38,9 @@ const UserPage = ({ navigation }) => {
           >
             <ProfileComponent />
             <CreoleProfileCard
-              gamesPlayed={6}
+              gamesPlayed={7}
               gamesWon={3}
-              tiedGames={1}
-              gamesLost={2}
+              gamesLost={4}
               arrimeBueno={12}
               arrimeMalo={2}
               bocheBueno={0}

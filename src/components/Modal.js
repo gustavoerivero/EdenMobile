@@ -1,12 +1,12 @@
 import React from 'react'
 import { ImageBackground, useWindowDimensions } from 'react-native'
 
-import { Box, Modal } from 'native-base'
+import { Box } from 'native-base'
 
 import colors from '../styled-components/colors'
 import styles from './styled-components/styles'
 
-const StyledModal = ({ children, modalStyle = {} }) => {
+const StyledModal = ({ children, top = 1, modalStyle = {} }) => {
 
   const layout = useWindowDimensions()
 
@@ -14,7 +14,7 @@ const StyledModal = ({ children, modalStyle = {} }) => {
     <ImageBackground
       style={[styles.modalBackground, {
         position: 'absolute',
-        top: -layout.height,
+        top: -layout.height/(top === 0 ? 1 : top),
         bottom: 0,
         left: -20,
         right: 0,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { Box, HStack, VStack, Text, Divider, Stack, Button, Checkbox } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -19,17 +19,7 @@ const ContactCard = ({ }) => {
 
   const [editModal, setEditModal] = useState(false)
 
-  const handleActivePhones = (key) => (value) => {
-    let aux = phones
-
-    aux.forEach(item => {
-      if (item.id === key) {
-        aux[key].status = value
-      }
-    })
-
-    setPhones(aux)
-  }
+  const layout = useWindowDimensions()
 
   return (
     <Box
@@ -124,7 +114,9 @@ const ContactCard = ({ }) => {
         </TouchableOpacity>
       </HStack>
       {editModal &&
-        <Modal>
+        <Modal
+          top={1}
+        >
           <VStack
             maxW='80%'
             isOpened={editModal}

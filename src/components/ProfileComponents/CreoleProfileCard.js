@@ -10,7 +10,6 @@ const CreoleProfileCard = ({
   navigation,
   gamesPlayed = 0,
   gamesWon = 0,
-  tiedGames = 0,
   gamesLost = 0,
   arrimeBueno = 0,
   arrimeMalo = 0,
@@ -144,11 +143,6 @@ const CreoleProfileCard = ({
               <ProgressBar
                 text='Ganados'
                 progress={gamesWon}
-                total={gamesPlayed}
-              />
-              <ProgressBar
-                text='Empatados'
-                progress={tiedGames}
                 total={gamesPlayed}
               />
               <ProgressBar

@@ -11,6 +11,7 @@ import colors from '../../styled-components/colors'
 import CreoleProfileCard from '../../components/ProfileComponents/CreoleProfileCard'
 import DominoesProfileCard from '../../components/ProfileComponents/DominoesProfileCard'
 import ContactCard from '../../components/ProfileComponents/ContactCard'
+import Modal from '../../components/Modal'
 
 const UserPage = ({ navigation }) => {
 
@@ -37,10 +38,9 @@ const UserPage = ({ navigation }) => {
           >
             <ProfileComponent />
             <CreoleProfileCard
-              gamesPlayed={6}
+              gamesPlayed={7}
               gamesWon={3}
-              tiedGames={1}
-              gamesLost={2}
+              gamesLost={4}
               arrimeBueno={12}
               arrimeMalo={2}
               bocheBueno={0}

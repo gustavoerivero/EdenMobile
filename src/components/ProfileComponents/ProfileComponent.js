@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, useWindowDimensions, Modal } from 'react-native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { Box, HStack, Image, Stack, Text, VStack } from 'native-base'
+import { Box, Button, HStack, Image, Stack, Text, VStack, Divider } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import CalendarPicker from 'react-native-calendar-picker'
 
 import colors from '../../styled-components/colors'
 import useConnection from '../../hooks/useConnection'
@@ -15,8 +18,19 @@ import useCustomToast from '../../hooks/useCustomToast'
 import { cutText } from '../../utilities/functions'
 
 import Goose from '../../assets/images/goose.jpg'
+import StyledModal from '../Modal'
+import StyledField from './StyledField'
+
+import { formatDate } from '../../utilities/functions'
+
+import moment from 'moment'
 
 const ProfileComponent = ({ navigation }) => {
+
+  moment.locale('es')
+
+  const initialDate = new Date(`${new Date().getFullYear() - 16}-${new Date().getDay() + 1}-${new Date().getMonth() + 1}`)
+  const endDate = new Date(`${new Date().getFullYear() - 99}-${new Date().getDay() + 1}-${new Date().getMonth() + 1}`)
 
   const { isConnected, recognizeConnection } = useConnection()
   const { dispatch } = useAuthContext()
@@ -25,6 +39,26 @@ const ProfileComponent = ({ navigation }) => {
   const [image, setImage] = useState(1)
 
   const [userData, setUserData] = useState(null)
+
+  const [edit, setEdit] = useState(false)
+
+  const [names, setNames] = useState('Gustavo Emmanuel')
+  const [lastNames, setLastNames] = useState('Rivero Menduni')
+  const [birthday, setBirthday] = useState(initialDate)
+
+  const [modalDateVisible, setModalDateVisible] = useState(false)
+
+  const openModalDate = () => setModalDateVisible(true)
+  const closeModalDate = () => setModalDateVisible(false)
+
+  const handleDateSelection = (data) => {
+    const date = new Date(data)
+    setBirthday(date)
+    console.log(date)
+    //closeModalDate()
+  }
+
+  const layout = useWindowDimensions()
 
   const getData = async () => {
     setUserData(JSON.parse(await AsyncStorage.getItem('@user')))
@@ -68,16 +102,24 @@ const ProfileComponent = ({ navigation }) => {
               justifyContent='center'
               alignItems='center'
             >
-              <Icon
-                name='log-out-outline'
-                size={20}
-                color={colors.white}
-              />
+              {isConnected ?
+                <Icon
+                  name='log-out-outline'
+                  size={20}
+                  color={colors.white}
+                /> :
+                <MaterialIcon
+                  name='connection'
+                  size={20}
+                  color={colors.white}
+                />
+              }
             </Box>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               console.log(userData)
+              setEdit(!edit)
             }}
           >
             <Box
@@ -166,6 +208,227 @@ const ProfileComponent = ({ navigation }) => {
 
         </VStack>
       </VStack>
+      {edit &&
+        <StyledModal
+          top={layout.height / 10}
+        >
+          <VStack
+            maxW='80%'
+          >
+            <Text
+              bold
+              fontSize='sm'
+              color={colors.gray}
+            >
+              Editar perfil
+            </Text>
+            <Divider
+              bgColor={colors.navBar.activeColor}
+              borderRadius={50}
+            />
+            <VStack
+              p={2}
+              pb={3}
+              space={1}
+            >
+              <HStack
+                justifyContent='center'
+                alignItems='center'
+                space={1}
+              >
+                <Stack
+                  w='25%'
+                  justifyContent='center'
+                  alignItems='center'
+                >
+                  <Text
+                    fontSize='xs'
+                    textAlign='right'
+                    color={colors.gray}
+                  >
+                    Nombres
+                  </Text>
+                </Stack>
+                <Stack
+                  w='75%'
+                >
+                  <StyledField
+                    value={names}
+                  />
+                </Stack>
+              </HStack>
+              <HStack
+                justifyContent='center'
+                alignItems='center'
+                space={1}
+              >
+                <Stack
+                  w='25%'
+                  justifyContent='center'
+                  alignItems='center'
+                >
+                  <Text
+                    fontSize='xs'
+                    textAlign='right'
+                    color={colors.gray}
+                  >
+                    Apellidos
+                  </Text>
+                </Stack>
+                <Stack
+                  w='75%'
+                >
+                  <StyledField
+                    value={lastNames}
+                  />
+                </Stack>
+              </HStack>
+              <HStack
+                justifyContent='center'
+                alignItems='center'
+                space={1}
+              >
+                <Stack
+                  w='25%'
+                  justifyContent='center'
+                  alignItems='center'
+                >
+                  <Text
+                    fontSize='xs'
+                    textAlign='right'
+                    lineHeight={12}
+                    color={colors.gray}
+                  >
+                    Fecha de nacimiento
+                  </Text>
+                </Stack>
+                <Stack
+                  w='50%'
+                >
+                  <Box
+                    mx={1}
+                    h={8}
+                    px={3}
+                    borderRadius={12}
+                    bgColor={colors.textField.bgSecondColor}
+                    borderColor={colors.base}
+                    justifyContent='center'
+                  >
+                    <Text
+                      fontSize='xs'
+                      color={colors.textField.text}
+                    >
+                      {formatDate(birthday.toISOString())}
+                    </Text>
+                  </Box>
+                </Stack>
+                <Stack
+                  w='25%'
+                >
+                  <TouchableOpacity
+                    onPress={openModalDate}
+                  >
+                    <Icon
+                      name='calendar'
+                      size={20}
+                      color={colors.navBar.activeColor}
+                    />
+                  </TouchableOpacity>
+                  <Modal
+                    visible={modalDateVisible}
+                    animationType='slide'
+                  >
+                    <VStack
+                      p={5}
+                      space={2}
+                      divider={
+                        <Divider
+                          bgColor={colors.navBar.activeColor}
+                          borderRadius={50}
+                        />
+                      }
+                    >
+                      <Text
+                        bold
+                        fontSize='xl'
+                        color={colors.gray}
+                      >
+                        Fecha de nacimiento
+                      </Text>
+
+                      <CalendarPicker
+                        onDateChange={handleDateSelection}
+                        months={[
+                          'Enero', 'Febrero', 'Marzo', 'Abril',
+                          'Mayo', 'Junio', 'Julio', 'Agosto',
+                          'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                        ]}
+                        weekdays={[
+                          'Lun', 'Mar', 'Miér',
+                          'Jue', 'Vie', 'Sáb',
+                          'Dom'
+                        ]}
+                        date={birthday}
+                        minDate={endDate}
+                        maxDate={initialDate}
+                        initialDate={birthday}
+                        selectedDayColor={colors.navBar.activeColor}
+                        todayBackgroundColor={colors.gray2}
+                      />
+                      <Stack
+                        w='100%'
+                        alignItems='center'
+                      >
+                      <Button
+                        onPress={closeModalDate}
+                        w='40%'
+                        borderRadius={10}
+                        shadow={3}
+                        justifyContent='center'
+                        alignItems='center'
+                        bgColor={colors.button.bgPrimary}
+                      >
+                        <Text
+                          bold
+                          fontSize='md'
+                          color={colors.white}
+                        >
+                          Cerrar
+                        </Text>
+                      </Button>
+                      </Stack>                      
+                    </VStack>
+                  </Modal>
+                </Stack>
+              </HStack>
+            </VStack>
+            <HStack
+              minW='100%'
+              justifyContent='center'
+            >
+              <Stack></Stack>
+              <Button
+                onPress={() => setEdit(false)}
+                w='40%'
+                h='100%'
+                borderRadius={10}
+                shadow={3}
+                justifyContent='center'
+                alignItems='center'
+                bgColor={colors.button.bgPrimary}
+              >
+                <Text
+                  bold
+                  fontSize='md'
+                  color={colors.white}
+                >
+                  Guardar
+                </Text>
+              </Button>
+            </HStack>
+          </VStack>
+        </StyledModal>
+      }
     </Box>
   )
 }

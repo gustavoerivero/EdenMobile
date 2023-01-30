@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     const initialize = async () => {
       try {
         const accessID = await AsyncStorage.getItem('@id')
-        const accessUser = await AsyncStorage.getItem('@user')
+        const accessUser = JSON.parse(await AsyncStorage.getItem('@user'))
         const accessToken = await AsyncStorage.getItem('@token')
 
         if (!accessToken) {

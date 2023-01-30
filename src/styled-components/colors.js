@@ -7,7 +7,7 @@ const colors = {
   white: '#ffffff',
   gray: '#6B6D79',
   gray1: '#ecf0f3',
-  gray2: '#d4d4d8',
+  gray2: '#d4d4d4',
   gray3: '#ECF0F3',
   gray4: '#D9D9D9',
   error: {
@@ -21,6 +21,7 @@ const colors = {
     borderColor: 'rgba(42,53,60, .25)',
     placeholder: 'rgba(42,53,60, .75)',
     text: '#2A353C',
+    bgSecondColor: 'rgba(217, 217, 217, .5)',
   },
   text: {
     primary: '#1F202A',

@@ -6,6 +6,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { AuthProvider } from './src/context/AuthContext'
 import StackNavigation from './src/navigation/StackNavigation'
 
+import 'moment-es6'
+
 const App = () => {
 
   useEffect(() => {

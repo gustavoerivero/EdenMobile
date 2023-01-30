@@ -55,7 +55,7 @@ const ProfileComponent = ({ navigation }) => {
     const date = new Date(data)
     setBirthday(date)
     console.log(date)
-    closeModalDate()
+    //closeModalDate()
   }
 
   const layout = useWindowDimensions()
@@ -373,8 +373,7 @@ const ProfileComponent = ({ navigation }) => {
                         maxDate={initialDate}
                         initialDate={birthday}
                         selectedDayColor={colors.navBar.activeColor}
-                        todayBackgroundColor={colors.gray}
-                        allowRangeSelection={true}
+                        todayBackgroundColor={colors.gray2}
                       />
                       <Stack
                         w='100%'

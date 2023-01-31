@@ -1,12 +1,13 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import LoginBottomNavigation from './LoginBottomNavigation'
-import BottomNavigation from './BottomNavigation'
-import EventPage from '../pages/Events/EventPage'
-
 import useAuthContext from '../hooks/useAuthContext'
 
 import styles from './styled-components/styles'
+
+import LoginBottomNavigation from './LoginBottomNavigation'
+import BottomNavigation from './BottomNavigation'
+
+import EventPage from '../pages/Events/EventPage'
 
 import CreoleBallsTournamentPage from '../pages/CreoleBalls/CreoleBallsTournamentPage'
 import CreoleBallsListPage from '../pages/CreoleBalls/CreoleBallsListPage'
@@ -19,6 +20,8 @@ import PlayerShootDataPage from '../pages/CreoleBalls/PlayerShootDataPage'
 import ScoreSetPage from '../pages/CreoleBalls/ScoreSetPage'
 import RoundNextPage from '../pages/CreoleBalls/RoundNextPage'
 import CreoleResult from '../pages/CreoleBalls/CreoleResult'
+
+import CommentPage from '../pages/Comments/CommentPage'
 
 const Stack = createNativeStackNavigator()
 
@@ -139,6 +142,15 @@ const StackNavigation = () => {
     {
       name: 'CreoleResult',
       component: CreoleResult,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false,
+      }
+    },
+
+    {
+      name: 'Comentarios',
+      component: CommentPage,
       requireAuth: isAuthenticated,
       options: {
         headerShown: false,

@@ -208,7 +208,10 @@ const EventPage = ({ navigation, route }) => {
                 backgroundColor={colors.icon.primary}
                 shadow={3}
                 w='40%'
-                onPress={() => console.log('Comment button is pressed')}
+                onPress={() => {
+                  console.log('Comment button is pressed')
+                  navigation?.navigate('Comentarios', event)
+                }}
               >
                 Comentar
               </Button>

@@ -6,7 +6,7 @@ import { Box } from 'native-base'
 import colors from '../styled-components/colors'
 import styles from './styled-components/styles'
 
-const StyledModal = ({ children, top = 1, modalStyle = {} }) => {
+const StyledModal = ({ children, left = null, top = 1, modalStyle = {} }) => {
 
   const layout = useWindowDimensions()
 
@@ -16,7 +16,7 @@ const StyledModal = ({ children, top = 1, modalStyle = {} }) => {
         position: 'absolute',
         top: -layout.height/(top === 0 ? 1 : top),
         bottom: 0,
-        left: -20,
+        left: left ? left : -20,
         right: 0,
         backgroundColor: 'rgba(255, 255, 255, 0.75)',
         zIndex: 1,

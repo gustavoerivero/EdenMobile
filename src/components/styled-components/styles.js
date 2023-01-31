@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
   modalBackground: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  teamCard: {
+    buttonSection: {
+      minWidth: '20%',
+      maxWidth: '20%',
+    },    
   }
 
 })

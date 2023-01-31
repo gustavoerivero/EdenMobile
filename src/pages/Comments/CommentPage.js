@@ -399,7 +399,7 @@ const CommentPage = ({ navigation, route }) => {
             <Button
               disabled={
                 name?.length <= 0 &&
-                year < 12 && text?.length <= 0
+                (year < 12 || year > 99) && text?.length <= 0
               }
               w='40%'
               h='100%'
@@ -409,7 +409,7 @@ const CommentPage = ({ navigation, route }) => {
               alignItems='center'
               bgColor={
                 name?.length > 0 &&
-                year >= 12 && text?.length > 0
+                year >= 12 && year <= 99 && text?.length > 0
                 ? colors.button.bgPrimary : colors.gray}
               onPress={submit}
             >

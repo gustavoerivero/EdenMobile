@@ -1,8 +1,10 @@
 import React, { useCallback, useState } from 'react'
-import { ActivityIndicator, useWindowDimensions, RefreshControl } from 'react-native'
+import { ActivityIndicator, useWindowDimensions, RefreshControl, TouchableOpacity } from 'react-native'
 
 import { useFocusEffect } from '@react-navigation/native'
-import { FlatList, Stack, Text, VStack } from 'native-base'
+import { Box, Divider, FlatList, ScrollView, Stack, Text, VStack } from 'native-base'
+
+import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import InfoCard from '../../components/HomeComponents/InfoCard'
@@ -16,6 +18,8 @@ import { getEvents } from '../../services/events/EventsService'
 
 import { formatDate, getHour, getDate } from '../../utilities/functions'
 import useCustomToast from '../../hooks/useCustomToast'
+import StyledField from '../../components/StyledField'
+import StyledBadge from '../../components/StyledBadge'
 
 const HomePage = ({ navigation }) => {
 
@@ -25,14 +29,40 @@ const HomePage = ({ navigation }) => {
 
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [events, setEvents] = useState(null)
+  const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isNextPage, setIsNextPage] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
+  const [search, setSearch] = useState('')
+
+  const [categoriesSelected, setCategoriesSelected] = useState(['Todo'])
+
   const layout = useWindowDimensions()
 
   const { showErrorToast } = useCustomToast()
+
+  const categories = [
+    'Todo', 'Torneos', 'Eventos', 'Actividades'
+  ]
+
+  const handleCategories = (text) => {
+    getData()
+    if (categoriesSelected?.length === 1 && text === 'Todo') {
+      console.log('Jaja ola')
+    } else if (categoriesSelected?.length === 1 && !categoriesSelected?.includes('Todo') && categoriesSelected?.includes(text)) {
+      const aux = categoriesSelected?.filter(item => item !== text)
+      setCategoriesSelected([...aux, 'Todo'])
+    } else if (categoriesSelected?.includes(text)) {
+      setCategoriesSelected(categoriesSelected?.filter(item => item !== text))
+    } else {
+      setCategoriesSelected([...categoriesSelected, text])
+    }
+  }
+
+  const getCategory = (text) => {
+    return categoriesSelected?.includes(text)
+  }
 
   const data = [
     {
@@ -69,6 +99,68 @@ const HomePage = ({ navigation }) => {
       descripcion: 'Viernes 09 de diciembre',
       tipo: 'D',
       creado: '2023-05-22T16:34:00',
+      torneo: [
+        {
+          id: 0,
+          name: 'Buitres Fan Club (BFC)',
+          image: 'https://dw0i2gv3d32l1.cloudfront.net/uploads/stage/stage_image/82123/optimized_large_thumb_stage.jpg',
+          members: [
+            {
+              id: 0,
+              name: 'William Pérez'
+            },
+            {
+              id: 1,
+              name: 'Sasha Fitness'
+            }
+          ]
+        },
+        {
+          id: 1,
+          name: 'Oscarsitos',
+          image: 'https://i.pinimg.com/originals/0a/3d/9a/0a3d9a6635d2fd94371fb2fa27847d3b.png',
+          members: [
+            {
+              id: 2,
+              name: 'Oscar de León'
+            },
+            {
+              id: 3,
+              name: 'Oscarsito'
+            },
+            {
+              id: 4,
+              name: 'Oscar Pérez'
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: 'Los masquediches',
+          image: null,
+          members: [
+            {
+              id: 5,
+              name: 'Chino'
+            },
+            {
+              id: 6,
+              name: 'Nacho'
+            },
+          ]
+        },
+        {
+          id: 3,
+          name: 'Los pistoleros',
+          image: 'https://blog.logomyway.com/wp-content/uploads/2021/12/oakland-raiders-logo.png',
+          members: [
+            {
+              id: 7,
+              name: 'Solo Solín'
+            }
+          ]
+        }
+      ],
       instalacion: {
         nombre: 'Área de deportes',
       },
@@ -103,9 +195,7 @@ const HomePage = ({ navigation }) => {
   const getData = () => {
 
     if (isNextPage) {
-
       startLoading()
-
       getEvents(currentPage)
         .then(res => {
           const { data, status } = res
@@ -127,7 +217,6 @@ const HomePage = ({ navigation }) => {
         .finally(() => {
           stopLoading()
         })
-
     }
 
   }
@@ -182,12 +271,58 @@ const HomePage = ({ navigation }) => {
       <VStack
         py={5}
         px={3}
-        height={layout.height}
+        h='100%'
       >
+        <VStack
+          pb={1}
+          space={1}
+        >
+          <StyledField
+            baseW='100%'
+            borderRadius={50}
+            placeholder='Buscar...'
+            bgColor={colors.white}
+            h={10}
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+            InputRightElement={
+              <Box
+                pr={3}
+              >
+                <Icon
+                  name='search'
+                  color={colors.text.description}
+                  size={20}
+                />
+              </Box>
+            }
+          />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {categories?.map((item, key) => (
+              <Stack
+                key={key}
+                m={1}
+              >
+                <StyledBadge
+                  bold
+                  text={item}
+                  value={getCategory(item)}
+                  w={100}
+                  onChangeValue={() => handleCategories(item)}
+                />
+              </Stack>
+            ))}
+
+          </ScrollView>
+        </VStack>
+        <Divider />
         {!events || events?.length === 0 ? (
           <NotFound
             text='Aún no se han publicado eventos en el club.'
-          />  
+          />
         ) : events?.length > 0 || !isLoading ? (
           <FlatList
             refreshControl={
@@ -198,7 +333,8 @@ const HomePage = ({ navigation }) => {
             }
             showsVerticalScrollIndicator={false}
             data={events}
-            maxH={layout.height * .80}
+            pb={5}
+            maxH='85%'
             keyExtractor={item => item?.id}
             renderItem={renderItem}
             ListFooterComponent={renderLoader}

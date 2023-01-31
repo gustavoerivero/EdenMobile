@@ -1,8 +1,10 @@
 import React, { useCallback, useState } from 'react'
-import { ActivityIndicator, useWindowDimensions, RefreshControl } from 'react-native'
+import { ActivityIndicator, useWindowDimensions, RefreshControl, TouchableOpacity } from 'react-native'
 
 import { useFocusEffect } from '@react-navigation/native'
-import { FlatList, Stack, Text, VStack } from 'native-base'
+import { Box, Divider, FlatList, ScrollView, Stack, Text, VStack } from 'native-base'
+
+import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import InfoCard from '../../components/HomeComponents/InfoCard'
@@ -16,6 +18,8 @@ import { getEvents } from '../../services/events/EventsService'
 
 import { formatDate, getHour, getDate } from '../../utilities/functions'
 import useCustomToast from '../../hooks/useCustomToast'
+import StyledField from '../../components/StyledField'
+import StyledBadge from '../../components/StyledBadge'
 
 const HomePage = ({ navigation }) => {
 
@@ -25,14 +29,40 @@ const HomePage = ({ navigation }) => {
 
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [events, setEvents] = useState(null)
+  const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isNextPage, setIsNextPage] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
+  const [search, setSearch] = useState('')
+
+  const [categoriesSelected, setCategoriesSelected] = useState(['Todo'])
+
   const layout = useWindowDimensions()
 
   const { showErrorToast } = useCustomToast()
+
+  const categories = [
+    'Todo', 'Torneos', 'Eventos', 'Actividades'
+  ]
+
+  const handleCategories = (text) => {
+    getData()
+    if (categoriesSelected?.length === 1 && text === 'Todo') {
+      console.log('Jaja ola')
+    } else if (categoriesSelected?.length === 1 && !categoriesSelected?.includes('Todo') && categoriesSelected?.includes(text)) {
+      const aux = categoriesSelected?.filter(item => item !== text)
+      setCategoriesSelected([...aux, 'Todo'])
+    } else if (categoriesSelected?.includes(text)) {
+      setCategoriesSelected(categoriesSelected?.filter(item => item !== text))
+    } else {
+      setCategoriesSelected([...categoriesSelected, text])
+    }
+  }
+
+  const getCategory = (text) => {
+    return categoriesSelected?.includes(text)
+  }
 
   const data = [
     {
@@ -165,9 +195,6 @@ const HomePage = ({ navigation }) => {
   const getData = () => {
 
     if (isNextPage) {
-
-      setEvents(data)
-/*
       startLoading()
       getEvents(currentPage)
         .then(res => {
@@ -190,7 +217,6 @@ const HomePage = ({ navigation }) => {
         .finally(() => {
           stopLoading()
         })
-        */
     }
 
   }
@@ -245,8 +271,54 @@ const HomePage = ({ navigation }) => {
       <VStack
         py={5}
         px={3}
-        height={layout.height}
+        h='100%'
       >
+        <VStack
+          pb={1}
+          space={1}
+        >
+          <StyledField
+            baseW='100%'
+            borderRadius={50}
+            placeholder='Buscar...'
+            bgColor={colors.white}
+            h={10}
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+            InputRightElement={
+              <Box
+                pr={3}
+              >
+                <Icon
+                  name='search'
+                  color={colors.text.description}
+                  size={20}
+                />
+              </Box>
+            }
+          />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {categories?.map((item, key) => (
+              <Stack
+                key={key}
+                m={1}
+              >
+                <StyledBadge
+                  bold
+                  text={item}
+                  value={getCategory(item)}
+                  w={100}
+                  onChangeValue={() => handleCategories(item)}
+                />
+              </Stack>
+            ))}
+
+          </ScrollView>
+        </VStack>
+        <Divider />
         {!events || events?.length === 0 ? (
           <NotFound
             text='Aún no se han publicado eventos en el club.'
@@ -261,7 +333,8 @@ const HomePage = ({ navigation }) => {
             }
             showsVerticalScrollIndicator={false}
             data={events}
-            maxH={layout.height * .80}
+            pb={5}
+            maxH='85%'
             keyExtractor={item => item?.id}
             renderItem={renderItem}
             ListFooterComponent={renderLoader}

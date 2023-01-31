@@ -69,6 +69,68 @@ const HomePage = ({ navigation }) => {
       descripcion: 'Viernes 09 de diciembre',
       tipo: 'D',
       creado: '2023-05-22T16:34:00',
+      torneo: [
+        {
+          id: 0,
+          name: 'Buitres Fan Club (BFC)',
+          image: 'https://dw0i2gv3d32l1.cloudfront.net/uploads/stage/stage_image/82123/optimized_large_thumb_stage.jpg',
+          members: [
+            {
+              id: 0,
+              name: 'William Pérez'
+            },
+            {
+              id: 1,
+              name: 'Sasha Fitness'
+            }
+          ]
+        },
+        {
+          id: 1,
+          name: 'Oscarsitos',
+          image: 'https://i.pinimg.com/originals/0a/3d/9a/0a3d9a6635d2fd94371fb2fa27847d3b.png',
+          members: [
+            {
+              id: 2,
+              name: 'Oscar de León'
+            },
+            {
+              id: 3,
+              name: 'Oscarsito'
+            },
+            {
+              id: 4,
+              name: 'Oscar Pérez'
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: 'Los masquediches',
+          image: null,
+          members: [
+            {
+              id: 5,
+              name: 'Chino'
+            },
+            {
+              id: 6,
+              name: 'Nacho'
+            },
+          ]
+        },
+        {
+          id: 3,
+          name: 'Los pistoleros',
+          image: 'https://blog.logomyway.com/wp-content/uploads/2021/12/oakland-raiders-logo.png',
+          members: [
+            {
+              id: 7,
+              name: 'Solo Solín'
+            }
+          ]
+        }
+      ],
       instalacion: {
         nombre: 'Área de deportes',
       },
@@ -104,8 +166,9 @@ const HomePage = ({ navigation }) => {
 
     if (isNextPage) {
 
+      setEvents(data)
+/*
       startLoading()
-
       getEvents(currentPage)
         .then(res => {
           const { data, status } = res
@@ -127,7 +190,7 @@ const HomePage = ({ navigation }) => {
         .finally(() => {
           stopLoading()
         })
-
+        */
     }
 
   }
@@ -187,7 +250,7 @@ const HomePage = ({ navigation }) => {
         {!events || events?.length === 0 ? (
           <NotFound
             text='Aún no se han publicado eventos en el club.'
-          />  
+          />
         ) : events?.length > 0 || !isLoading ? (
           <FlatList
             refreshControl={

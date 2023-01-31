@@ -84,6 +84,9 @@ const colors = {
     selectedShoot: '#48CBC5',
     winner: '#C0F2F3',
     textWinner: '#054D50'
+  },
+  teamCard: {
+    buttonBackground: '#a3e5e3'
   }
 }
 

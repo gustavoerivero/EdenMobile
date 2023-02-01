@@ -121,6 +121,30 @@ const HomePage = ({ navigation }) => {
             {
               id: 1,
               name: 'Sasha Fitness'
+            },
+            {
+              id: 8,
+              name: 'Cristiano Ronaldo'
+            },
+            {
+              id: 9,
+              name: 'Robert Pérez'
+            },
+            {
+              id: 10,
+              name: 'Simón Bolívar'
+            },
+            {
+              id: 11,
+              name: 'Barack Obama'
+            },
+            {
+              id: 12,
+              name: 'Michael Jackson'
+            },
+            {
+              id: 13,
+              name: 'Cho Mi Yeon'
             }
           ]
         },
@@ -202,8 +226,9 @@ const HomePage = ({ navigation }) => {
   }, [])
 
   const getData = () => {
-
+    setEvents(data)
     if (isNextPage) {
+      /*
       startLoading()
       getEvents(currentPage)
         .then(res => {
@@ -225,7 +250,7 @@ const HomePage = ({ navigation }) => {
         })
         .finally(() => {
           stopLoading()
-        })
+        })*/
     }
 
   }

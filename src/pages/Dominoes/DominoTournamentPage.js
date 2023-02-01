@@ -12,7 +12,9 @@ import colors from '../../styled-components/colors'
 import { cutText } from '../../utilities/functions'
 import TeamPreviewCard from '../../components/TeamPreviewCard'
 
-const CreoleBallsTournamentPage = ({ navigation, route }) => {
+const DominoTournamentPage = ({ navigation, route }) => {
+
+  const layout = useWindowDimensions()
 
   const event = route?.params
 
@@ -329,7 +331,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                       disabled={false /*!event.tournament*/}
                       onPress={() => {
                         console.log(`Game list button is pressed`)
-                        navigation?.navigate('CreoleBallsListPage', {
+                        navigation?.navigate('DominoListPage', {
                           id: event.id,
                           type: event.type,
                           title: event.title,
@@ -378,4 +380,4 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
   )
 }
 
-export default CreoleBallsTournamentPage
+export default DominoTournamentPage

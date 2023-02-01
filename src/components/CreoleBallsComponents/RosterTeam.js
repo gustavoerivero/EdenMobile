@@ -24,21 +24,18 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
             add(item)
           }
         }}
-        disabled={!roster.some(member => member.id === item.id) && roster.length >= 8}
       >
         <HStack
           alignItems='center'
           space={2}
-          opacity={!roster.some(member => member.id === item.id) && roster.length >= 8 ? 0.5 : 1}
         >
           <Box
             w={4}
             h={4}
             bgColor={
               roster.some(member => member.id === item.id) ?
-                colors.creoleRoster.checkboxColor : !roster.some(member => member.id === item.id) && roster.length >= 8 ?
-                  colors.creoleRoster.checkboxInactiveBorderColor :
-                  colors.creoleRoster.checkboxBackgroundColor
+                colors.creoleRoster.checkboxColor :
+                colors.creoleRoster.checkboxBackgroundColor
             }
             borderWidth={2}
             borderRadius={2}
@@ -60,7 +57,6 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
           <Text
             bold
             fontSize='md'
-            strikeThrough={!roster.some(member => member.id === item.id) && roster.length >= 8}
             color={roster.some(member => member.id === item.id) ?
               colors.creoleRoster.checkboxColor :
               colors.creoleRoster.textColor}
@@ -74,8 +70,8 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
 
   return (
     <VStack
-      minH={layout.height * .35}
-      maxH={layout.height * .35}
+      minH={275}
+      maxH={275}
       space={2}
     >
       <HStack

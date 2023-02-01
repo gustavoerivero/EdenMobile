@@ -18,25 +18,27 @@ const PlayTeamBPage = ({ navigation, route }) => {
       hiddenNavBar={true}
     >
       <VStack
-        maxW={layout.width}
-        minH={layout.height * .9}
-        maxH={layout.height}
-        my={5}
+        maxW='100%'
+        minH='100%'
+        maxH='100%'
         justifyContent='space-between'
       >
-        <Stack>
+        <Stack
+          minH='91%'
+          maxH='91%'
+        >
           <HStack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
+            minH='5%'
+            maxH='5%'
             alignItems='center'
             justifyContent='space-between'
+            mt={5}
           >
             <HStack
-              pt={1}
               pl={5}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
-              minW={layout.width * .333}
+              minH='100%'
+              maxH='100%'
+              minW='33%'
             >
               <TouchableOpacity
                 onPress={() => navigation?.goBack()}
@@ -58,9 +60,9 @@ const PlayTeamBPage = ({ navigation, route }) => {
             </HStack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
               justifyContent='center'
               alignItems='center'
             >
@@ -74,18 +76,18 @@ const PlayTeamBPage = ({ navigation, route }) => {
             </Stack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
             >
 
             </Stack>
 
           </HStack>
           <HStack
-            minH={layout.height * .1}
-            maxH={layout.height * .1}
-            minW={layout.width}
+            minH='10%'
+            maxH='10%'
+            minW='100%'
             divider={
               <Divider
                 bgColor={colors.divider.primary}
@@ -95,7 +97,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
             space={2}
           >
             <HStack
-              minW={layout.width * .48}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -117,7 +119,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
             </HStack>
 
             <HStack
-              minW={layout.width * .45}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -145,12 +147,12 @@ const PlayTeamBPage = ({ navigation, route }) => {
             mt={4}
             mb={2}
             space={2}
-            minW={layout.width}
+            minW='100%'
             justifyContent='center'
           >
             <Stack
-              minW={layout.width * .25}
-              maxW={layout.width * .25}
+              minW='25%'
+              maxW='25%'
             >
               <Box
                 borderRadius={10}
@@ -162,19 +164,19 @@ const PlayTeamBPage = ({ navigation, route }) => {
               >
                 <Icon
                   name='people'
-                  color={game?.initialTeam === game?.selectedTeam ? game?.colorTeamA : game?.colorTeamB}
+                  color={game?.colorTeamB}
                   size={50}
                 />
               </Box>
             </Stack>
             <Stack
-              minW={layout.width * .5}
-              maxW={layout.width * .5}
+              minW='50%'
+              maxW='50%'
             >
               <Text
                 bold
                 fontSize='2xl'
-                color={colors.creoleStartGame.teamSelectedTextColor}
+                color={game?.colorTeamB}
                 textAlign='left'
                 pt={1}
               >
@@ -185,15 +187,15 @@ const PlayTeamBPage = ({ navigation, route }) => {
 
           <Stack
             minH={5}
-            bgColor={game?.initialTeam === game?.selectedTeam ? game?.colorTeamA : game?.colorTeamB}
-            mb={2}
+            bgColor={game?.colorTeamB}
           >
           </Stack>
 
+          <Divider />
           <FlatList
             showsVerticalScrollIndicator={false}
             data={game?.selectedTeam === game?.teamA ? game?.rosterA : game?.rosterB}
-            minH='52%'
+            minH='50%'
             maxH='50%'
             keyExtractor={item => item?.id}
             renderItem={({ item }) =>
@@ -249,15 +251,13 @@ const PlayTeamBPage = ({ navigation, route }) => {
               </Stack >
             }
           />
+          <Divider />
 
           <Stack
-            minW='100%'
-            maxW='100%'
-            minH='8%'
-            maxH='8%'
+            minH='15%'
+            maxH='15%'
             justifyContent='center'
             alignItems='center'
-            my={2}
           >
             <Button
               w={layout.width * .6}
@@ -278,6 +278,8 @@ const PlayTeamBPage = ({ navigation, route }) => {
                   colorTeamB: game?.colorTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  scoreTeamA: game?.scoreTeamA,
+                  scoreTeamB: game?.scoreTeamB,
                 })
               }}
             >
@@ -297,7 +299,8 @@ const PlayTeamBPage = ({ navigation, route }) => {
           space={2}
           px={5}
           alignItems='center'
-          minH={layout.height * .05}
+          minH='9%'
+          maxH='9%'
         >
           <Divider
             bgColor={colors.divider.primary}

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { useWindowDimensions, RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import { Divider, FlatList, HStack, Stack, Text, VStack } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -8,7 +8,6 @@ import Container from '../../components/Container'
 import useLoading from '../../hooks/useLoading'
 
 import colors from '../../styled-components/colors'
-import styles from './styled-components/styles'
 import CreoleGameCard from '../../components/CreoleBallsComponents/CreoleGameCard'
 import NotFound from '../../components/NotFound'
 
@@ -55,8 +54,6 @@ const CreoleBallsListPage = ({ navigation, route }) => {
 
   const tournament = route?.params
 
-  const layout = useWindowDimensions()
-
   const wait = (timeOut) => {
     return new Promise(resolve => setTimeout(resolve, timeOut))
   }
@@ -88,15 +85,18 @@ const CreoleBallsListPage = ({ navigation, route }) => {
       hiddenNavBar={true}
     >
       <VStack
-        maxW={layout.width}
-        minH={layout.height * .95}
-        p={5}
+        maxW='100%'
+        minH='100%'
         justifyContent='space-between'
+        p={5}
       >
-        <Stack>
+        <Stack
+          minH='93%'
+          maxH='93%'
+        >
           <HStack
-            minH={layout.height * .1}
-            maxH={layout.height * .1}
+            minH='10%'
+            maxH='10%'
             pr={1}
             space={2}
           >
@@ -119,11 +119,13 @@ const CreoleBallsListPage = ({ navigation, route }) => {
               bold
               color={colors.text.primary}
               alignContent='center'
+              lineHeight={25}
             >
 
               {tournament.title}
             </Text>
           </HStack>
+          <Divider />
           {events?.length > 0 || !isLoading ? (
             <FlatList
               refreshControl={
@@ -134,8 +136,8 @@ const CreoleBallsListPage = ({ navigation, route }) => {
               }
               showsVerticalScrollIndicator={false}
               data={events}
-              minH={layout.height * .75}
-              maxH={layout.height * .75}
+              minH='90%'
+              maxH='90%'
               keyExtractor={item => item?.id}
               renderItem={({ item }) => (
                 <Stack
@@ -154,7 +156,7 @@ const CreoleBallsListPage = ({ navigation, route }) => {
             />
           ) : events?.length === 0 ?
             <Stack
-              maxH={layout.height * .75}
+              maxH='100%'
             >
               <NotFound
                 text='No hay juegos disponibles'
@@ -165,23 +167,27 @@ const CreoleBallsListPage = ({ navigation, route }) => {
             <Stack
               mt={2}
               justifyContent='flex-start'
-              minH={layout.height * .75}
+              minH='100%'
             >
-              <ActivityIndicator size='large' color={colors.primary} />
+              <ActivityIndicator
+                size='large'
+                color={colors.primary}
+              />
             </Stack>
           }
 
         </Stack>
 
-        <VStack space={2}>
+        <VStack
+          space={2}
+          minH='7%'
+          maxH='7%'
+        >
           <Divider
             bgColor={colors.divider.primary}
             borderRadius={50}
           />
-          <Stack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
-          >
+          <Stack>
 
           </Stack>
         </VStack>

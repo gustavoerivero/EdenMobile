@@ -20,21 +20,21 @@ const CreoleResult = ({ navigation, route }) => {
       hiddenNavBar={true}
     >
       <VStack
-        maxW={layout.width}
-        minH={layout.height * .9}
-        maxH={layout.height}
-        my={5}
+        maxW='100%'
+        minH='100%'
+        maxH='100%'
         justifyContent='space-between'
       >
-        <Stack>
+      <Stack
+        minH='91%'
+        maxH='91%'
+      >
           <Stack
-            minH={5}
-            mt={5}
-            mb={10}
-            minW={layout.width}
-            maxW={layout.width}
-            justifyContent='center'
+            minH='10%'
+            maxH='10%'
+            py={5}
             alignItems='center'
+            justifyContent='space-between'
           >
             <Text
               fontSize='xl'
@@ -162,6 +162,8 @@ const CreoleResult = ({ navigation, route }) => {
 
           <Stack
             my={6}
+            w='100%'
+            alignItems='center'
           >
             <Box
               mx={3}
@@ -169,11 +171,12 @@ const CreoleResult = ({ navigation, route }) => {
               h={100}
               borderRadius={10}
               bgColor={colors.creoleStartGame.winner}
+              w='90%'
             >
               <HStack>
                 <Stack
-                  minW={layout.width / 3}
-                  maxW={layout.width / 3}
+                  minW='33%'
+                  maxW='33%'
                   justifyContent='flex-start'
                   alignItems='center'
                 >
@@ -197,8 +200,8 @@ const CreoleResult = ({ navigation, route }) => {
                   </HStack>
                 </Stack>
                 <Stack
-                  minW={layout.width / 3}
-                  maxW={layout.width / 3}
+                  minW='33%'
+                  maxW='33%'
                   h={100}
                   justifyContent='center'
                   alignItems='center'
@@ -217,8 +220,8 @@ const CreoleResult = ({ navigation, route }) => {
                   </Text>
                 </Stack>
                 <Stack
-                  minW={layout.width / 3}
-                  maxW={layout.width / 3}
+                  minW='33%'
+                  maxW='33%'
                   justifyContent='center'
                   alignItems='center'
                 >
@@ -234,7 +237,8 @@ const CreoleResult = ({ navigation, route }) => {
           space={2}
           px={5}
           alignItems='center'
-          minH={layout.height * .05}
+          minH='9%'
+          maxH='9%'
         >
           <Divider
             bgColor={colors.divider.primary}

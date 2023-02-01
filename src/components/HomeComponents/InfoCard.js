@@ -22,7 +22,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
     >
       <TouchableOpacity
         onPress={() => {
-          if (type === 'B')
+          if (type === 'B') {
             navigation?.navigate('CreoleBallsTournamentPage', {
               id: id,
               type: type,
@@ -35,7 +35,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
               image: image,
               tournament: tournament
             })
-          if (type === 'D')
+          } else if (type === 'D') {
             navigation?.navigate('DominoTournamentPage', {
               id: id,
               type: type,
@@ -48,7 +48,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
               image: image,
               tournament: tournament
             })
-          if (type === 'N')
+          } else {
             navigation?.navigate('EventPage', {
               id: id,
               type: type,
@@ -60,6 +60,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
               description: description,
               image: image,
             })
+          }
         }}
       >
 
@@ -81,6 +82,14 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
               alignSelf='flex-end'
               m={5}
             >
+              <Text
+                color='white'
+                textAlign='right'
+                italic
+                fontSize='xs'
+              >
+                {type === 'D' ? 'Torneo de dominó' : type === 'B' ? 'Torneo de bolas criollas' : type === 'N' ? 'Evento' : 'Actividad'}
+              </Text>
               <Text
                 fontSize='xl'
                 bold

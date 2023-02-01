@@ -25,10 +25,10 @@ const CreoleResult = ({ navigation, route }) => {
         maxH='100%'
         justifyContent='space-between'
       >
-      <Stack
-        minH='91%'
-        maxH='91%'
-      >
+        <Stack
+          minH='91%'
+          maxH='91%'
+        >
           <Stack
             minH='10%'
             maxH='10%'
@@ -173,12 +173,15 @@ const CreoleResult = ({ navigation, route }) => {
               bgColor={colors.creoleStartGame.winner}
               w='90%'
             >
-              <HStack>
+              <VStack>
                 <Stack
-                  minW='33%'
-                  maxW='33%'
-                  justifyContent='flex-start'
-                  alignItems='center'
+                  minW='100%'
+                  maxW='100%'
+                  minH='26%'
+                  maxH='26%'
+                  pl={3}
+                  justifyContent='center'
+                  alignItems='flex-start'
                 >
                   <HStack
                     alignItems='center'
@@ -200,10 +203,12 @@ const CreoleResult = ({ navigation, route }) => {
                   </HStack>
                 </Stack>
                 <Stack
-                  minW='33%'
-                  maxW='33%'
-                  h={100}
-                  justifyContent='center'
+                  minW='100%'
+                  maxW='100%'
+                  minH='74%'
+                  maxH='74%'
+                  pt={2}
+                  justifyContent='flex-start'
                   alignItems='center'
                 >
                   <Text
@@ -219,15 +224,7 @@ const CreoleResult = ({ navigation, route }) => {
                     }
                   </Text>
                 </Stack>
-                <Stack
-                  minW='33%'
-                  maxW='33%'
-                  justifyContent='center'
-                  alignItems='center'
-                >
-
-                </Stack>
-              </HStack>
+              </VStack>
             </Box>
           </Stack>
 

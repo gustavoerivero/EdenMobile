@@ -34,7 +34,8 @@ const stateReducer = (state, action) => {
       }
     }
 
-    case 'LOGOUT': {
+    case 'LOGOUT': {      
+      setSession(null, null)
       return {
         ...state,
         isAuthenticated: false,
@@ -53,12 +54,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initialize = async () => {
       try {
-        const accessID = await AsyncStorage.getItem('@id')
         const accessUser = JSON.parse(await AsyncStorage.getItem('@user'))
         const accessToken = await AsyncStorage.getItem('@token')
 
         if (!accessToken) {
-          setSession(null)
+          setSession(null, null)
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -69,14 +69,13 @@ export const AuthProvider = ({ children }) => {
           return
         }
 
-        await setSession(accessID, accessToken, accessUser)
+        await setSession(accessToken, accessUser)
 
         dispatch({
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: true,
             user: {
-              id: accessID,
               token: accessToken,
               user: accessUser
             },

@@ -59,7 +59,7 @@ const getHour = (date) => {
   }
 }
 
-const getDate = (date) => {
+const getDate = (date = new Date()) => {
 
   try {
 

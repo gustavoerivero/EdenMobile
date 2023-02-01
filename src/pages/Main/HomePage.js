@@ -92,7 +92,7 @@ const HomePage = ({ navigation }) => {
       id: 1,
       nombre: 'Juegos interclub',
       descripcion: 'del 01 al 07 de diciembre',
-      tipo: 'N',
+      tipo: 'A',
       creado: '2023-02-14T03:24:00',
       instalacion: {
         nombre: 'Área de deportes',
@@ -106,7 +106,7 @@ const HomePage = ({ navigation }) => {
       id: 2,
       nombre: 'Torneo de bolas criollas',
       descripcion: 'Viernes 09 de diciembre',
-      tipo: 'D',
+      tipo: 'B',
       creado: '2023-05-22T16:34:00',
       torneo: [
         {
@@ -226,17 +226,16 @@ const HomePage = ({ navigation }) => {
   }, [])
 
   const getData = () => {
-    setEvents(data)
     if (isNextPage) {
-      /*
       startLoading()
       getEvents(currentPage)
         .then(res => {
           const { data, status } = res
 
-          setEvents(status === 200 ? data?.data?.data : [])
+          setEvents(status === 200 ? data?.data : [])
 
-          console.log(data?.data?.data)
+          console.log(`This is the status: ${status}`)
+          console.log(data?.data)
 
           console.log(events)
 
@@ -250,7 +249,7 @@ const HomePage = ({ navigation }) => {
         })
         .finally(() => {
           stopLoading()
-        })*/
+        })
     }
 
   }
@@ -274,7 +273,7 @@ const HomePage = ({ navigation }) => {
           id={item?.id}
           type={item?.tipo || ""}
           title={item?.nombre || ""}
-          date={`${dayWeek}, ${day} de ${month} de ${year}` || ""}
+          date={dayWeek && day && month && year ? `${dayWeek}, ${day} de ${month} de ${year}` : ''}
           hour={getHour(item?.creado) || ""}
           description={item?.descripcion || ""}
           location={item?.instalacion?.nombre || ""}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, VStack } from 'native-base'
+import { ScrollView, Text, VStack } from 'native-base'
 
 import Container from '../../components/Container'
 

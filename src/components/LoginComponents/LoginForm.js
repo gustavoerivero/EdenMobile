@@ -37,6 +37,9 @@ import Eden from '../../assets/logo/eden.svg'
 
 import colors from '../../styled-components/colors'
 import StyledLink from '../Link'
+import AuthService from '../../services/auth/AuthService'
+import UserService from '../../services/user/UserService'
+import { putToken } from '../../services/http'
 
 const LoginForm = ({ navigation }) => {
 
@@ -56,42 +59,53 @@ const LoginForm = ({ navigation }) => {
     defaultvalue: loginDefaultValues,
   })
 
+  const Auth = new AuthService()
+  const User = new UserService()
+
   const onSubmit = async (value) => {
     startLoading()
 
     try {
-      console.log('Hello moto')
 
-      const response = { id: '1', ...loginData(value) }
-      
-      console.log(response)
+      const token = await Auth.login(loginData(value))
 
-      const token = '1253642'
+      console.log(token)
 
       if (token) {
-        showSuccessToast('¡Bienvenido!')
-        const data = {
-          name: 'Gustavo Rivero',
-          role: 'Director del Club',
-          description: '25 años'
-        }
-        setSession(response.id, token, data)
-        dispatch({
-          type: 'LOGIN',
-          payload: {
-            user: {
-              token: token,
-              id: response.id,
-              user: data
+
+        putToken(token)
+
+        const userData = await User.getUser()
+
+        console.log(userData?.data)
+
+        if (userData?.data?.usuario) {
+          setSession(token, userData?.data)
+          dispatch({
+            type: 'LOGIN',
+            payload: {
+              user: {
+                id: userData?.data?.usuario?.id,
+                token: token,
+                user: userData?.data
+              }
             }
-          }
-        })
+          })
+          reset(loginDefaultValues)
+          showSuccessToast('¡Bienvenido!')
+        } else {
+          console.log(`This is an error with user service.`)
+          showErrorToast(`Credenciales incorrectas.`)
+        }
+
+      } else {
+        console.log(`This is an error with token.`)
+        showErrorToast(`Credenciales incorrectas.`)
       }
 
-      reset(loginDefaultValues)
     } catch (error) {
       console.log(`Error: ${error}`)
-      showErrorToast(`Error: ${error}`)
+      showErrorToast(`Credenciales incorrectas`)
     }
 
     stopLoading()

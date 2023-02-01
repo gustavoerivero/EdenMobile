@@ -13,8 +13,8 @@ const ScoreSetPage = ({ navigation, route }) => {
 
   const game = route?.params
 
-  const [scoreTeamA, setScoreTeamA] = useState(route?.params?.scoreTeamA || 0)
-  const [scoreTeamB, setScoreTeamB] = useState(route?.params?.scoreTeamB || 0)
+  const [scoreTeamA, setScoreTeamA] = useState(0)
+  const [scoreTeamB, setScoreTeamB] = useState(0)
   const [isSetScore, setIsSetScore] = useState(false)
 
   return (
@@ -22,25 +22,27 @@ const ScoreSetPage = ({ navigation, route }) => {
       hiddenNavBar={true}
     >
       <VStack
-        maxW={layout.width}
-        minH={layout.height * .9}
-        maxH={layout.height}
-        my={5}
+        maxW='100%'
+        minH='100%'
+        maxH='100%'
         justifyContent='space-between'
       >
-        <Stack>
+        <Stack
+          minH='91%'
+          maxH='91%'
+        >
           <HStack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
+            minH='5%'
+            maxH='5%'
             alignItems='center'
             justifyContent='space-between'
+            mt={5}
           >
             <HStack
-              pt={1}
               pl={5}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
-              minW={layout.width * .333}
+              minH='100%'
+              maxH='100%'
+              minW='33%'
             >
               <TouchableOpacity
                 onPress={() => navigation?.goBack()}
@@ -62,9 +64,9 @@ const ScoreSetPage = ({ navigation, route }) => {
             </HStack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
               justifyContent='center'
               alignItems='center'
             >
@@ -78,18 +80,18 @@ const ScoreSetPage = ({ navigation, route }) => {
             </Stack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
             >
 
             </Stack>
 
           </HStack>
           <HStack
-            minH={layout.height * .1}
-            maxH={layout.height * .1}
-            minW={layout.width}
+            minH='10%'
+            maxH='10%'
+            minW='100%'
             divider={
               <Divider
                 bgColor={colors.divider.primary}
@@ -99,7 +101,7 @@ const ScoreSetPage = ({ navigation, route }) => {
             space={2}
           >
             <HStack
-              minW={layout.width * .48}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -121,7 +123,7 @@ const ScoreSetPage = ({ navigation, route }) => {
             </HStack>
 
             <HStack
-              minW={layout.width * .45}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -149,12 +151,12 @@ const ScoreSetPage = ({ navigation, route }) => {
             mt={2}
             mb={2}
             space={2}
-            minW={layout.width}
+            minW='100%'
             justifyContent='center'
           >
             <Stack
-              minW={layout.width}
-              maxW={layout.width}
+              minW='100%'
+              maxW='100%'
               justifyContent='center'
               alignItems='center'
             >
@@ -173,8 +175,8 @@ const ScoreSetPage = ({ navigation, route }) => {
           <Stack
             minH={5}
             mb={10}
-            minW={layout.width}
-            maxW={layout.width}
+            minW='100%'
+            maxW='100%'
             justifyContent='center'
             alignItems='center'
           >
@@ -193,7 +195,7 @@ const ScoreSetPage = ({ navigation, route }) => {
             mb={3}
           >
             <HStack
-              minW={layout.width}
+              minW='100%'
               justifyContent='space-around'
               space={2}
               px={5}
@@ -265,25 +267,30 @@ const ScoreSetPage = ({ navigation, route }) => {
           </VStack>
 
           <HStack
-            justifyContent='space-between'
-            mx={10}
+            justifyContent='space-around'
             my={2}
-            minH={layout.height * .2}
+            minW='100%'
+            minH='25%'
           >
             <VStack
               space={1}
               justifyContent='center'
               alignItems='center'
+              minW='50%'
             >
               <Button
-                w={layout.width * .25}
+                w='50%'
                 h={layout.height * .055}
                 borderRadius={10}
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={colors.button.bgPrimary}
+                bgColor={scoreTeamB !== 0 && isSetScore ?
+                  colors.gray2 :
+                  colors.button.bgPrimary
+                }
                 _pressed={colors.bgSecondary}
+                disabled={scoreTeamB !== 0 && isSetScore}
                 onPress={() => {
                   if (scoreTeamB === 0 || !isSetScore) {
                     setScoreTeamA(scoreTeamA + 1)
@@ -294,7 +301,10 @@ const ScoreSetPage = ({ navigation, route }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={colors.white}
+                  color={scoreTeamB !== 0 && isSetScore ?
+                    colors.gray :
+                    colors.white
+                  }
                 >
                   +1
                 </Text>
@@ -302,7 +312,7 @@ const ScoreSetPage = ({ navigation, route }) => {
               <Box
                 justifyContent='center'
                 alignItems='center'
-                w={layout.width * .25}
+                w='50%'
                 h={50}
                 borderWidth={1}
                 borderRadius={10}
@@ -317,14 +327,18 @@ const ScoreSetPage = ({ navigation, route }) => {
                 </Text>
               </Box>
               <Button
-                w={layout.width * .25}
+                w='50%'
                 h={layout.height * .055}
                 borderRadius={10}
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={colors.button.bgPrimary}
+                bgColor={scoreTeamA === 0 ?
+                  colors.gray2 :
+                  colors.button.bgPrimary
+                }
                 _pressed={colors.bgSecondary}
+                disabled={scoreTeamA === 0}
                 onPress={() => {
                   if (scoreTeamA > 0) {
                     setScoreTeamA(scoreTeamA - 1)
@@ -334,7 +348,10 @@ const ScoreSetPage = ({ navigation, route }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={colors.white}
+                  color={scoreTeamA === 0 ?
+                    colors.gray :
+                    colors.white
+                  }
                 >
                   -1
                 </Text>
@@ -345,16 +362,21 @@ const ScoreSetPage = ({ navigation, route }) => {
               space={1}
               justifyContent='center'
               alignItems='center'
+              minW='50%'
             >
               <Button
-                w={layout.width * .25}
+                w='50%'
                 h={layout.height * .055}
                 borderRadius={10}
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={colors.button.bgPrimary}
+                bgColor={scoreTeamA !== 0 && isSetScore ?
+                  colors.gray2 :
+                  colors.button.bgPrimary
+                }
                 _pressed={colors.bgSecondary}
+                disabled={scoreTeamA !== 0 && isSetScore}
                 onPress={() => {
                   if (scoreTeamA === 0 || !isSetScore) {
                     setScoreTeamB(scoreTeamB + 1)
@@ -365,7 +387,10 @@ const ScoreSetPage = ({ navigation, route }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={colors.white}
+                  color={scoreTeamA !== 0 && isSetScore ?
+                    colors.gray :
+                    colors.white
+                  }
                 >
                   +1
                 </Text>
@@ -373,7 +398,7 @@ const ScoreSetPage = ({ navigation, route }) => {
               <Box
                 justifyContent='center'
                 alignItems='center'
-                w={layout.width * .25}
+                w='50%'
                 h={50}
                 borderWidth={1}
                 borderRadius={10}
@@ -388,13 +413,17 @@ const ScoreSetPage = ({ navigation, route }) => {
                 </Text>
               </Box>
               <Button
-                w={layout.width * .25}
+                w='50%'
                 h={layout.height * .055}
                 borderRadius={10}
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={colors.button.bgPrimary}
+                bgColor={scoreTeamB === 0 ?
+                  colors.gray2 :
+                  colors.button.bgPrimary
+                }
+                disabled={scoreTeamB === 0}
                 _pressed={colors.bgSecondary}
                 onPress={() => {
                   if (scoreTeamB > 0) {
@@ -405,7 +434,10 @@ const ScoreSetPage = ({ navigation, route }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={colors.white}
+                  color={scoreTeamB === 0 ?
+                    colors.gray :
+                    colors.white
+                  }
                 >
                   -1
                 </Text>
@@ -419,7 +451,8 @@ const ScoreSetPage = ({ navigation, route }) => {
           space={2}
           px={5}
           alignItems='center'
-          minH={layout.height * .05}
+          minH='9%'
+          maxH='9%'
         >
           <Divider
             bgColor={colors.divider.primary}
@@ -447,8 +480,8 @@ const ScoreSetPage = ({ navigation, route }) => {
                   colorTeamA: game?.colorTeamA,
                   teamB: game?.teamB,
                   colorTeamB: game?.colorTeamB,
-                  scoreTeamA: scoreTeamA,
-                  scoreTeamB: scoreTeamB,
+                  scoreTeamA: game?.scoreTeamA + scoreTeamA,
+                  scoreTeamB: game?.scoreTeamB + scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
                 })

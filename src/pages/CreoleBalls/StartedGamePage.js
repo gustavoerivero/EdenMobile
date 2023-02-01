@@ -53,25 +53,27 @@ const StartedGamePage = ({ navigation, route }) => {
       hiddenNavBar={true}
     >
       <VStack
-        maxW={layout.width}
-        minH={layout.height * .9}
-        maxH={layout.height}
-        my={5}
+        maxW='100%'
+        minH='100%'
+        maxH='100%'
         justifyContent='space-between'
       >
-        <Stack>
+        <Stack
+          minH='91%'
+          maxH='91%'
+        >
           <HStack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
+            minH='5%'
+            maxH='5%'
             alignItems='center'
             justifyContent='space-between'
+            mt={5}
           >
             <HStack
-              pt={1}
               pl={5}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
-              minW={layout.width * .333}
+              minH='100%'
+              maxH='100%'
+              minW='33%'
             >
               <TouchableOpacity
                 onPress={() => navigation?.goBack()}
@@ -93,9 +95,9 @@ const StartedGamePage = ({ navigation, route }) => {
             </HStack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
               justifyContent='center'
               alignItems='center'
             >
@@ -109,18 +111,18 @@ const StartedGamePage = ({ navigation, route }) => {
             </Stack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
             >
 
             </Stack>
 
           </HStack>
           <HStack
-            minH={layout.height * .1}
-            maxH={layout.height * .1}
-            minW={layout.width}
+            minH='10%'
+            maxH='10%'
+            minW='100%'
             divider={
               <Divider
                 bgColor={colors.divider.primary}
@@ -130,7 +132,7 @@ const StartedGamePage = ({ navigation, route }) => {
             space={2}
           >
             <HStack
-              minW={layout.width * .48}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -152,7 +154,7 @@ const StartedGamePage = ({ navigation, route }) => {
             </HStack>
 
             <HStack
-              minW={layout.width * .45}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -191,8 +193,8 @@ const StartedGamePage = ({ navigation, route }) => {
           </Stack>
 
           <HStack
-            minW={layout.width * .75}
-            justifyContent='space-between'
+            minW='75%'
+            justifyContent='space-around'
             mx={5}
             py={3}
             pb={10}
@@ -345,17 +347,14 @@ const StartedGamePage = ({ navigation, route }) => {
         <VStack
           space={2}
           px={5}
+          minH='9%'
+          maxH='9%'
+          alignItems='center'
         >
           <Divider
             bgColor={colors.divider.primary}
             borderRadius={50}
           />
-          <Stack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
-            justifyContent='center'
-            alignItems='center'
-          >
             {shoot &&
               <Text
                 bold
@@ -365,7 +364,6 @@ const StartedGamePage = ({ navigation, route }) => {
                 {coinTeam ? game.teamA : game.teamB}
               </Text>
             }
-          </Stack>
         </VStack>
 
       </VStack>

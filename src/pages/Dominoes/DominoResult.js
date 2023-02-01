@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const CreoleResult = ({ navigation, route }) => {
+const DominoResult = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
@@ -278,4 +278,4 @@ const CreoleResult = ({ navigation, route }) => {
   )
 }
 
-export default CreoleResult
+export default DominoResult

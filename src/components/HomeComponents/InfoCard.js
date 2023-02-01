@@ -36,7 +36,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
               tournament: tournament
             })
           if (type === 'D')
-            navigation?.navigate('CreoleBallsTournamentPage', {
+            navigation?.navigate('DominoTournamentPage', {
               id: id,
               type: type,
               title: title,

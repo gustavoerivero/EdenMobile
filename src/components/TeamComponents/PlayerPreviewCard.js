@@ -5,10 +5,10 @@ import { Box, HStack, VStack, Text, Image, Stack } from 'native-base'
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import colors from '../styled-components/colors'
-import styles from './styled-components/styles'
+import colors from '../../styled-components/colors'
+import styles from '../styled-components/styles'
 
-const TeamPreviewCard = ({ navigation, route, teamID = 0, teamName = '', teamMembers = [], teamImage = '' }) => {
+const PlayerPreviewCard = ({ navigation, route, playerID = 0, playerName = '', playerPosition = '', playerImage = '' }) => {
 
   return (
     <Box
@@ -31,10 +31,10 @@ const TeamPreviewCard = ({ navigation, route, teamID = 0, teamName = '', teamMem
           justifyContent='center'
           alignItems='center'
         >
-          {teamImage ?
+          {playerImage ?
             <Image
-              src={teamImage}
-              alt={teamName}
+              src={playerImage}
+              alt={playerName}
               h='50'
               w='50'
             />
@@ -70,14 +70,14 @@ const TeamPreviewCard = ({ navigation, route, teamID = 0, teamName = '', teamMem
               fontSize='sm'
               color={colors.text.description}
             >
-              {teamName}
+              {playerName}
             </Text>
             <Text
               fontSize='xs'
-              italic
-              color={colors.text.description}
+              bold
+              color={colors.secondary}
             >
-              {teamMembers?.length} jugadores
+              {playerPosition}
             </Text>
           </Stack>
 
@@ -85,11 +85,11 @@ const TeamPreviewCard = ({ navigation, route, teamID = 0, teamName = '', teamMem
         <TouchableOpacity
           style={styles.teamCard.buttonSection}
           onPress={() => {
-            navigation?.navigate('TeamPage', {
-              teamID: teamID,
-              teamName: teamName,
-              teamImage: teamImage,
-              teamMembers: teamMembers
+            navigation?.navigate('PlayerPage', {
+              playerID: playerID,
+              playerName: playerName,
+              playerImage: playerImage,
+              playerPosition: playerPosition
             })
           }}
         >
@@ -115,4 +115,4 @@ const TeamPreviewCard = ({ navigation, route, teamID = 0, teamName = '', teamMem
   )
 }
 
-export default TeamPreviewCard
+export default PlayerPreviewCard

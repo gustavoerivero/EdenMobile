@@ -48,17 +48,26 @@ const PostPage = ({ navigation }) => {
   const [categoriesSelected, setCategoriesSelected] = useState(['Todo'])
 
   const handleCategories = (text) => {
-    getData()
-    if (categoriesSelected?.length === 1 && text === 'Todo') {
-      console.log('Jaja ola')
-    } else if (categoriesSelected?.length === 1 && !categoriesSelected?.includes('Todo') && categoriesSelected?.includes(text)) {
-      const aux = categoriesSelected?.filter(item => item !== text)
-      setCategoriesSelected([...aux, 'Todo'])
-    } else if (categoriesSelected?.includes(text)) {
-      setCategoriesSelected(categoriesSelected?.filter(item => item !== text))
+    let updatedCategoriesSelected = [...categoriesSelected];
+    if (text === 'Todo') {
+      updatedCategoriesSelected = ['Todo']
+    } else if (categoriesSelected.includes(text)) {
+      updatedCategoriesSelected = categoriesSelected.filter(item => item !== text)
     } else {
-      setCategoriesSelected([...categoriesSelected, text])
+      if (categoriesSelected.includes('Todo')) {
+        updatedCategoriesSelected = [text]
+      } else {
+        updatedCategoriesSelected = [...categoriesSelected, text]
+      }
     }
+    if (updatedCategoriesSelected?.length === 0) {
+      updatedCategoriesSelected = ['Todo']
+    }
+    if (updatedCategoriesSelected?.length === categories?.length - 1 && !categoriesSelected?.includes('Todo')) {
+      updatedCategoriesSelected = ['Todo']
+    }
+    setCategoriesSelected(updatedCategoriesSelected)
+    getData()
   }
 
   const getCategory = (text) => {
@@ -207,33 +216,39 @@ const PostPage = ({ navigation }) => {
     <Container>
       <VStack
         py={5}
-        px={3}
         h='100%'
       >
         <VStack
           pb={1}
           space={1}
+          justifyContent='center'
         >
-          <StyledField
-            baseW='100%'
-            borderRadius={50}
-            placeholder='Buscar...'
-            bgColor={colors.white}
-            h={10}
-            value={search}
-            onChangeText={(text) => setSearch(text)}
-            InputRightElement={
-              <Box
-                pr={3}
-              >
-                <Icon
-                  name='search'
-                  color={colors.text.description}
-                  size={20}
-                />
-              </Box>
-            }
-          />
+          <Stack
+            mx={3}
+            alignItems='center'
+            justifyContent='center'
+          >
+            <StyledField
+              baseW='100%'
+              borderRadius={50}
+              placeholder='Buscar...'
+              bgColor={colors.white}
+              h={10}
+              value={search}
+              onChangeText={(text) => setSearch(text)}
+              InputRightElement={
+                <Box
+                  pr={3}
+                >
+                  <Icon
+                    name='search'
+                    color={colors.text.description}
+                    size={20}
+                  />
+                </Box>
+              }
+            />
+          </Stack>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -256,9 +271,13 @@ const PostPage = ({ navigation }) => {
         </VStack>
         <Divider />
         {!events || events?.length === 0 ? (
-          <NotFound
-            text='Aún no se han publicado eventos en el club.'
-          />
+          <Stack
+            px={3}
+          >
+            <NotFound
+              text='Aún no se han publicado eventos en el club.'
+            />
+          </Stack>
         ) : events?.length > 0 || !isLoading ? (
           <FlatList
             refreshControl={
@@ -267,6 +286,7 @@ const PostPage = ({ navigation }) => {
                 onRefresh={onRefresh}
               />
             }
+            px={3}
             showsVerticalScrollIndicator={false}
             data={events}
             maxH='85%'

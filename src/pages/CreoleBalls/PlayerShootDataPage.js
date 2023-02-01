@@ -22,25 +22,27 @@ const PlayerShootDataPage = ({ navigation, route }) => {
       hiddenNavBar={true}
     >
       <VStack
-        maxW={layout.width}
-        minH={layout.height * .9}
-        maxH={layout.height}
-        my={5}
+        maxW='100%'
+        minH='100%'
+        maxH='100%'
         justifyContent='space-between'
       >
-        <Stack>
+        <Stack
+          minH='91%'
+          maxH='91%'
+        >
           <HStack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
+            minH='5%'
+            maxH='5%'
             alignItems='center'
             justifyContent='space-between'
+            mt={5}
           >
             <HStack
-              pt={1}
               pl={5}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
-              minW={layout.width * .333}
+              minH='100%'
+              maxH='100%'
+              minW='33%'
             >
               <TouchableOpacity
                 onPress={() => navigation?.goBack()}
@@ -62,9 +64,9 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             </HStack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
               justifyContent='center'
               alignItems='center'
             >
@@ -78,18 +80,18 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             </Stack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
             >
 
             </Stack>
 
           </HStack>
           <HStack
-            minH={layout.height * .1}
-            maxH={layout.height * .1}
-            minW={layout.width}
+            minH='10%'
+            maxH='10%'
+            minW='100%'
             divider={
               <Divider
                 bgColor={colors.divider.primary}
@@ -121,7 +123,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             </HStack>
 
             <HStack
-              minW={layout.width * .45}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -149,12 +151,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             mt={2}
             mb={2}
             space={2}
-            minW={layout.width}
+            minW='100%'
             justifyContent='center'
           >
             <Stack
-              minW={layout.width}
-              maxW={layout.width}
               justifyContent='center'
               alignItems='center'
             >
@@ -200,7 +200,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             mb={3}
           >
             <HStack
-              minW={layout.width}
+              minW='100%'
               justifyContent='center'
               space={3}
             >
@@ -219,7 +219,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'A' && secondShoot !== 'A' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .25}
+                  w={100}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -249,7 +249,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'B' && secondShoot !== 'B' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .25}
+                  w={100}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -279,7 +279,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'M' && secondShoot !== 'M' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .25}
+                  w={100}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -296,7 +296,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             </HStack>
 
             <HStack
-              minW={layout.width}
+              minW='100%'
               justifyContent='center'
               space={3}
             >
@@ -315,7 +315,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'a' && secondShoot !== 'a' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .25}
+                  w={100}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -345,7 +345,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'b' && secondShoot !== 'b' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .25}
+                  w={100}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -375,7 +375,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'm' && secondShoot !== 'm' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .25}
+                  w={100}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -392,7 +392,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             </HStack>
 
             <HStack
-              minW={layout.width}
+              minW='100%'
               justifyContent='center'
               space={3}
             >
@@ -411,7 +411,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'N' && secondShoot !== 'N' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .53}
+                  w={215}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -441,7 +441,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   bgColor={firstShoot !== 'F' && secondShoot !== 'F' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
                   borderRadius={10}
                   shadow={7}
-                  w={layout.width * .25}
+                  w={100}
                   h={50}
                   justifyContent='center'
                   alignItems='center'
@@ -482,7 +482,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <Box
                 justifyContent='center'
                 alignItems='center'
-                w={layout.width * .25}
+                w={100}
                 h={50}
                 borderWidth={1}
                 borderRadius={10}
@@ -514,7 +514,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <Box
                 justifyContent='center'
                 alignItems='center'
-                w={layout.width * .25}
+                w={100}
                 h={50}
                 borderWidth={1}
                 borderRadius={10}
@@ -567,7 +567,8 @@ const PlayerShootDataPage = ({ navigation, route }) => {
           space={2}
           px={5}
           alignItems='center'
-          minH={layout.height * .05}
+          minH='9%'
+          maxH='9%'
         >
           <Divider
             bgColor={colors.divider.primary}

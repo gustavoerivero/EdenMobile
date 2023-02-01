@@ -5,69 +5,20 @@ import { Stack, VStack, HStack, Text, Divider, Button } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import colors from '../../styled-components/colors'
-import RosterTeam from '../../components/CreoleBallsComponents/RosterTeam'
 import { firstTeamData } from './data/teamA'
 import { secondTeamData } from './data/teamB'
+import PlayersTeam from '../../components/DominoComponents/PlayersTeam'
 
-const firstRosterReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_MEMBER':
-      return [...state, action.payload]
-    case 'REMOVE_MEMBER':
-      return action.payload
-    default: return state
-  }
-}
-
-const secondRosterReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_MEMBER':
-      return [...state, action.payload]
-    case 'REMOVE_MEMBER':
-      return action.payload
-    default: return state
-  }
-}
-
-const PlayerRoster = ({ navigation, route }) => {
+const DominoRoster = ({ navigation, route }) => {
 
   const game = route?.params
 
   const layout = useWindowDimensions()
 
-  const [firstRoster, firstDispatch] = useReducer(firstRosterReducer, [])
-  const [secondRoster, secondDispatch] = useReducer(secondRosterReducer, [])
-
-  const addFirstRoster = (player) => {
-    firstDispatch({
-      type: 'ADD_MEMBER',
-      payload: player
-    })
-  }
-
-  const removeFirstRoster = (player) => {
-    firstDispatch({
-      type: 'REMOVE_MEMBER',
-      payload: firstRoster.filter(member => member.id !== player.id)
-    })
-  }
-
-  const addSecondRoster = (player) => {
-    secondDispatch({
-      type: 'ADD_MEMBER',
-      payload: player
-    })
-  }
-
-  const removeSecondRoster = (player) => {
-    secondDispatch({
-      type: 'REMOVE_MEMBER',
-      payload: secondRoster.filter(member => member.id !== player.id)
-    })
-  }
+  const [firstRoster, setFirstRoster] = useState(firstTeamData)
+  const [secondRoster, setSecondRoster] = useState(secondTeamData)
 
   const [teamA, setTeamA] = useState(game?.teamA || '')
-
   const [firstTeam, setFirstTeam] = useState(firstTeamData || [])
 
   const [teamB, setTeamB] = useState(game?.teamB || '')
@@ -120,26 +71,19 @@ const PlayerRoster = ({ navigation, route }) => {
           justifyContent='center'
           space={3}
         >
-          <RosterTeam
+          <PlayersTeam
             id={1}
             teamID={1}
             name={teamA}
             team={firstTeam}
             roster={firstRoster}
-
-            add={addFirstRoster}
-            remove={removeFirstRoster}
-
           />
-          <RosterTeam
+          <PlayersTeam
             id={2}
             teamID={2}
             name={teamB}
             team={secondTeam}
             roster={secondRoster}
-
-            add={addSecondRoster}
-            remove={removeSecondRoster}
           />
         </Stack>
 
@@ -165,27 +109,26 @@ const PlayerRoster = ({ navigation, route }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={firstRoster.length >= 4 && secondRoster.length >= 4 ?
-                colors.button.bgPrimary :
-                colors.gray2
-              }
-              disabled={firstRoster.length < 4 || secondRoster.length < 4}
+              bgColor={colors.button.bgPrimary}
               onPress={() => {
-                navigation?.navigate('StartedGamePage', {
+                navigation?.navigate('StartedDominoGamePage', {
+                  round: 1,
+                  points: 50,
                   teamA: teamA,
                   teamB: teamB,
                   rosterA: firstRoster,
-                  rosterB: secondRoster
+                  rosterB: secondRoster,
+                  colorTeamA: colors.creoleStartGame.teamAColor,
+                  colorTeamB: colors.creoleStartGame.teamBColor,
+                  scoreTeamA: 0,
+                  scoreTeamB: 0,
                 })
               }}
             >
               <Text
                 bold
                 fontSize='md'
-                color={firstRoster.length >= 4 && secondRoster.length >= 4 ?
-                  colors.white :
-                  colors.gray
-                }
+                color={colors.white}
               >
                 Iniciar juego
               </Text>
@@ -197,4 +140,4 @@ const PlayerRoster = ({ navigation, route }) => {
   )
 }
 
-export default PlayerRoster
+export default DominoRoster

@@ -23,6 +23,14 @@ import CreoleResult from '../pages/CreoleBalls/CreoleResult'
 
 import CommentPage from '../pages/Comments/CommentPage'
 
+import DominoTournamentPage from '../pages/Dominoes/DominoTournamentPage'
+import DominoListPage from '../pages/Dominoes/DominoListPage'
+import DominoRoster from '../pages/Dominoes/DominoRoster'
+import StartedDominoGamePage from '../pages/Dominoes/StartedDominoGamePage'
+import DominoResult from '../pages/Dominoes/DominoResult'
+import TeamPage from '../pages/Teams/TeamPage'
+import PlayerPage from '../pages/Teams/PlayerPage'
+
 const Stack = createNativeStackNavigator()
 
 const StackNavigation = () => {
@@ -149,6 +157,47 @@ const StackNavigation = () => {
     },
 
     {
+      name: 'DominoTournamentPage',
+      component: DominoTournamentPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false
+      }
+    },
+    {
+      name: 'DominoListPage',
+      component: DominoListPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false
+      }
+    },
+    {
+      name: 'DominoRoster', 
+      component: DominoRoster,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false
+      }
+    },
+    {
+      name: 'StartedDominoGamePage',
+      component: StartedDominoGamePage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false
+      }
+    },
+    {
+      name: 'DominoResult',
+      component: DominoResult,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false
+      }
+    },
+
+    {
       name: 'Comentarios',
       component: CommentPage,
       requireAuth: isAuthenticated,
@@ -156,6 +205,23 @@ const StackNavigation = () => {
         headerShown: false,
       }
     },
+
+    {
+      name: 'TeamPage',
+      component: TeamPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false
+      }
+    }, 
+    {
+      name: 'PlayerPage',
+      component: PlayerPage,
+      requireAuth: isAuthenticated,
+      options: {
+        headerShown: false
+      }
+    }
   
   ]
 

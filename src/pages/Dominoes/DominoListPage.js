@@ -10,6 +10,7 @@ import useLoading from '../../hooks/useLoading'
 import colors from '../../styled-components/colors'
 import CreoleGameCard from '../../components/CreoleBallsComponents/CreoleGameCard'
 import NotFound from '../../components/NotFound'
+import DominoGameCard from '../../components/DominoComponents/DominoGameCard'
 
 const games = [
   {
@@ -50,7 +51,7 @@ const games = [
   },
 ]
 
-const CreoleBallsListPage = ({ navigation, route }) => {
+const DominoListPage = ({ navigation, route }) => {
 
   const tournament = route?.params
 
@@ -144,7 +145,7 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                   key={item.id}
                   p={1}
                 >
-                  <CreoleGameCard
+                  <DominoGameCard
                     id={item.id}
                     title={tournament.title}
                     teamA={item.teamA}
@@ -197,4 +198,4 @@ const CreoleBallsListPage = ({ navigation, route }) => {
   )
 }
 
-export default CreoleBallsListPage
+export default DominoListPage

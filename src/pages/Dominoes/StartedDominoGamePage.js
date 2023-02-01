@@ -6,12 +6,19 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
+import StyledDominoNumberField from '../../components/DominoComponents/StyledDominoNumberField'
+import StyledSwitch from '../../components/StyledSwitch'
 
-const PlayTeamBPage = ({ navigation, route }) => {
+const StartedDominoGamePage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
   const game = route?.params
+
+  const [scoreTeamA, setScoreTeamA] = useState(0)
+  const [scoreTeamB, setScoreTeamB] = useState(0)
+
+  const [isLocked, setIsLocked] = useState(false)
 
   return (
     <Container
@@ -144,154 +151,190 @@ const PlayTeamBPage = ({ navigation, route }) => {
 
           <HStack
             alignItems='center'
-            mt={4}
+            mt={2}
             mb={2}
             space={2}
             minW='100%'
             justifyContent='center'
           >
             <Stack
-              minW='25%'
-              maxW='25%'
-            >
-              <Box
-                borderRadius={10}
-                bgColor={colors.creoleStartGame.backgroundIconColor}
-                w='65'
-                h='65'
-                justifyContent='center'
-                alignItems='center'
-              >
-                <Icon
-                  name='people'
-                  color={game?.colorTeamB}
-                  size={50}
-                />
-              </Box>
-            </Stack>
-            <Stack
-              minW='50%'
-              maxW='50%'
+              minW='100%'
+              maxW='100%'
+              justifyContent='center'
+              alignItems='center'
             >
               <Text
-                bold
-                fontSize='2xl'
-                color={game?.colorTeamB}
+                fontSize='md'
+                color={colors.creoleStartGame.scoreColor}
                 textAlign='left'
                 pt={1}
+                bold
               >
-                {game?.selectedTeam}
+                Puntuación
               </Text>
             </Stack>
           </HStack>
 
           <Stack
             minH={5}
-            bgColor={game?.colorTeamB}
-          >
-          </Stack>
-
-          <Divider />
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={game?.selectedTeam === game?.teamA ? game?.rosterA : game?.rosterB}
-            minH='50%'
-            maxH='50%'
-            keyExtractor={item => item?.id}
-            renderItem={({ item }) =>
-              <Stack
-                minW='100%'
-                maxW='100%'
-                justifyContent='center'
-                alignItems='center'
-                py={2}
-              >
-                <Stack
-                  shadow={5}
-                  minW='85%'
-                  h={39}
-                  borderRadius={10}
-                >
-                  <TouchableOpacity
-                    activeOpacity={.9}
-                    onPress={() => {
-                      navigation?.navigate('PlayerShootDataPage', {
-                        selectedTeam: game?.selectedTeam,
-                        selectedPlayer: item.id,
-                        initialTeam: game?.initialTeam,
-                        teamA: game?.teamA,
-                        colorTeamA: game?.colorTeamA,
-                        teamB: game?.teamB,
-                        colorTeamB: game?.colorTeamB,
-                        scoreTeamA: game?.scoreTeamA,
-                        scoreTeamB: game?.scoreTeamB,
-                        rosterA: game?.rosterA,
-                        rosterB: game?.rosterB,
-                      })
-                    }}
-                  >
-                    <Box
-                      bgColor={colors.gray3}
-                      justifyContent='center'
-                      alignItems='center'
-                      borderRadius={10}
-                      h={39}
-                    >
-                      <Text
-                        bold
-                        fontSize='md'
-                        color={colors.gray}
-                        textAlign='center'
-                      >
-                        {item.name}
-                      </Text>
-                    </Box>
-                  </TouchableOpacity>
-                </Stack>
-              </Stack >
-            }
-          />
-          <Divider />
-
-          <Stack
-            minH='15%'
-            maxH='15%'
+            mb={10}
+            minW='100%'
+            maxW='100%'
             justifyContent='center'
             alignItems='center'
           >
-            <Button
-              w={layout.width * .6}
-              h={layout.height * .055}
-              borderRadius={10}
-              shadow={3}
+            <Text
+              fontSize='xl'
+              color={colors.creoleStartGame.scoreColor}
+              textAlign='left'
+              bold
+            >
+              Ronda N° {game?.round}
+            </Text>
+          </Stack>
+
+          <VStack
+            space={3}
+            mb={3}
+          >
+            <HStack
+              minW='100%'
+              justifyContent='space-around'
+              space={2}
+              px={5}
+            >
+              <VStack
+                justifyContent='center'
+                alignItems='center'
+                space={1}
+              >
+                <Box
+                  bgColor={colors.gray3}
+                  borderRadius={10}
+                  shadow={7}
+                  w={150}
+                  h={150}
+                  justifyContent='center'
+                  alignItems='center'
+                >
+                  <Icon
+                    name='people'
+                    color={game?.colorTeamA}
+                    size={120}
+                  />
+                </Box>
+                <Text
+                  bold
+                  fontSize='md'
+                  color={colors.creoleStartGame.teamSelectedTextColor}
+                  textAlign='center'
+                  pt={1}
+                >
+                  {game?.teamA}
+                </Text>
+              </VStack>
+
+              <VStack
+                justifyContent='center'
+                alignItems='center'
+                space={1}
+              >
+                <Box
+                  bgColor={colors.gray3}
+                  borderRadius={10}
+                  shadow={7}
+                  w={150}
+                  h={150}
+                  justifyContent='center'
+                  alignItems='center'
+                >
+
+                  <Icon
+                    name='people'
+                    color={game?.colorTeamB}
+                    size={120}
+                  />
+                </Box>
+                <Text
+                  bold
+                  fontSize='md'
+                  color={colors.creoleStartGame.teamSelectedTextColor}
+                  textAlign='center'
+                  pt={1}
+                >
+                  {game?.teamB}
+                </Text>
+              </VStack>
+
+            </HStack>
+          </VStack>
+
+          <HStack
+            justifyContent='space-around'
+            my={2}
+            minW='100%'
+            minH='25%'
+          >
+            <VStack
+              space={1}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.button.bgPrimary}
-              _pressed={colors.bgSecondary}
-              onPress={() => {
-                navigation?.navigate('PlayTeamAPage', {
-                  selectedTeam: game?.selectedTeam !== game?.teamA ? game?.teamA : game?.teamB,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                })
-              }}
+              minW='50%'
             >
-              <Text
-                bold
-                fontSize='md'
-                color={colors.white}
-              >
-                Cambio de equipo
-              </Text>
-            </Button>
-          </Stack>
+              <StyledDominoNumberField
+                value={scoreTeamA}
+                onChangeText={text => {
+                  const value = Number(text)
+                  if (!isNaN(value)) {
+                    setScoreTeamA(value);
+                  }
+                }}
+                w='50%'
+                borderWidth={1}
+                borderRadius={10}
+              />
+            </VStack>
+
+            <VStack
+              space={1}
+              justifyContent='center'
+              alignItems='center'
+              minW='50%'
+            >
+              <StyledDominoNumberField
+                value={scoreTeamB}
+                onChangeText={text => {
+                  const value = Number(text)
+                  if (!isNaN(value)) {
+                    setScoreTeamB(value);
+                  }
+                }}
+                w='50%'
+                borderWidth={1}
+                borderRadius={10}
+              />
+            </VStack>
+          </HStack>
+
+          <HStack
+            justifyContent='center'
+            alignItems='center'
+            space={3}
+          >
+            <Text
+              bold
+              fontSize='md'
+              color={colors.text.description}
+              textAlign='center'
+              pt={1}
+            >
+              Partida trancada
+            </Text>
+            <StyledSwitch
+              value={isLocked}
+              setValue={setIsLocked}
+            />
+          </HStack>
 
         </Stack>
 
@@ -307,7 +350,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
             borderRadius={50}
           />
           <HStack
-            justifyContent='space-between'
+            justifyContent='center'
             minW='100%'
             space={2}
           >
@@ -318,50 +361,20 @@ const PlayTeamBPage = ({ navigation, route }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.gray3}
-              _pressed={colors.bgSecondary}
-              onPress={() => {
-                navigation?.navigate('CreoleResult', {
-                  selectedTeam: game?.selectedTeam,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                })
-              }}
-            >
-              <Text
-                bold
-                fontSize='md'
-                color={colors.gray}
-              >
-                Finalizar juego
-              </Text>
-            </Button>
-            <Button
-              w={layout.width * .45}
-              h={layout.height * .055}
-              borderRadius={10}
-              shadow={3}
-              justifyContent='center'
-              alignItems='center'
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('ScoreSetPage', {
-                  selectedTeam: game?.selectedTeam,
-                  initialTeam: game?.initialTeam,
+                navigation?.navigate(game?.scoreTeamA + scoreTeamA < game?.points &&
+                  game?.scoreTeamB + scoreTeamB < game?.points ? 'StartedDominoGamePage' : 'DominoResult', {
+                  points: game?.points,
+                  round: game?.scoreTeamA + scoreTeamA < game?.points &&
+                    game?.scoreTeamB + scoreTeamB < game?.points ? game?.round + 1 : game?.round,
                   teamA: game?.teamA,
                   colorTeamA: game?.colorTeamA,
                   teamB: game?.teamB,
                   colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
+                  scoreTeamA: game?.scoreTeamA + scoreTeamA,
+                  scoreTeamB: game?.scoreTeamB + scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
                 })
@@ -383,4 +396,4 @@ const PlayTeamBPage = ({ navigation, route }) => {
   )
 }
 
-export default PlayTeamBPage
+export default StartedDominoGamePage

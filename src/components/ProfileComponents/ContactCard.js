@@ -11,7 +11,7 @@ import Modal from '../Modal'
 import StyledField from './StyledField'
 import StyledSwitch from '../StyledSwitch'
 
-const ContactCard = ({ }) => {
+const ContactCard = () => {
 
   const [email, setEmail] = useState('gustavoerivero.p63@gmail.com')
   const [phones, setPhones] = useState('+584149561231')

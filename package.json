@@ -19,7 +19,7 @@
     "@react-native-community/netinfo": "^9.3.7",
     "@react-navigation/bottom-tabs": "^6.5.3",
     "@react-navigation/drawer": "^6.5.7",
-    "@react-navigation/material-top-tabs": "^6.5.2",
+    "@react-navigation/material-top-tabs": "^6.5.3",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
     "@rneui/base": "^4.0.0-rc.7",

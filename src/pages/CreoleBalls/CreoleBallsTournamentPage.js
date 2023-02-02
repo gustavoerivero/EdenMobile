@@ -1,7 +1,7 @@
 import React from 'react'
 import { ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { Button, Divider, HStack, ScrollView, Stack, Text, Tooltip, VStack } from 'native-base'
+import { Box, Button, Divider, HStack, ScrollView, Stack, Text, Tooltip, VStack } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
@@ -292,7 +292,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                           key={key}
                           m={1}
                         >
-                          <TeamPreviewCard 
+                          <TeamPreviewCard
                             teamID={item.id}
                             teamName={item.name}
                             teamImage={item.image}
@@ -326,6 +326,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                     openDelay={200}
                   >
                     <TouchableOpacity
+                      activeOpacity={.75}
                       disabled={false /*!event.tournament*/}
                       onPress={() => {
                         console.log(`Game list button is pressed`)
@@ -342,11 +343,22 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                         })
                       }}
                     >
-                      <Icon
-                        name='list-circle-outline'
-                        color={event.tournament ? colors.icon.primary : colors.gray}
-                        size={40}
-                      />
+                      <Box
+                        w={12}
+                        h={12}
+                        borderRadius={50}
+                        bgColor={event?.tournament ? colors.icon.primary : colors.gray2}
+                        shadow={3}
+                        alignItems='center'
+                        justifyContent='center'
+                        pl={.5}
+                      >
+                        <Icon
+                          name='list-circle-outline'
+                          color={event?.tournament ? colors.white : colors.gray}
+                          size={40}
+                        />
+                      </Box>
                     </TouchableOpacity>
                   </Tooltip>
 
@@ -354,7 +366,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
 
                 <Button
                   borderRadius={10}
-                  backgroundColor={colors.icon.primary}
+                  bgColor={colors.icon.primary}
                   shadow={3}
                   w='40%'
                   onPress={() => {

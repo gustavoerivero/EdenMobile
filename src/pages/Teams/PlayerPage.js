@@ -5,7 +5,6 @@ import Container from '../../components/Container'
 
 import CreoleProfileCard from '../../components/ProfileComponents/CreoleProfileCard'
 import DominoesProfileCard from '../../components/ProfileComponents/DominoesProfileCard'
-import ContactCard from '../../components/ProfileComponents/ContactCard'
 import PlayerProfileComponent from '../../components/TeamComponents/PlayerProfileComponent'
 import PlayerContactCard from '../../components/TeamComponents/PlayerContactCard'
 

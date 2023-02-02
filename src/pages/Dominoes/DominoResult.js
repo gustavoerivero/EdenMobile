@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import React from 'react'
+import { useWindowDimensions } from 'react-native'
 
 import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -13,8 +13,6 @@ const DominoResult = ({ navigation, route }) => {
 
   const game = route?.params
 
-  const [selectedTeam, setSelectedTeam] = useState(null)
-
   return (
     <Container
       hiddenNavBar={true}
@@ -25,10 +23,10 @@ const DominoResult = ({ navigation, route }) => {
         maxH='100%'
         justifyContent='space-between'
       >
-      <Stack
-        minH='91%'
-        maxH='91%'
-      >
+        <Stack
+          minH='91%'
+          maxH='91%'
+        >
           <Stack
             minH='10%'
             maxH='10%'
@@ -64,7 +62,7 @@ const DominoResult = ({ navigation, route }) => {
                   maxW='30%'
                 >
                   <Box
-                    bgColor={colors.creoleStartGame.teamAColor}
+                    bgColor={colors.gray1}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -74,7 +72,11 @@ const DominoResult = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={colors.gray}
+                      color={game?.scoreTeamA === game?.scoreTeamB ? colors.gray :
+                        game?.scoreTeamA > game?.scoreTeamB ?
+                          colors.creoleStartGame.textWinner :
+                          colors.gray
+                      }
                       size={120}
                     />
                   </Box>
@@ -119,7 +121,7 @@ const DominoResult = ({ navigation, route }) => {
                   maxW='30%'
                 >
                   <Box
-                    bgColor={colors.creoleStartGame.teamBColor}
+                    bgColor={colors.gray1}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -129,7 +131,11 @@ const DominoResult = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={colors.gray}
+                      color={game?.scoreTeamA === game?.scoreTeamB ? colors.gray :
+                        game?.scoreTeamA < game?.scoreTeamB ?
+                          colors.creoleStartGame.textWinner :
+                          colors.gray
+                      }
                       size={120}
                     />
                   </Box>
@@ -173,12 +179,15 @@ const DominoResult = ({ navigation, route }) => {
               bgColor={colors.creoleStartGame.winner}
               w='90%'
             >
-              <HStack>
+              <VStack>
                 <Stack
-                  minW='33%'
-                  maxW='33%'
-                  justifyContent='flex-start'
-                  alignItems='center'
+                  minW='100%'
+                  maxW='100%'
+                  minH='20%'
+                  maxH='20%'
+                  pl={3}
+                  justifyContent='center'
+                  alignItems='flex-start'
                 >
                   <HStack
                     alignItems='center'
@@ -200,10 +209,12 @@ const DominoResult = ({ navigation, route }) => {
                   </HStack>
                 </Stack>
                 <Stack
-                  minW='33%'
-                  maxW='33%'
-                  h={100}
-                  justifyContent='center'
+                  minW='100%'
+                  maxW='100%'
+                  minH='80%'
+                  maxH='80%'
+                  pt={3}
+                  justifyContent='flex-start'
                   alignItems='center'
                 >
                   <Text
@@ -219,15 +230,7 @@ const DominoResult = ({ navigation, route }) => {
                     }
                   </Text>
                 </Stack>
-                <Stack
-                  minW='33%'
-                  maxW='33%'
-                  justifyContent='center'
-                  alignItems='center'
-                >
-
-                </Stack>
-              </HStack>
+              </VStack>
             </Box>
           </Stack>
 

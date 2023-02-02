@@ -18,12 +18,12 @@ const useConnection = () => {
           getConnection()
             .then(result => {
               let { data } = result
-
+              /*
               console.group(`Connection Details: `)
               console.log(`Connection type: ${state.type}`)
               console.log(`Is connected? ${data.conectado}`)
               console.groupEnd()
-
+              */
               setIsConnected(data.conectado)
             })
             .catch(error => {

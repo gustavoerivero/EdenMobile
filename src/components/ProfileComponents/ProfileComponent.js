@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { TouchableOpacity, useWindowDimensions, Modal } from 'react-native'
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import { Box, Button, HStack, Image, Stack, Text, VStack, Divider } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -23,28 +21,32 @@ import StyledField from './StyledField'
 
 import { formatDate } from '../../utilities/functions'
 
-import moment from 'moment'
-
 const ProfileComponent = ({ navigation }) => {
 
-  moment.locale('es')
+  const {
+    state: { user },
+    dispatch
+  } = useAuthContext()
 
   const initialDate = new Date(`${new Date().getFullYear() - 16}-${new Date().getDay() + 1}-${new Date().getMonth() + 1}`)
   const endDate = new Date(`${new Date().getFullYear() - 99}-${new Date().getDay() + 1}-${new Date().getMonth() + 1}`)
 
   const { isConnected, recognizeConnection } = useConnection()
-  const { dispatch } = useAuthContext()
   const { showSuccessToast } = useCustomToast()
 
   const [image, setImage] = useState(1)
 
-  const [userData, setUserData] = useState(null)
-
   const [edit, setEdit] = useState(false)
 
-  const [names, setNames] = useState('Gustavo Emmanuel')
-  const [lastNames, setLastNames] = useState('Rivero Menduni')
+  const [names, setNames] = useState(user?.user?.usuario?.name || '')
+  const [lastNames, setLastNames] = useState('')
   const [birthday, setBirthday] = useState(initialDate)
+
+  const calculateAge = (date = new Date()) => {
+    let ageDifMs = Date.now() - date.getTime()
+    let ageDate = new Date(ageDifMs)
+    return Math.abs(ageDate.getUTCFullYear() - 1970)
+  }
 
   const [modalDateVisible, setModalDateVisible] = useState(false)
 
@@ -60,15 +62,9 @@ const ProfileComponent = ({ navigation }) => {
 
   const layout = useWindowDimensions()
 
-  const getData = async () => {
-    setUserData(JSON.parse(await AsyncStorage.getItem('@user')))
-  }
-
   useEffect(() => {
-    if (!userData) {
-      getData()
-    }
-  }, [userData])
+    console.log(user)
+  }, [])
 
   return (
     <Box
@@ -118,7 +114,7 @@ const ProfileComponent = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              console.log(userData)
+              console.log(user)
               setEdit(!edit)
             }}
           >
@@ -147,6 +143,7 @@ const ProfileComponent = ({ navigation }) => {
         >
           <Stack
             top='-40%'
+            alignItems='center'
           >
             <TouchableOpacity
               activeOpacity={.5}
@@ -186,7 +183,7 @@ const ProfileComponent = ({ navigation }) => {
               textAlign='center'
               color={colors.gray}
             >
-              {cutText(userData?.name, 50)}
+              {cutText(`${names} ${lastNames}`, 50)}
             </Text>
             <Text
               fontSize='md'
@@ -194,7 +191,7 @@ const ProfileComponent = ({ navigation }) => {
               opacity={.5}
               color={colors.gray}
             >
-              {userData?.role}
+              {user?.role ? user?.role : 'Usuario'}
             </Text>
             <Text
               fontSize='sm'
@@ -202,7 +199,7 @@ const ProfileComponent = ({ navigation }) => {
               opacity={.5}
               color={colors.gray}
             >
-              {cutText(userData?.description, 100)}
+              {calculateAge(birthday)} años
             </Text>
           </Stack>
 
@@ -254,6 +251,7 @@ const ProfileComponent = ({ navigation }) => {
                 >
                   <StyledField
                     value={names}
+                    onChangeText={(text) => setNames(text)}
                   />
                 </Stack>
               </HStack>
@@ -280,6 +278,7 @@ const ProfileComponent = ({ navigation }) => {
                 >
                   <StyledField
                     value={lastNames}
+                    onChangeText={text => setLastNames(text)}
                   />
                 </Stack>
               </HStack>
@@ -368,6 +367,10 @@ const ProfileComponent = ({ navigation }) => {
                           'Jue', 'Vie', 'Sáb',
                           'Dom'
                         ]}
+                        previousTitle='Anterior'
+                        nextTitle='Siguiente'
+                        selectYearTitle='Seleccione el año'
+                        selectMonthTitle='Seleccione el mes en '
                         date={birthday}
                         minDate={endDate}
                         maxDate={initialDate}
@@ -379,24 +382,24 @@ const ProfileComponent = ({ navigation }) => {
                         w='100%'
                         alignItems='center'
                       >
-                      <Button
-                        onPress={closeModalDate}
-                        w='40%'
-                        borderRadius={10}
-                        shadow={3}
-                        justifyContent='center'
-                        alignItems='center'
-                        bgColor={colors.button.bgPrimary}
-                      >
-                        <Text
-                          bold
-                          fontSize='md'
-                          color={colors.white}
+                        <Button
+                          onPress={closeModalDate}
+                          w='40%'
+                          borderRadius={10}
+                          shadow={3}
+                          justifyContent='center'
+                          alignItems='center'
+                          bgColor={colors.button.bgPrimary}
                         >
-                          Cerrar
-                        </Text>
-                      </Button>
-                      </Stack>                      
+                          <Text
+                            bold
+                            fontSize='md'
+                            color={colors.white}
+                          >
+                            Cerrar
+                          </Text>
+                        </Button>
+                      </Stack>
                     </VStack>
                   </Modal>
                 </Stack>

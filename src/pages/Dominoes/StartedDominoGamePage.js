@@ -219,7 +219,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                 >
                   <Icon
                     name='people'
-                    color={game?.colorTeamA}
+                    color={colors.gray}
                     size={120}
                   />
                 </Box>
@@ -251,7 +251,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
 
                   <Icon
                     name='people'
-                    color={game?.colorTeamB}
+                    color={colors.gray}
                     size={120}
                   />
                 </Box>
@@ -385,7 +385,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.white}
               >
-                Finalizar tiro
+                Finalizar ronda
               </Text>
             </Button>
           </HStack>

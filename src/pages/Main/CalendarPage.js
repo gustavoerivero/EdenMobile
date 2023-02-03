@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { ActivityIndicator, RefreshControl, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, RefreshControl } from 'react-native'
 
 import { useFocusEffect } from '@react-navigation/native'
 
@@ -11,14 +11,13 @@ import NotFound from '../../components/NotFound'
 
 import { getHour, getDate } from '../../utilities/functions'
 
-import CalendarService from '../../services/calendar/CalendarService'
-
 import colors from '../../styled-components/colors'
 import useCustomToast from '../../hooks/useCustomToast'
+import ScheduleService from '../../services/calendar/CalendarService'
 
 const CalendarPage = ({ navigation }) => {
 
-  const Calendar = new CalendarService()
+  const Calendar = new ScheduleService()
 
   const { showErrorToast } = useCustomToast()
 

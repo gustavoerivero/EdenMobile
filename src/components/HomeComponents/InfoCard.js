@@ -1,4 +1,4 @@
-import { Box, VStack, Text } from 'native-base'
+import { Box, VStack, Text, HStack } from 'native-base'
 import React from 'react'
 import { ImageBackground, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -9,7 +9,7 @@ import colors from '../../styled-components/colors'
 
 import styles from './styled-components/styles'
 
-const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = '', location = '', area = '', description = '', image = '', tournament = null }) => {
+const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = '', location = '', area = '', description = '', image = '', tournament = null, subtype = null }) => {
 
   return (
     <Box
@@ -82,14 +82,29 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
               alignSelf='flex-end'
               m={5}
             >
-              <Text
-                color='white'
-                textAlign='right'
-                italic
-                fontSize='xs'
+              <HStack
+                space={1}
+                justifyContent='flex-end'
               >
-                {type === 'D' ? 'Torneo de dominó' : type === 'B' ? 'Torneo de bolas criollas' : type === 'O' ? 'Torneo' : type === 'E' ? 'Evento' : 'Actividad'}
-              </Text>
+                <Text
+                  color='white'
+                  textAlign='right'
+                  italic
+                  fontSize='xs'
+                >
+                  {type === 'D' ? 'Torneo de dominó' : type === 'B' ? 'Torneo de bolas criollas' : type === 'O' ? 'Torneo' : type === 'E' ? 'Evento' : 'Actividad'}
+                </Text>
+                {subtype &&
+                  <Text
+                    color='white'
+                    textAlign='right'
+                    italic
+                    fontSize='xs'
+                  >
+                    {subtype?.toLowerCase()}
+                  </Text>
+                }
+              </HStack>
               <Text
                 fontSize='xl'
                 bold

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { ActivityIndicator, RefreshControl } from 'react-native'
 
 import { useFocusEffect } from '@react-navigation/native'
@@ -19,10 +19,12 @@ import StyledField from '../../components/StyledField'
 import StyledBadge from '../../components/StyledBadge'
 
 import EventService from '../../services/events/EventsService'
+import TournamentService from '../../services/tournaments/TournamentsService'
 
 const HomePage = ({ navigation }) => {
 
   const Event = new EventService()
+  const Tournament = new TournamentService()
 
   const [isLoading, setIsLoading] = useState(true)
   const [events, setEvents] = useState([])
@@ -32,41 +34,28 @@ const HomePage = ({ navigation }) => {
 
   const [search, setSearch] = useState('')
 
-  const [categoriesSelected, setCategoriesSelected] = useState(['Todo'])
+  const [categoriesSelected, setCategoriesSelected] = useState([{ id: -1, name: 'Todo' }])
 
   const { showErrorToast } = useCustomToast()
 
   const categories = [
-    'Todo', 'Torneos', 'Eventos', 'Actividades'
+    { id: -1, name: 'Todo' },
+    { id: -2, name: 'Torneos' },
+    { id: -3, name: 'Eventos' },
+    { id: -4, name: 'Actividades' }
   ]
 
-  const handleCategories = (text) => {
-    let updatedCategoriesSelected = [...categoriesSelected];
-    if (text === 'Todo') {
-      updatedCategoriesSelected = ['Todo']
-    } else if (categoriesSelected.includes(text)) {
-      updatedCategoriesSelected = categoriesSelected.filter(item => item !== text)
-    } else {
-      if (categoriesSelected.includes('Todo')) {
-        updatedCategoriesSelected = [text]
-      } else {
-        updatedCategoriesSelected = [...categoriesSelected, text]
-      }
-    }
-    if (updatedCategoriesSelected.length === 0) {
-      updatedCategoriesSelected = ['Todo']
-    }
-    if (updatedCategoriesSelected?.length === categories?.length - 1 && !categoriesSelected?.includes('Todo')) {
-      updatedCategoriesSelected = ['Todo']
-    }
-    setCategoriesSelected(updatedCategoriesSelected)
+  const [badges, setBadges] = useState(categories)
+
+  const handleCategories = (item) => {
+    setCategoriesSelected([item])
     setEvents([])
     setCurrentPage(1)
     setIsNextPage(true)
   }
 
-  const getCategory = (text) => {
-    return categoriesSelected?.includes(text)
+  const getCategory = (value) => {
+    return categoriesSelected?.find(item => item?.name === value?.name)
   }
 
   const onRefresh = useCallback(() => {
@@ -82,48 +71,61 @@ const HomePage = ({ navigation }) => {
       if (isNextPage) {
         setIsLoading(true)
 
-        Event.getFeed(currentPage, search)
-          .then(res => {
+        let { data } = categoriesSelected?.find(item => item?.name === 'Todo') ?
+          await Event.getFeed(currentPage, search) :
+          categoriesSelected?.find(item => item?.name === 'Torneos') ?
+            await Tournament.getAll(currentPage, search) :
+            categoriesSelected?.find(item => item?.name === 'Eventos') ?
+              await Event.getAllEvents(currentPage, search) :
+              categoriesSelected?.find(item => item?.name === 'Actividades') ?
+                await Event.getAllActivities(currentPage, search) :
+                await Event.getAllByType(categoriesSelected[0]?.id, currentPage, search)
 
-            const { data } = res
+        const auxEvents = categoriesSelected?.find(item => item?.name === 'Torneos') ?
+          data?.data?.data : data?.data
 
-            const auxEvents = data?.data
+        let aux = []
 
-            let aux = []
+        for (const key in auxEvents) {
+          let obj = auxEvents[key]
 
-            for (const key in auxEvents) {
-              let obj = auxEvents[key]
+          if (!events.find(item => item.name === obj.name)) {
+            aux.push(obj)
+          }
+        }
 
-              if (!events.find(item => item.id === obj.id && item.name === obj.name)) {
-                aux.push(obj)
-              }
-            }
+        const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
 
-            const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
+        setIsNextPage(nextPage > currentPage)
 
-            setIsNextPage(nextPage > currentPage)
+        setEvents(prevEvents => [...prevEvents, ...aux])
 
-            setEvents(prevEvents => [...prevEvents, ...aux])
-
-            setIsLoading(false)
-
-          })
-          .catch(error => {
-            showErrorToast('No se pudo obtener los eventos y actividades.')
-            console.log(`Event error: ${error}`)
-
-            setIsLoading(false)
-          })
+        setIsLoading(false)
 
       }
     } catch (error) {
       console.log(`Event error: ${error}`)
+      showErrorToast('No se pudo obtener los eventos y actividades.')
       setIsLoading(false)
+    }
+  }
+
+  const getTypeEvents = async () => {
+    try {
+      const { data } = await Event.getTypeEvents()
+      let auxData = []
+      data?.forEach(element => {
+        auxData.push({ id: element?.id, name: element?.nombre })
+      })
+      setBadges([...categories, ...auxData])
+    } catch (error) {
+      console.log(`Get type events error: ${error}`)
     }
   }
 
   useFocusEffect(
     useCallback(() => {
+      getTypeEvents()
       getData()
     }, [currentPage, search, categoriesSelected])
   )
@@ -141,6 +143,7 @@ const HomePage = ({ navigation }) => {
         <InfoCard
           id={item?.id}
           type={type || 'A'}
+          subtype={item?.tipo?.nombre || null}
           title={item?.nombre || ''}
           date={dayWeek && day && month && year ? `${dayWeek}, ${day} de ${month} de ${year}` : ''}
           hour={item?.fecha_inicio ? getHour(item?.fecha_inicio) : getHour(item?.creado)}
@@ -217,14 +220,14 @@ const HomePage = ({ navigation }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {categories?.map((item, key) => (
+            {badges?.map((item, key) => (
               <Stack
                 key={key}
                 m={1}
               >
                 <StyledBadge
                   bold
-                  text={item}
+                  text={item?.name}
                   value={getCategory(item)}
                   w={100}
                   onChangeValue={() => handleCategories(item)}

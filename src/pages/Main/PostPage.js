@@ -84,7 +84,7 @@ const PostPage = ({ navigation }) => {
         const auxEvents = []
 
         aux?.forEach(element => {
-          if (!events?.includes(item => item?.name === element?.name)) {
+          if (!events?.find(item => item?.name === element?.name)) {
             auxEvents.push(element)
           }
         })
@@ -124,6 +124,7 @@ const PostPage = ({ navigation }) => {
         <InfoCard
           id={item?.id}
           type={type || 'A'}
+          subtype={item?.tipo?.nombre || null}
           title={item?.nombre || ''}
           date={dayWeek && day && month && year ? `${dayWeek}, ${day} de ${month} de ${year}` : ''}
           hour={item?.fecha_inicio ? getHour(item?.fecha_inicio) : getHour(item?.creado)}

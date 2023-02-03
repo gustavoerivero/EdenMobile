@@ -21,7 +21,13 @@ import useCustomToast from '../../hooks/useCustomToast'
 import StyledField from '../../components/StyledField'
 import StyledBadge from '../../components/StyledBadge'
 
+import EventService from '../../services/events/EventsService'
+import FacilitiesService from '../../services/facilities/FacilitiesService'
+import AreasService from '../../services/areas/AreasService'
+
 const HomePage = ({ navigation }) => {
+
+  const Event = new EventService()
 
   const wait = (timeOut) => {
     return new Promise(resolve => setTimeout(resolve, timeOut))
@@ -37,8 +43,6 @@ const HomePage = ({ navigation }) => {
   const [search, setSearch] = useState('')
 
   const [categoriesSelected, setCategoriesSelected] = useState(['Todo'])
-
-  const layout = useWindowDimensions()
 
   const { showErrorToast } = useCustomToast()
 
@@ -61,7 +65,7 @@ const HomePage = ({ navigation }) => {
     }
     if (updatedCategoriesSelected.length === 0) {
       updatedCategoriesSelected = ['Todo']
-    }    
+    }
     if (updatedCategoriesSelected?.length === categories?.length - 1 && !categoriesSelected?.includes('Todo')) {
       updatedCategoriesSelected = ['Todo']
     }
@@ -73,185 +77,83 @@ const HomePage = ({ navigation }) => {
     return categoriesSelected?.includes(text)
   }
 
-  const data = [
-    {
-      id: 0,
-      nombre: 'Torneo de voleibol',
-      descripcion: 'Sábado 26 de noviembre',
-      tipo: 'N',
-      creado: '2023-01-22T03:24:00',
-      instalacion: {
-        nombre: 'Área de deportes',
-      },
-      area: {
-        nombre: 'Sector D',
-      },
-      image: 'https://imagenes.elpais.com/resizer/L-x86NTaSVVBr9YZnnn1driudPw=/980x0/cloudfront-eu-central-1.images.arcpublishing.com/prisa/CNK6AU3UNFB2REUA4VXS233FKE.jpg'
-    },
-    {
-      id: 1,
-      nombre: 'Juegos interclub',
-      descripcion: 'del 01 al 07 de diciembre',
-      tipo: 'A',
-      creado: '2023-02-14T03:24:00',
-      instalacion: {
-        nombre: 'Área de deportes',
-      },
-      area: {
-        nombre: 'Sector B',
-      },
-      image: 'https://warwick.ac.uk/services/sport/find-your-active.jpg'
-    },
-    {
-      id: 2,
-      nombre: 'Torneo de bolas criollas',
-      descripcion: 'Viernes 09 de diciembre',
-      tipo: 'B',
-      creado: '2023-05-22T16:34:00',
-      torneo: [
-        {
-          id: 0,
-          name: 'Buitres Fan Club (BFC)',
-          image: 'https://dw0i2gv3d32l1.cloudfront.net/uploads/stage/stage_image/82123/optimized_large_thumb_stage.jpg',
-          members: [
-            {
-              id: 0,
-              name: 'William Pérez'
-            },
-            {
-              id: 1,
-              name: 'Sasha Fitness'
-            },
-            {
-              id: 8,
-              name: 'Cristiano Ronaldo'
-            },
-            {
-              id: 9,
-              name: 'Robert Pérez'
-            },
-            {
-              id: 10,
-              name: 'Simón Bolívar'
-            },
-            {
-              id: 11,
-              name: 'Barack Obama'
-            },
-            {
-              id: 12,
-              name: 'Michael Jackson'
-            },
-            {
-              id: 13,
-              name: 'Cho Mi Yeon'
-            }
-          ]
-        },
-        {
-          id: 1,
-          name: 'Oscarsitos',
-          image: 'https://i.pinimg.com/originals/0a/3d/9a/0a3d9a6635d2fd94371fb2fa27847d3b.png',
-          members: [
-            {
-              id: 2,
-              name: 'Oscar de León'
-            },
-            {
-              id: 3,
-              name: 'Oscarsito'
-            },
-            {
-              id: 4,
-              name: 'Oscar Pérez'
-            }
-          ]
-        },
-        {
-          id: 2,
-          name: 'Los masquediches',
-          image: null,
-          members: [
-            {
-              id: 5,
-              name: 'Chino'
-            },
-            {
-              id: 6,
-              name: 'Nacho'
-            },
-          ]
-        },
-        {
-          id: 3,
-          name: 'Los pistoleros',
-          image: 'https://blog.logomyway.com/wp-content/uploads/2021/12/oakland-raiders-logo.png',
-          members: [
-            {
-              id: 7,
-              name: 'Solo Solín'
-            }
-          ]
-        }
-      ],
-      instalacion: {
-        nombre: 'Área de deportes',
-      },
-      area: {
-        nombre: 'Sector C',
-      },
-      image: 'https://http2.mlstatic.com/D_NQ_NP_655547-MLV25593228224_052017-O.webp'
-    },
-    {
-      id: 3,
-      nombre: 'Torneo de dominó',
-      descripcion: 'Martes 12 de diciembre',
-      tipo: 'D',
-      creado: '2023-12-12T16:34:00',
-      instalacion: {
-        nombre: 'Área de caneys',
-      },
-      area: {
-        nombre: 'Sector A',
-      },
-      image: 'https://patasdegallo.com/wp-content/uploads/2016/12/capacidad-mental.jpg'
-    },
-  ]
-
   const onRefresh = useCallback(() => {
+    setEvents([])
     setIsNextPage(true)
     setCurrentPage(1)
-    setRefreshing(true)
-    wait(2000).then(() => setRefreshing(false))
+    getData()
   }, [])
 
-  const getData = () => {
-    if (isNextPage) {
-      startLoading()
-      getEvents(currentPage)
-        .then(res => {
-          const { data, status } = res
+  const getData = async () => {
 
-          setEvents(status === 200 ? data?.data : [])
+    console.log(`Feed page: ${currentPage}`)
 
-          console.log(`This is the status: ${status}`)
-          console.log(data?.data)
+    try {
 
-          console.log(events)
+      if (isNextPage) {
+        startLoading()
 
-          setIsNextPage(data?.links?.next ? true : false)
-          console.log(`Events: ${events}`)
-          console.log(`Next page: ${isNextPage}`)
-        })
-        .catch(error => {
-          console.log(`Event error: ${error}`)
-          setEvents(data)
-        })
-        .finally(() => {
-          stopLoading()
-        })
+        const { data } = await Event.getFeed(currentPage)
+
+        const auxEvents = data?.data
+
+        let aux = []
+
+        for (const key in auxEvents) {
+
+          let obj = auxEvents[key]
+
+          if (obj?.instalacion_id) {
+
+            const Facilities = new FacilitiesService()
+
+            const { data } = await Facilities.getFacilitiesByID(obj?.instalacion_id)
+
+            obj = { 
+              ...obj, 
+              instalacion: { 
+                ...data?.data 
+              }, 
+              area: { 
+                ...data?.data?.area 
+              } 
+            }
+
+          }
+
+          if (obj?.instalacion?.area_id) {
+
+            const Areas = new AreasService()
+
+            const { data } = await Areas.getAreaByID(obj?.instalacion?.area_id)
+
+            obj = { 
+              ...obj,
+              area: { 
+                ...data?.data 
+              } 
+            }
+
+          }
+
+          aux.push(obj)
+        }
+
+        const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
+
+        console.log(`Feed: ${aux}`)
+        console.log(`Next page: ${nextPage > currentPage ? 'Yes' : 'No'}`)
+
+        setIsNextPage(nextPage > currentPage ? true : false)
+        setEvents([...aux])
+
+      }
+    } catch (error) {
+      showErrorToast('No se pudo obtener los eventos y actividades.')
+      console.log(`Event error: ${error}`)
+    } finally {
+      stopLoading()
     }
-
   }
 
   useFocusEffect(
@@ -262,23 +164,24 @@ const HomePage = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
 
-    const { dayWeek, day, month, year } = getDate(item?.creado)
+    const { dayWeek, day, month, year } = item?.fecha_inicio ? getDate(item?.fecha_inicio) : getDate(item?.creado)
+
+    const type = item?.disciplina ? item?.disciplina : item?.es_actividad === '0' ? 'E' : 'A'
 
     return (
       <Stack
         py={2}
       >
         <InfoCard
-          key={item?.id}
           id={item?.id}
-          type={item?.tipo || ""}
+          type={type || 'A'}
           title={item?.nombre || ""}
           date={dayWeek && day && month && year ? `${dayWeek}, ${day} de ${month} de ${year}` : ''}
-          hour={getHour(item?.creado) || ""}
+          hour={item?.fecha_inicio ? getHour(item?.fecha_inicio) : getHour(item?.creado)}
           description={item?.descripcion || ""}
           location={item?.instalacion?.nombre || ""}
           area={item?.area?.nombre || ""}
-          image={`https://medinajosedev.com/storage/${item?.imagen_principal}` || ""}
+          image={item?.imagen_principal || 'https://via.placeholder.com/561x421/AFFFEA/599182/?text=Sin+imagen'}
           tournament={item?.torneo}
           navigation={navigation}
         />
@@ -379,9 +282,9 @@ const HomePage = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             data={events}
             px={3}
-            pb={5}
-            maxH='85%'
-            keyExtractor={item => item?.id}
+            pb={7}
+            maxH='83%'
+            keyExtractor={item => `${item?.id}${item?.creado}${new Date()}`}
             renderItem={renderItem}
             ListFooterComponent={renderLoader}
             onEndReached={loadMoreItem}

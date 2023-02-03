@@ -88,7 +88,7 @@ const InfoCard = ({ navigation, id = 0, type = 3, title = '', date = '', hour = 
                 italic
                 fontSize='xs'
               >
-                {type === 'D' ? 'Torneo de dominó' : type === 'B' ? 'Torneo de bolas criollas' : type === 'N' ? 'Evento' : 'Actividad'}
+                {type === 'D' ? 'Torneo de dominó' : type === 'B' ? 'Torneo de bolas criollas' : type === 'O' ? 'Torneo' : type === 'E' ? 'Evento' : 'Actividad'}
               </Text>
               <Text
                 fontSize='xl'

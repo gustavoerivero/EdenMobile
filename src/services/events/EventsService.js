@@ -24,3 +24,12 @@ export {
   getEvents,
   getEventByID
 }
+
+class EventService {
+  async getFeed (page = 1) {
+    const { data, status } = await http.get(`/feed?page=${page}`)
+    return { data, status }
+  }
+}
+
+export default EventService

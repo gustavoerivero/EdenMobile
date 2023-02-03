@@ -2,13 +2,12 @@ import React, { useCallback, useState } from 'react'
 import { ActivityIndicator, useWindowDimensions, RefreshControl } from 'react-native'
 
 import { useFocusEffect } from '@react-navigation/native'
-import { Box, Divider, FlatList, ScrollView, Stack, Text, VStack } from 'native-base'
+import { Box, Divider, FlatList, ScrollView, Stack, VStack } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import InfoCard from '../../components/HomeComponents/InfoCard'
-import useLoading from '../../hooks/useLoading'
 
 
 import colors from '../../styled-components/colors'
@@ -17,14 +16,16 @@ import NotFound from '../../components/NotFound'
 
 import { getEvents } from '../../services/events/EventsService'
 
-import { formatDate, getHour } from '../../utilities/functions'
+import { formatDate, getHour, getDate } from '../../utilities/functions'
 import useCustomToast from '../../hooks/useCustomToast'
 import StyledField from '../../components/StyledField'
 import StyledBadge from '../../components/StyledBadge'
 
+import TournamentService from '../../services/tournaments/TournamentsService'
+
 const PostPage = ({ navigation }) => {
 
-  const layout = useWindowDimensions()
+  const Tournament = new TournamentService()
 
   const { showErrorToast } = useCustomToast()
 
@@ -32,9 +33,9 @@ const PostPage = ({ navigation }) => {
     return new Promise(resolve => setTimeout(resolve, timeOut))
   }
 
-  const { isLoading, startLoading, stopLoading } = useLoading()
+  const [isLoading, setIsLoading] = useState(true)
 
-  const [events, setEvents] = useState(null)
+  const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isNextPage, setIsNextPage] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -42,130 +43,64 @@ const PostPage = ({ navigation }) => {
   const [search, setSearch] = useState('')
 
   const categories = [
-    'Todo', 'Bolas criollas', 'Dominó'
+    'Todo', 'Bolas criollas', 'Dominó', 'Otro'
   ]
 
   const [categoriesSelected, setCategoriesSelected] = useState(['Todo'])
 
   const handleCategories = (text) => {
-    let updatedCategoriesSelected = [...categoriesSelected];
-    if (text === 'Todo') {
-      updatedCategoriesSelected = ['Todo']
-    } else if (categoriesSelected.includes(text)) {
-      updatedCategoriesSelected = categoriesSelected.filter(item => item !== text)
-    } else {
-      if (categoriesSelected.includes('Todo')) {
-        updatedCategoriesSelected = [text]
-      } else {
-        updatedCategoriesSelected = [...categoriesSelected, text]
-      }
-    }
-    if (updatedCategoriesSelected?.length === 0) {
-      updatedCategoriesSelected = ['Todo']
-    }
-    if (updatedCategoriesSelected?.length === categories?.length - 1 && !categoriesSelected?.includes('Todo')) {
-      updatedCategoriesSelected = ['Todo']
-    }
-    setCategoriesSelected(updatedCategoriesSelected)
-    getData()
+    setCategoriesSelected([text])
+    setEvents([])
+    setCurrentPage(1)
+    setIsNextPage(true)
   }
 
   const getCategory = (text) => {
     return categoriesSelected?.includes(text)
   }
 
-  const data = [
-    {
-      id: 0,
-      nombre: 'Torneo de dominó',
-      descripcion: 'Sábado 26 de noviembre',
-      tipo: 'D',
-      creado: '2023-01-22T03:24:00',
-      instalacion: {
-        nombre: 'Área de deportes',
-      },
-      area: {
-        nombre: 'Sector D',
-      },
-      image: 'https://patasdegallo.com/wp-content/uploads/2016/12/capacidad-mental.jpg'
-    },
-    {
-      id: 1,
-      nombre: 'Juegos de bolas criollas',
-      descripcion: 'del 01 al 07 de diciembre',
-      tipo: 'D',
-      creado: '2023-02-14T03:24:00',
-      instalacion: {
-        nombre: 'Área de deportes',
-      },
-      area: {
-        nombre: 'Sector B',
-      },
-      image: 'https://http2.mlstatic.com/D_NQ_NP_655547-MLV25593228224_052017-O.webp'
-    },
-    {
-      id: 2,
-      nombre: 'Torneo de bolas criollas en playa asiática',
-      descripcion: 'Viernes 09 de diciembre',
-      tipo: 'D',
-      creado: '2023-05-22T16:34:00',
-      instalacion: {
-        nombre: 'Área de deportes',
-      },
-      area: {
-        nombre: 'Sector C',
-      },
-      image: 'https://http2.mlstatic.com/D_NQ_NP_655547-MLV25593228224_052017-O.webp'
-    },
-    {
-      id: 3,
-      nombre: 'Torneo de dominó',
-      descripcion: 'Martes 12 de diciembre',
-      tipo: 'D',
-      creado: '2023-12-12T16:34:00',
-      instalacion: {
-        nombre: 'Área de caneys',
-      },
-      area: {
-        nombre: 'Sector A',
-      },
-      image: 'https://patasdegallo.com/wp-content/uploads/2016/12/capacidad-mental.jpg'
-    },
-  ]
-
   const onRefresh = useCallback(() => {
-    setIsNextPage(true)
+    setEvents([])
     setCurrentPage(1)
-    setRefreshing(true)
-    wait(2000).then(() => setRefreshing(false))
+    setIsNextPage(true)
   }, [])
 
-  const getData = () => {
+  const getData = async () => {
 
-    if (isNextPage) {
+    try {
+      if (isNextPage) {
 
-      startLoading()
+        setIsLoading(true)
 
-      getEvents(currentPage)
-        .then(res => {
-          const { data, status } = res
+        let { data } = categoriesSelected.includes('Todo') ?
+          await Tournament.getAll(currentPage, search) :
+          categoriesSelected.includes('Bolas criollas') ?
+            await Tournament.getByTournamentType('B', currentPage, search) :
+            categoriesSelected.includes('Dominó') ?
+              await Tournament.getByTournamentType('D', currentPage, search) :
+              await Tournament.getByTournamentType('O', currentPage, search)
 
-          const games = data?.data?.data.filter(game => game?.tipo === 'D' || game?.tipo === 'B')
+        const aux = categoriesSelected.includes('Todo') ? data?.data?.data : data?.data || []
+        const auxEvents = []
 
-          setEvents(status === 200 ? games : [])
-
-          setIsNextPage(data?.links?.next ? true : false)
-          console.log(`Events: ${games}`)
-          console.log(`Next page: ${isNextPage}`)
-        })
-        .catch(error => {
-          console.log(`Event error: ${error}`)
-          setEvents(data)
-        })
-        .finally(() => {
-          stopLoading()
+        aux?.forEach(element => {
+          if (!events?.find(item => item?.name === element?.name)) {
+            auxEvents.push(element)
+          }
         })
 
+        const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
+
+        setIsNextPage(nextPage > currentPage)
+
+        setEvents(prevEvents => [...prevEvents, ...auxEvents])
+
+        setIsLoading(false)
+
+      }
+    } catch (error) {
+      console.log(`Event error: ${error}`)
+      setIsLoading(false)
     }
 
   }
@@ -173,26 +108,31 @@ const PostPage = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       getData()
-    }, [currentPage])
+    }, [currentPage, search, categoriesSelected])
   )
 
   const renderItem = ({ item }) => {
+
+    const { dayWeek, day, month, year } = item?.fecha_inicio ? getDate(item?.fecha_inicio) : getDate(item?.creado)
+
+    const type = item?.disciplina ? item?.disciplina : item?.es_actividad === '0' ? 'E' : 'A'
 
     return (
       <Stack
         py={2}
       >
         <InfoCard
-          key={item?.id}
           id={item?.id}
-          type={item?.tipo || ""}
-          title={item?.nombre || ""}
-          date={formatDate(item?.creado) || ""}
-          hour={getHour(item?.creado) || ""}
-          description={item?.descripcion || ""}
-          location={item?.instalacion?.nombre || ""}
-          area={item?.area?.nombre || ""}
-          image={`https://medinajosedev.com/storage/${item?.imagen_principal}` || ""}
+          type={type || 'A'}
+          subtype={item?.tipo?.nombre || null}
+          title={item?.nombre || ''}
+          date={dayWeek && day && month && year ? `${dayWeek}, ${day} de ${month} de ${year}` : ''}
+          hour={item?.fecha_inicio ? getHour(item?.fecha_inicio) : getHour(item?.creado)}
+          description={item?.descripcion || ''}
+          location={item?.instalacion?.nombre || ''}
+          area={item?.instalacion?.area?.nombre || ''}
+          image={item?.imagen_principal || 'https://via.placeholder.com/561x421/AFFFEA/599182/?text=Sin+imagen'}
+          tournament={item?.torneo}
           navigation={navigation}
         />
       </Stack>
@@ -209,7 +149,9 @@ const PostPage = ({ navigation }) => {
   }
 
   const loadMoreItem = () => {
-    setCurrentPage(currentPage + 1)
+    if (!isLoading && isNextPage) {
+      setCurrentPage(currentPage + 1)
+    }
   }
 
   return (
@@ -235,7 +177,12 @@ const PostPage = ({ navigation }) => {
               bgColor={colors.white}
               h={10}
               value={search}
-              onChangeText={(text) => setSearch(text)}
+              onChangeText={(text) => {
+                setSearch(text)
+                setEvents([])
+                setIsNextPage(true)
+                setCurrentPage(1)
+              }}
               InputRightElement={
                 <Box
                   pr={3}
@@ -270,7 +217,17 @@ const PostPage = ({ navigation }) => {
           </ScrollView>
         </VStack>
         <Divider />
-        {!events || events?.length === 0 ? (
+        {isLoading && events?.length === 0 ? (
+          <Stack
+            mt={2}
+            alignItems='center'
+            justifyContent='center'
+            alignContent='center'
+            alignSelf='center'
+          >
+            <ActivityIndicator size='large' color={colors.primary} />
+          </Stack>
+        ) : !events || events?.length === 0 ? (
           <Stack
             px={3}
           >
@@ -278,7 +235,8 @@ const PostPage = ({ navigation }) => {
               text='Aún no se han publicado eventos en el club.'
             />
           </Stack>
-        ) : events?.length > 0 || !isLoading ? (
+
+        ) : events?.length > 0 ? (
           <FlatList
             refreshControl={
               <RefreshControl
@@ -286,11 +244,12 @@ const PostPage = ({ navigation }) => {
                 onRefresh={onRefresh}
               />
             }
-            px={3}
             showsVerticalScrollIndicator={false}
             data={events}
-            maxH='85%'
-            keyExtractor={item => item?.id}
+            px={3}
+            pb={7}
+            maxH='83%'
+            keyExtractor={(item, key) => `${item?.id}${item?.creado}${new Date().toISOString()}${key}`}
             renderItem={renderItem}
             ListFooterComponent={renderLoader}
             onEndReached={loadMoreItem}

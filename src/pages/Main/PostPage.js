@@ -101,6 +101,7 @@ const PostPage = ({ navigation }) => {
     } catch (error) {
       console.log(`Event error: ${error}`)
       setIsLoading(false)
+      showErrorToast('No se pudo obtener los torneos.')
     }
 
   }

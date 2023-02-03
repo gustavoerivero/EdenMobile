@@ -51,6 +51,9 @@ const getHour = (date) => {
 
     hour = hour > 12 ? hour - 12 : hour
 
+    hour = hour < 10 ? `0${hour}` : hour
+    minute = minute < 10 ? `0${minute}` : minute
+
     return `${hour}:${minute} ${time ? 'A.M.' : 'P.M.'}`
 
   } catch (error) {
@@ -82,7 +85,7 @@ const getDate = (date = new Date()) => {
       day: d.getDate(),
       month: months[d.getMonth()].toLowerCase(),
       year: d.getFullYear()
-    } 
+    }
 
   } catch (error) {
     console.log(`Error trying to get date: ${error}`)

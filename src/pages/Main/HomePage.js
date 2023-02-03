@@ -105,7 +105,7 @@ const HomePage = ({ navigation }) => {
       }
     } catch (error) {
       console.log(`Event error: ${error}`)
-      showErrorToast('No se pudo obtener los eventos y actividades.')
+      showErrorToast('No se pudo obtener los torneos, eventos y actividades.')
       setIsLoading(false)
     }
   }

@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import colors from '../../styled-components/colors'
 import { cutText, getDate } from '../../utilities/functions'
 
-const EventItem = ({ navigation, date, name, type, id }) => {
+const EventItem = ({ navigation, date, hour, location, area, description, image, tournament, name, type, id }) => {
 
   const layout = useWindowDimensions()
 
@@ -25,7 +25,49 @@ const EventItem = ({ navigation, date, name, type, id }) => {
       minH='100'
       maxH='100'
     >
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (type === 'B') {
+            navigation?.navigate('CreoleBallsTournamentPage', {
+              id: id,
+              type: type,
+              title: name,
+              date: eventDay,
+              hour: hour,
+              location: location,
+              area: area,
+              description: description,
+              image: image,
+              tournament: tournament
+            })
+          } else if (type === 'D') {
+            navigation?.navigate('DominoTournamentPage', {
+              id: id,
+              type: type,
+              title: name,
+              date: eventDay,
+              hour: hour,
+              location: location,
+              area: area,
+              description: description,
+              image: image,
+              tournament: tournament
+            })
+          } else {
+            navigation?.navigate('EventPage', {
+              id: id,
+              type: type,
+              title: name,
+              date: eventDay,
+              hour: hour,
+              location: location,
+              area: area,
+              description: description,
+              image: image,
+            })
+          }
+        }}      
+      >
         <HStack
           minW={layout.width * .9}
           maxW={layout.width * .9}

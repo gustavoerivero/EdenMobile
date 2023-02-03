@@ -1,40 +1,30 @@
 import React, { useCallback, useState } from 'react'
-import { ActivityIndicator, useWindowDimensions, RefreshControl, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, RefreshControl } from 'react-native'
 
 import { useFocusEffect } from '@react-navigation/native'
-import { Box, Divider, FlatList, ScrollView, Stack, Text, VStack } from 'native-base'
+import { Box, Divider, FlatList, ScrollView, Stack, VStack } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import InfoCard from '../../components/HomeComponents/InfoCard'
-import useLoading from '../../hooks/useLoading'
 
 import colors from '../../styled-components/colors'
 
 import NotFound from '../../components/NotFound'
 
-import { getEvents } from '../../services/events/EventsService'
-
-import { formatDate, getHour, getDate } from '../../utilities/functions'
+import { getHour, getDate } from '../../utilities/functions'
 import useCustomToast from '../../hooks/useCustomToast'
 import StyledField from '../../components/StyledField'
 import StyledBadge from '../../components/StyledBadge'
 
 import EventService from '../../services/events/EventsService'
-import FacilitiesService from '../../services/facilities/FacilitiesService'
-import AreasService from '../../services/areas/AreasService'
 
 const HomePage = ({ navigation }) => {
 
   const Event = new EventService()
 
-  const wait = (timeOut) => {
-    return new Promise(resolve => setTimeout(resolve, timeOut))
-  }
-
-  const { isLoading, startLoading, stopLoading } = useLoading()
-
+  const [isLoading, setIsLoading] = useState(true)
   const [events, setEvents] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isNextPage, setIsNextPage] = useState(true)
@@ -70,7 +60,9 @@ const HomePage = ({ navigation }) => {
       updatedCategoriesSelected = ['Todo']
     }
     setCategoriesSelected(updatedCategoriesSelected)
-    getData()
+    setEvents([])
+    setCurrentPage(1)
+    setIsNextPage(true)
   }
 
   const getCategory = (text) => {
@@ -79,87 +71,61 @@ const HomePage = ({ navigation }) => {
 
   const onRefresh = useCallback(() => {
     setEvents([])
-    setIsNextPage(true)
     setCurrentPage(1)
-    getData()
+    setIsNextPage(true)
   }, [])
 
   const getData = async () => {
 
-    console.log(`Feed page: ${currentPage}`)
-
     try {
 
       if (isNextPage) {
-        startLoading()
+        setIsLoading(true)
 
-        const { data } = await Event.getFeed(currentPage)
+        Event.getFeed(currentPage, search)
+          .then(res => {
 
-        const auxEvents = data?.data
+            const { data } = res
 
-        let aux = []
+            const auxEvents = data?.data
 
-        for (const key in auxEvents) {
+            let aux = []
 
-          let obj = auxEvents[key]
+            for (const key in auxEvents) {
+              let obj = auxEvents[key]
 
-          if (obj?.instalacion_id) {
-
-            const Facilities = new FacilitiesService()
-
-            const { data } = await Facilities.getFacilitiesByID(obj?.instalacion_id)
-
-            obj = { 
-              ...obj, 
-              instalacion: { 
-                ...data?.data 
-              }, 
-              area: { 
-                ...data?.data?.area 
-              } 
+              if (!events.find(item => item.id === obj.id && item.name === obj.name)) {
+                aux.push(obj)
+              }
             }
 
-          }
+            const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
 
-          if (obj?.instalacion?.area_id) {
+            setIsNextPage(nextPage > currentPage)
 
-            const Areas = new AreasService()
+            setEvents(prevEvents => [...prevEvents, ...aux])
 
-            const { data } = await Areas.getAreaByID(obj?.instalacion?.area_id)
+            setIsLoading(false)
 
-            obj = { 
-              ...obj,
-              area: { 
-                ...data?.data 
-              } 
-            }
+          })
+          .catch(error => {
+            showErrorToast('No se pudo obtener los eventos y actividades.')
+            console.log(`Event error: ${error}`)
 
-          }
-
-          aux.push(obj)
-        }
-
-        const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
-
-        console.log(`Feed: ${aux}`)
-        console.log(`Next page: ${nextPage > currentPage ? 'Yes' : 'No'}`)
-
-        setIsNextPage(nextPage > currentPage ? true : false)
-        setEvents([...aux])
+            setIsLoading(false)
+          })
 
       }
     } catch (error) {
-      showErrorToast('No se pudo obtener los eventos y actividades.')
       console.log(`Event error: ${error}`)
-    } finally {
-      stopLoading()
+      setIsLoading(false)
     }
   }
 
   useFocusEffect(
     useCallback(() => {
       getData()
-    }, [currentPage])
+    }, [currentPage, search, categoriesSelected])
   )
 
   const renderItem = ({ item }) => {
@@ -175,12 +141,12 @@ const HomePage = ({ navigation }) => {
         <InfoCard
           id={item?.id}
           type={type || 'A'}
-          title={item?.nombre || ""}
+          title={item?.nombre || ''}
           date={dayWeek && day && month && year ? `${dayWeek}, ${day} de ${month} de ${year}` : ''}
           hour={item?.fecha_inicio ? getHour(item?.fecha_inicio) : getHour(item?.creado)}
-          description={item?.descripcion || ""}
-          location={item?.instalacion?.nombre || ""}
-          area={item?.area?.nombre || ""}
+          description={item?.descripcion || ''}
+          location={item?.instalacion?.nombre || ''}
+          area={item?.instalacion?.area?.nombre || ''}
           image={item?.imagen_principal || 'https://via.placeholder.com/561x421/AFFFEA/599182/?text=Sin+imagen'}
           tournament={item?.torneo}
           navigation={navigation}
@@ -199,7 +165,9 @@ const HomePage = ({ navigation }) => {
   }
 
   const loadMoreItem = () => {
-    setCurrentPage(currentPage + 1)
+    if (!isLoading && isNextPage) {
+      setCurrentPage(currentPage + 1)
+    }
   }
 
   return (
@@ -226,7 +194,12 @@ const HomePage = ({ navigation }) => {
               bgColor={colors.white}
               h={10}
               value={search}
-              onChangeText={(text) => setSearch(text)}
+              onChangeText={(text) => {
+                setSearch(text)
+                setEvents([])
+                setIsNextPage(true)
+                setCurrentPage(1)
+              }}
               InputRightElement={
                 <Box
                   pr={3}
@@ -262,7 +235,17 @@ const HomePage = ({ navigation }) => {
           </ScrollView>
         </VStack>
         <Divider />
-        {!events || events?.length === 0 ? (
+        {isLoading && events?.length === 0 ? (
+          <Stack
+            mt={2}
+            alignItems='center'
+            justifyContent='center'
+            alignContent='center'
+            alignSelf='center'
+          >
+            <ActivityIndicator size='large' color={colors.primary} />
+          </Stack>
+        ) : !events || events?.length === 0 ? (
           <Stack
             px={3}
           >
@@ -271,7 +254,7 @@ const HomePage = ({ navigation }) => {
             />
           </Stack>
 
-        ) : events?.length > 0 || !isLoading ? (
+        ) : events?.length > 0 ? (
           <FlatList
             refreshControl={
               <RefreshControl
@@ -284,7 +267,7 @@ const HomePage = ({ navigation }) => {
             px={3}
             pb={7}
             maxH='83%'
-            keyExtractor={item => `${item?.id}${item?.creado}${new Date()}`}
+            keyExtractor={(item, key) => `${item?.id}${item?.creado}${new Date().toISOString()}${key}`}
             renderItem={renderItem}
             ListFooterComponent={renderLoader}
             onEndReached={loadMoreItem}

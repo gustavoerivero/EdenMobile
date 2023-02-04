@@ -11,74 +11,55 @@ import colors from '../../styled-components/colors'
 import CreoleGameCard from '../../components/CreoleBallsComponents/CreoleGameCard'
 import NotFound from '../../components/NotFound'
 
-const games = [
-  {
-    id: 1,
-    date: '01/12/2022',
-    teamA: 'Apucla',
-    teamB: 'DCyTeam'
-  },
-  {
-    id: 2,
-    date: '01/12/2022',
-    teamA: 'Agronórmicos',
-    teamB: 'Ballysteam'
-  },
-  {
-    id: 3,
-    date: '01/12/2022',
-    teamA: 'UCLArt',
-    teamB: 'Econiteam'
-  },
-  {
-    id: 4,
-    date: '01/12/2022',
-    teamA: 'Criomed',
-    teamB: 'Conteam'
-  },
-  {
-    id: 5,
-    date: '01/12/2022',
-    teamA: 'Tetrateam',
-    teamB: 'CEDYTeam'
-  },
-  {
-    id: 6,
-    date: '01/12/2022',
-    teamA: 'Anteam',
-    teamB: 'Osys'
-  },
-]
+import ScheduleService from '../../services/calendar/CalendarService'
+import TournamentService from '../../services/tournaments/TournamentsService'
 
 const CreoleBallsListPage = ({ navigation, route }) => {
 
   const tournament = route?.params
 
-  const wait = (timeOut) => {
-    return new Promise(resolve => setTimeout(resolve, timeOut))
-  }
+  const Tournament = new TournamentService()
 
-  const { isLoading, startLoading, stopLoading } = useLoading()
-
+  const [isLoading, setIsLoading] = useState(true)
   const [events, setEvents] = useState([])
+  const [modality, setModality] = useState({})
+  const [playersTeamA, setPlayersTeamA] = useState([])
+  const [playersTeamB, setPlayersTeamB] = useState([])
   const [refreshing, setRefreshing] = useState()
 
   const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    wait(2000).then(() => setRefreshing(false))
+    setIsLoading(true)
+    setEvents([])
+    getData()
   }, [])
+
+  const getData = async () => {
+    try {
+
+      setIsLoading(true)
+
+      const { data } = await Tournament.get(tournament?.id)
+
+      let auxData = data?.data
+
+
+      let calendar = auxData?.fase_de_torneo[0]?.calendario
+      setModality(auxData?.fase_de_torneo[0]?.modalidad)
+
+      setEvents(calendar)
+
+      setIsLoading(false)
+
+    } catch (error) {
+      console.log(`Calendar error: ${error}`)
+    }
+  }
 
   useFocusEffect(
     useCallback(() => {
-      if (events?.length === 0) startLoading()
-
-      setEvents(games)
-
-      if (events?.length !== 0) stopLoading()
-
+      getData()
     }, [])
   )
-
 
   return (
     <Container
@@ -115,6 +96,7 @@ const CreoleBallsListPage = ({ navigation, route }) => {
             </Stack>
 
             <Text
+              pt={2}
               fontSize='2xl'
               bold
               color={colors.text.primary}
@@ -126,8 +108,28 @@ const CreoleBallsListPage = ({ navigation, route }) => {
             </Text>
           </HStack>
           <Divider />
-          {events?.length > 0 || !isLoading ? (
+          {isLoading ? (
+            <Stack
+              mt={2}
+              justifyContent='flex-start'
+              minH='100%'
+            >
+              <ActivityIndicator
+                size='large'
+                color={colors.primary}
+              />
+            </Stack>
+          ) : events?.length === 0 ? (
+            <Stack
+              maxH='100%'
+            >
+              <NotFound
+                text='No hay juegos disponibles'
+              />
+            </Stack>
+          ) : (
             <FlatList
+              pt={1}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
@@ -141,40 +143,27 @@ const CreoleBallsListPage = ({ navigation, route }) => {
               keyExtractor={item => item?.id}
               renderItem={({ item }) => (
                 <Stack
-                  key={item.id}
+                  key={item?.id}
                   p={1}
                 >
                   <CreoleGameCard
-                    id={item.id}
+                    id={item?.id}
                     title={tournament.title}
-                    teamA={item.teamA}
-                    teamB={item.teamB}
+                    teamA={item?.equipo_a}
+                    teamB={item?.equipo_b}
+                    date={item?.fecha}
+                    status={item?.estado}
+                    maxTime={modality?.tiempo_maximo_minutos}
+                    forfeit={modality?.tiempo_forfeit_minutos}
+                    maxPoints={modality?.puntuacion_maxima}
                     navigation={navigation}
+                    playersTeamA={item?.jugadores_equipo_a || []}
+                    playersTeamB={item?.jugadores_equipo_b || []}
                   />
                 </Stack>
               )}
             />
-          ) : events?.length === 0 ?
-            <Stack
-              maxH='100%'
-            >
-              <NotFound
-                text='No hay juegos disponibles'
-              />
-            </Stack>
-
-            :
-            <Stack
-              mt={2}
-              justifyContent='flex-start'
-              minH='100%'
-            >
-              <ActivityIndicator
-                size='large'
-                color={colors.primary}
-              />
-            </Stack>
-          }
+          )}
 
         </Stack>
 

@@ -22,25 +22,27 @@ const RoundNextPage = ({ navigation, route }) => {
       hiddenNavBar={true}
     >
       <VStack
-        maxW={layout.width}
-        minH={layout.height * .9}
-        maxH={layout.height}
-        my={5}
+        maxW='100%'
+        minH='100%'
+        maxH='100%'
         justifyContent='space-between'
       >
-        <Stack>
+        <Stack
+          minH='91%'
+          maxH='91%'
+        >
           <HStack
-            minH={layout.height * .05}
-            maxH={layout.height * .05}
+            minH='5%'
+            maxH='5%'
             alignItems='center'
             justifyContent='space-between'
+            mt={5}
           >
             <HStack
-              pt={1}
               pl={5}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
-              minW={layout.width * .333}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
             >
               <TouchableOpacity
                 onPress={() => navigation?.goBack()}
@@ -62,9 +64,9 @@ const RoundNextPage = ({ navigation, route }) => {
             </HStack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
               justifyContent='center'
               alignItems='center'
             >
@@ -73,23 +75,23 @@ const RoundNextPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                30:00
+                {`${game?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
             <Stack
-              minW={layout.width * .333}
-              minH={layout.height * .05}
-              maxH={layout.height * .05}
+              minW='33%'
+              minH='100%'
+              maxH='100%'
             >
 
             </Stack>
 
           </HStack>
           <HStack
-            minH={layout.height * .1}
-            maxH={layout.height * .1}
-            minW={layout.width}
+            minH='10%'
+            maxH='10%'
+            minW='100%'
             divider={
               <Divider
                 bgColor={colors.divider.primary}
@@ -99,7 +101,7 @@ const RoundNextPage = ({ navigation, route }) => {
             space={2}
           >
             <HStack
-              minW={layout.width * .48}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -109,7 +111,7 @@ const RoundNextPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamA}
               >
-                {`${game?.teamA.slice(0, 3).toUpperCase()}`}
+                {game?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
@@ -121,7 +123,7 @@ const RoundNextPage = ({ navigation, route }) => {
             </HStack>
 
             <HStack
-              minW={layout.width * .45}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -138,7 +140,7 @@ const RoundNextPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamB}
               >
-                {`${game?.teamB.slice(0, 3).toUpperCase()}`}
+                {game?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -147,8 +149,8 @@ const RoundNextPage = ({ navigation, route }) => {
           <Stack
             minH={5}
             mb={10}
-            minW={layout.width}
-            maxW={layout.width}
+            minW='100%'
+            maxW='100%'
             justifyContent='center'
             alignItems='center'
           >
@@ -165,11 +167,11 @@ const RoundNextPage = ({ navigation, route }) => {
           <VStack
             space={3}
             mb={3}
-            minH={layout.height * .54}
+            minH='50%'
             justifyContent='center'
           >
             <HStack
-              minW={layout.width}
+              minW='100%'
               justifyContent='space-around'
               space={2}
               px={5}
@@ -182,11 +184,11 @@ const RoundNextPage = ({ navigation, route }) => {
                 <TouchableOpacity
                   activeOpacity={.9}
                   onPress={() => {
-                    setSelectedTeam(game?.teamA)
+                    setSelectedTeam(game?.teamA?.nombre)
                   }}
                 >
                   <Box
-                    bgColor={selectedTeam === game?.teamA ? game?.colorTeamA : colors.gray3}
+                    bgColor={selectedTeam === game?.teamA?.nombre ? game?.colorTeamA : colors.gray3}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -196,7 +198,7 @@ const RoundNextPage = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={selectedTeam !== game?.teamA ? game?.colorTeamA : colors.gray}
+                      color={selectedTeam !== game?.teamA?.nombre ? game?.colorTeamA : colors.gray}
                       size={120}
                     />
                   </Box>
@@ -208,7 +210,7 @@ const RoundNextPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamA}
+                  {game?.teamA?.nombre}
                 </Text>
               </VStack>
 
@@ -220,11 +222,11 @@ const RoundNextPage = ({ navigation, route }) => {
                 <TouchableOpacity
                   activeOpacity={.9}
                   onPress={() => {
-                    setSelectedTeam(game?.teamB)
+                    setSelectedTeam(game?.teamB?.nombre)
                   }}
                 >
                   <Box
-                    bgColor={selectedTeam === game?.teamB ? game?.colorTeamB : colors.gray3}
+                    bgColor={selectedTeam === game?.teamB?.nombre ? game?.colorTeamB : colors.gray3}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -234,7 +236,7 @@ const RoundNextPage = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={selectedTeam !== game?.teamB ? game?.colorTeamB : colors.gray}
+                      color={selectedTeam !== game?.teamB?.nombre ? game?.colorTeamB : colors.gray}
                       size={120}
                     />
                   </Box>
@@ -246,7 +248,7 @@ const RoundNextPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamB}
+                  {game?.teamB?.nombre}
                 </Text>
               </VStack>
 
@@ -260,7 +262,8 @@ const RoundNextPage = ({ navigation, route }) => {
           space={2}
           px={5}
           alignItems='center'
-          minH={layout.height * .05}
+          minH='9%'
+          maxH='9%'
         >
           <Divider
             bgColor={colors.divider.primary}
@@ -281,7 +284,9 @@ const RoundNextPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(selectedTeam === game?.teamA ? 'PlayTeamAPage' : 'PlayTeamBPage', {
+                navigation?.navigate(selectedTeam === game?.teamA?.nombre ? 'PlayTeamAPage' : 'PlayTeamBPage', {
+                  id: game?.id,
+                  title: game?.title,
                   selectedTeam: selectedTeam,
                   initialTeam: game?.initialTeam,
                   teamA: game?.teamA,
@@ -292,6 +297,10 @@ const RoundNextPage = ({ navigation, route }) => {
                   scoreTeamB: game?.scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime
                 })
               }}
             >

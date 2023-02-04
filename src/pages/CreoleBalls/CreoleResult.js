@@ -91,7 +91,7 @@ const CreoleResult = ({ navigation, route }) => {
                     textAlign='center'
                     pt={1}
                   >
-                    {game?.teamA}
+                    {game?.teamA?.nombre}
                   </Text>
                   <Text
                     bold
@@ -146,7 +146,7 @@ const CreoleResult = ({ navigation, route }) => {
                     textAlign='center'
                     pt={1}
                   >
-                    {game?.teamB}
+                    {game?.teamB?.nombre}
                   </Text>
                   <Text
                     bold
@@ -219,8 +219,8 @@ const CreoleResult = ({ navigation, route }) => {
                   >
                     {game?.scoreTeamA === game?.scoreTeamB ? 'Empate' :
                       game?.scoreTeamA > game?.scoreTeamB ?
-                        `Equipo ${game?.teamA}` :
-                        `Equipo ${game?.teamB}`
+                        `Equipo ${game?.teamA?.nombre}` :
+                        `Equipo ${game?.teamB?.nombre}`
                     }
                   </Text>
                 </Stack>

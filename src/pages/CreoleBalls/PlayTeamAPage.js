@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
+import { cutText } from '../../utilities/functions'
+
 const PlayTeamAPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
@@ -71,7 +73,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                30:00
+                {`${game?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -107,7 +109,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamA}
               >
-                {`${game?.teamA.slice(0, 3).toUpperCase()}`}
+                {game?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
@@ -136,7 +138,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamB}
               >
-                {`${game?.teamB.slice(0, 3).toUpperCase()}`}
+                {game?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -179,6 +181,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                 color={game?.colorTeamA}
                 textAlign='left'
                 pt={1}
+                lineHeight={22}
               >
                 {game?.selectedTeam}
               </Text>
@@ -194,7 +197,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
           <Divider />
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={game?.selectedTeam === game?.teamA ? game?.rosterA : game?.rosterB}
+            data={game?.selectedTeam === game?.teamA?.nombre ? game?.rosterA : game?.rosterB}
             minH='50%'
             maxH='50%'
             keyExtractor={item => item?.id}
@@ -216,8 +219,10 @@ const PlayTeamAPage = ({ navigation, route }) => {
                     activeOpacity={.9}
                     onPress={() => {
                       navigation?.navigate('PlayerShootDataPage', {
-                        selectedTeam: game?.teamA === game?.selectedTeam ? game?.teamA : game?.teamB,
-                        selectedPlayer: item.id,
+                        id: game?.id,
+                        title: game?.title,
+                        selectedTeam: game?.selectedTeam,
+                        selectedPlayer: item?.persona?.id,
                         initialTeam: game?.initialTeam,
                         teamA: game?.teamA,
                         colorTeamA: game?.colorTeamA,
@@ -227,6 +232,10 @@ const PlayTeamAPage = ({ navigation, route }) => {
                         scoreTeamB: game?.scoreTeamB,
                         rosterA: game?.rosterA,
                         rosterB: game?.rosterB,
+                        date: game?.date,
+                        maxPoints: game?.maxPoints,
+                        forfeit: game?.forfeit,
+                        maxTime: game?.maxTime
                       })
                     }}
                   >
@@ -243,7 +252,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                         color={colors.gray}
                         textAlign='center'
                       >
-                        {item.name}
+                        {cutText(`${item?.persona?.nombres} ${item?.persona?.apellidos}`, 35)}
                       </Text>
                     </Box>
                   </TouchableOpacity>
@@ -270,16 +279,22 @@ const PlayTeamAPage = ({ navigation, route }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
                 navigation?.navigate('PlayTeamBPage', {
-                  selectedTeam: game?.selectedTeam !== game?.teamA ? game?.teamA : game?.teamB,
+                  id: game?.id,
+                  title: game?.title,
+                  selectedTeam: game?.selectedTeam !== game?.teamA?.nombre ? game?.teamA?.nombre : game?.teamB?.nombre,
                   initialTeam: game?.initialTeam,
                   teamA: game?.teamA,
                   colorTeamA: game?.colorTeamA,
                   teamB: game?.teamB,
                   colorTeamB: game?.colorTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
                   scoreTeamA: game?.scoreTeamA,
                   scoreTeamB: game?.scoreTeamB,
+                  rosterA: game?.rosterA,
+                  rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime,
                 })
               }}
             >
@@ -322,6 +337,8 @@ const PlayTeamAPage = ({ navigation, route }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
                 navigation?.navigate('CreoleResult', {
+                  id: game?.id,
+                  title: game?.title,
                   selectedTeam: game?.selectedTeam,
                   initialTeam: game?.initialTeam,
                   teamA: game?.teamA,
@@ -332,6 +349,10 @@ const PlayTeamAPage = ({ navigation, route }) => {
                   scoreTeamB: game?.scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime,
                 })
               }}
             >
@@ -354,6 +375,8 @@ const PlayTeamAPage = ({ navigation, route }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
                 navigation?.navigate('ScoreSetPage', {
+                  id: game?.id,
+                  title: game?.title,
                   selectedTeam: game?.selectedTeam,
                   initialTeam: game?.initialTeam,
                   teamA: game?.teamA,
@@ -364,6 +387,10 @@ const PlayTeamAPage = ({ navigation, route }) => {
                   scoreTeamB: game?.scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime,
                 })
               }}
             >

@@ -75,7 +75,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                30:00
+                {`${game?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -111,7 +111,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamA}
               >
-                {`${game?.teamA.slice(0, 3).toUpperCase()}`}
+                {game?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
@@ -140,7 +140,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamB}
               >
-                {`${game?.teamB.slice(0, 3).toUpperCase()}`}
+                {game?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -227,7 +227,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamA}
+                  {game?.teamA?.nombre}
                 </Text>
               </VStack>
 
@@ -259,7 +259,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamB}
+                  {game?.teamB?.nombre}
                 </Text>
               </VStack>
 
@@ -285,14 +285,14 @@ const ScoreSetPage = ({ navigation, route }) => {
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={scoreTeamB !== 0 && isSetScore ?
+                bgColor={(scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8 ?
                   colors.gray2 :
                   colors.button.bgPrimary
                 }
                 _pressed={colors.bgSecondary}
-                disabled={scoreTeamB !== 0 && isSetScore}
+                disabled={(scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8}
                 onPress={() => {
-                  if (scoreTeamB === 0 || !isSetScore) {
+                  if (scoreTeamB === 0 || !isSetScore || scoreTeamA < 8) {
                     setScoreTeamA(scoreTeamA + 1)
                     setIsSetScore(true)
                   }
@@ -301,7 +301,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={scoreTeamB !== 0 && isSetScore ?
+                  color={(scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8 ?
                     colors.gray :
                     colors.white
                   }
@@ -371,14 +371,14 @@ const ScoreSetPage = ({ navigation, route }) => {
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={scoreTeamA !== 0 && isSetScore ?
+                bgColor={(scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8 ?
                   colors.gray2 :
                   colors.button.bgPrimary
                 }
                 _pressed={colors.bgSecondary}
-                disabled={scoreTeamA !== 0 && isSetScore}
+                disabled={(scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8}
                 onPress={() => {
-                  if (scoreTeamA === 0 || !isSetScore) {
+                  if (scoreTeamA === 0 || !isSetScore || scoreTeamB < 8) {
                     setScoreTeamB(scoreTeamB + 1)
                     setIsSetScore(true)
                   }
@@ -387,7 +387,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={scoreTeamA !== 0 && isSetScore ?
+                  color={(scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8 ?
                     colors.gray :
                     colors.white
                   }
@@ -474,6 +474,8 @@ const ScoreSetPage = ({ navigation, route }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
                 navigation?.navigate('RoundNextPage', {
+                  id: game?.id,
+                  title: game?.title,
                   selectedTeam: game?.selectedTeam,
                   initialTeam: game?.initialTeam,
                   teamA: game?.teamA,
@@ -484,6 +486,10 @@ const ScoreSetPage = ({ navigation, route }) => {
                   scoreTeamB: game?.scoreTeamB + scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime
                 })
               }}
             >

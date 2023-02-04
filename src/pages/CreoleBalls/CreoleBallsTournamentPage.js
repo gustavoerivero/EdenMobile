@@ -1,5 +1,6 @@
-import React from 'react'
-import { ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { ImageBackground, TouchableOpacity } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Box, Button, Divider, HStack, ScrollView, Stack, Text, Tooltip, VStack } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -12,9 +13,39 @@ import colors from '../../styled-components/colors'
 import { cutText } from '../../utilities/functions'
 import TeamPreviewCard from '../../components/TeamPreviewCard'
 
+import TournamentService from '../../services/tournaments/TournamentsService'
+
 const CreoleBallsTournamentPage = ({ navigation, route }) => {
 
+  const Tournament = new TournamentService()
+
+  const [isLoading, setIsLoading] = useState(true)
+  const [teams, setTeams] = useState([])
+
   const event = route?.params
+
+  const getData = async () => {
+    if (isLoading) {
+      Tournament.get(event?.id)
+        .then(res => {
+          let { data } = res
+          data = data?.data?.fase_de_torneo[0]?.equipo
+          setTeams(data)
+          setIsLoading(false)
+        })
+        .catch(error => {
+          console.log(`Tournament error: ${error}`)
+          setIsLoading(false)
+        })
+    }
+
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getData()
+    }, [teams])
+  )
 
   return (
     <Container
@@ -277,7 +308,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                   >
                     Equipos del torneo
                   </Text>
-                  {!event?.tournament ?
+                  {!teams ?
                     <Text
                       fontSize='sm'
                       color={colors.text.description}
@@ -287,15 +318,15 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                     </Text>
                     :
                     <VStack>
-                      {event?.tournament?.map((item, key) => (
+                      {teams?.map((item, key) => (
                         <Stack
                           key={key}
                           m={1}
                         >
                           <TeamPreviewCard
                             teamID={item.id}
-                            teamName={item.name}
-                            teamImage={item.image}
+                            teamName={item.nombre}
+                            teamImage={'https://medinajosedev.com/storage/' + item.logo}
                             teamMembers={item.members}
                             navigation={navigation}
                           />
@@ -379,8 +410,6 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
               </HStack>
 
             </VStack>
-
-
 
           </VStack>
 

@@ -2,9 +2,24 @@ import React from 'react'
 import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import colors from '../../styled-components/colors'
-import { cutText } from '../../utilities/functions'
+import { cutText, getDate, getHour } from '../../utilities/functions'
 
-const CreoleGameCard = ({ navigation, id, title, teamA, teamB }) => {
+const CreoleGameCard = ({ 
+  navigation, 
+  id = 0, 
+  title = '', 
+  teamA = {}, 
+  teamB = {}, 
+  date = new Date(), 
+  status = 'D', 
+  maxPoints = 0, 
+  maxTime = 0, 
+  forfeit = 0, 
+  playersTeamA = [], 
+  playersTeamB = [] }) => {
+
+  const time = getHour(date)
+  const { day, month, year } = getDate(date)
 
   const layout = useWindowDimensions()
 
@@ -24,6 +39,12 @@ const CreoleGameCard = ({ navigation, id, title, teamA, teamB }) => {
             title: title,
             teamA: teamA,
             teamB: teamB,
+            date: date,
+            maxPoints: maxPoints,
+            forfeit: forfeit,
+            maxTime: maxTime,
+            playersTeamA: playersTeamA,
+            playersTeamB: playersTeamB
           })
           console.log(`Game ID: ${id} pressed...`)
         }}
@@ -38,8 +59,9 @@ const CreoleGameCard = ({ navigation, id, title, teamA, teamB }) => {
             minH={70}
             alignItems='center'
           >
-            <Stack
-              w={layout.width * .35}     >
+            <VStack
+              w={layout.width * .35}
+            >
               <Text
                 fontSize='md'
                 bold
@@ -47,7 +69,19 @@ const CreoleGameCard = ({ navigation, id, title, teamA, teamB }) => {
               >
                 Juego N°{id}
               </Text>
-            </Stack>
+              <Text
+                fontSize='2xs'
+                color={colors.text.primary}
+              >
+                {`${day} de ${month} de ${year}`}
+              </Text>
+              <Text
+                fontSize='2xs'
+                color={colors.gray}
+              >
+                {time}
+              </Text>
+            </VStack>
             <Stack
               w={layout.width * .45}
             >
@@ -73,10 +107,11 @@ const CreoleGameCard = ({ navigation, id, title, teamA, teamB }) => {
                   <Text
                     color={colors.text.primary}
                     fontSize='md'
+                    bold
                     fontWeight='thin'
                     textAlign='center'
                   >
-                    {cutText(teamA, 10)}
+                    {cutText(teamA?.abreviatura, 10)}
                   </Text>
                 </VStack>
                 <Divider
@@ -100,10 +135,11 @@ const CreoleGameCard = ({ navigation, id, title, teamA, teamB }) => {
                   <Text
                     fontSize='md'
                     fontWeight='thin'
+                    bold
                     textAlign='center'
                     color={colors.text.primary}
                   >
-                    {cutText(teamB, 10)}
+                    {cutText(teamB?.abreviatura, 10)}
                   </Text>
                 </VStack>
               </HStack>
@@ -115,9 +151,13 @@ const CreoleGameCard = ({ navigation, id, title, teamA, teamB }) => {
           >
             <Text
               color={colors.text.primary}
-              fontSize='sm'
+              fontSize='xs'
             >
-              El juego no ha finalizado...
+              {status === 'D' ?
+                'El juego aún no ha comenzado' :
+                status === 'P' ? 'El juego está en progreso' :
+                  'El juego ha finalizado'
+              }
             </Text>
           </Stack>
         </VStack>

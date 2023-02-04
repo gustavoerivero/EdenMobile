@@ -16,12 +16,14 @@ const StartedGamePage = ({ navigation, route }) => {
   const [coinPressed, setCoinPressed] = useState(false)
   const [shoot, setShoot] = useState(false)
   const [coinTeam, setCoinTeam] = useState(false)
+  const [passPage, setPassPage] = useState(false)
 
   const coinThrow = () => {
 
     const throws = Math.round(Math.random() * 6)
     setShoot(true)
     setCoinPressed(true)
+    setPassPage(true)
 
     let coin = coinTeam
 
@@ -37,13 +39,20 @@ const StartedGamePage = ({ navigation, route }) => {
 
     setTimeout(() => {
       navigation?.navigate('ColorTeamPage', {
-        selectedTeam: coin ? game?.teamA : game?.teamB,
-        initialTeam: coin ? game?.teamA : game?.teamB,
+        id: game?.id,
+        title: game?.title,
+        selectedTeam: coin ? game?.teamA?.nombre : game?.teamB?.nombre,
+        initialTeam: coin ? game?.teamA?.nombre : game?.teamB?.nombre,
         teamA: game?.teamA,
         teamB: game?.teamB,
         rosterA: game?.rosterA,
         rosterB: game?.rosterB,
+        date: game?.date,
+        maxPoints: game?.maxPoints,
+        forfeit: game?.forfeit,
+        maxTime: game?.maxTime
       })
+      setPassPage(false)
     }, 5000)
 
   }
@@ -106,7 +115,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                30:00
+                {`${game?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -142,7 +151,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {`${game?.teamA.slice(0, 3).toUpperCase()}`}
+                {`${game?.teamA?.abreviatura}`}
               </Text>
               <Text
                 bold
@@ -171,7 +180,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {`${game?.teamB.slice(0, 3).toUpperCase()}`}
+                {`${game?.teamB?.abreviatura}`}
               </Text>
 
             </HStack>
@@ -193,19 +202,23 @@ const StartedGamePage = ({ navigation, route }) => {
           </Stack>
 
           <HStack
-            minW='75%'
+            minW='100%'
             justifyContent='space-around'
-            mx={5}
             py={3}
             pb={10}
           >
-            <VStack>
+            <VStack
+              maxW='50%'
+              minW='50%'
+              justifyContent='center'
+              alignItems='center'
+            >
               <TouchableOpacity
                 onPress={() => {
                   setShoot(true)
                   setCoinTeam(true)
                 }}
-                disabled={coinPressed}
+                disabled={passPage || coinPressed}
               >
                 <Box
                   borderRadius={10}
@@ -234,17 +247,22 @@ const StartedGamePage = ({ navigation, route }) => {
                 textAlign='center'
                 pt={1}
               >
-                {game.teamA}
+                {game?.teamA?.nombre}
               </Text>
             </VStack>
 
-            <VStack>
+            <VStack
+              maxW='50%'
+              minW='50%'
+              justifyContent='center'
+              alignItems='center'
+            >
               <TouchableOpacity
                 onPress={() => {
                   setShoot(true)
                   setCoinTeam(false)
                 }}
-                disabled={coinPressed}
+                disabled={passPage || coinPressed}
               >
                 <Box
                   borderRadius={10}
@@ -274,7 +292,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 textAlign='center'
                 pt={1}
               >
-                {game.teamB}
+                {game?.teamB?.nombre}
               </Text>
             </VStack>
 
@@ -296,12 +314,18 @@ const StartedGamePage = ({ navigation, route }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
                 navigation?.navigate('ColorTeamPage', {
-                  selectedTeam: coinTeam ? game?.teamA : game?.teamB,
-                  initialTeam: coinTeam ? game?.teamA : game?.teamB,
+                  id: game?.id,
+                  title: game?.title,
+                  selectedTeam: coinTeam ? game?.teamA?.nombre : game?.teamB?.nombre,
+                  initialTeam: coinTeam ? game?.teamA?.nombre : game?.teamB?.nombre,
                   teamA: game?.teamA,
                   teamB: game?.teamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime
                 })
               }}
               disabled={coinPressed || !shoot}
@@ -355,15 +379,15 @@ const StartedGamePage = ({ navigation, route }) => {
             bgColor={colors.divider.primary}
             borderRadius={50}
           />
-            {shoot &&
-              <Text
-                bold
-                fontSize='xl'
-                color={colors.creoleStartGame.text}
-              >
-                {coinTeam ? game.teamA : game.teamB}
-              </Text>
-            }
+          {shoot &&
+            <Text
+              bold
+              fontSize='xl'
+              color={colors.creoleStartGame.text}
+            >
+              {coinTeam ? game.teamA?.nombre : game.teamB?.nombre}
+            </Text>
+          }
         </VStack>
 
       </VStack>

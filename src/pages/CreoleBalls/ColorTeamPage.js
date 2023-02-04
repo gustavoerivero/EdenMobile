@@ -74,7 +74,7 @@ const ColorTeamPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                30:00
+                {`${game?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -110,7 +110,7 @@ const ColorTeamPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {`${game?.teamA.slice(0, 3).toUpperCase()}`}
+                {game?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
@@ -139,7 +139,7 @@ const ColorTeamPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {`${game?.teamB.slice(0, 3).toUpperCase()}`}
+                {game?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -283,6 +283,8 @@ const ColorTeamPage = ({ navigation, route }) => {
             _pressed={colors.bgSecondary}
             onPress={() => {
               navigation?.navigate('PlayTeamAPage', {
+                id: game?.id,
+                title: game?.title,
                 selectedTeam: game?.selectedTeam,
                 initialTeam: game?.initialTeam,
                 teamA: game?.teamA,
@@ -293,6 +295,10 @@ const ColorTeamPage = ({ navigation, route }) => {
                 scoreTeamB: 0,
                 rosterA: game?.rosterA,
                 rosterB: game?.rosterB,
+                date: game?.date,
+                maxPoints: game?.maxPoints,
+                forfeit: game?.forfeit,
+                maxTime: game?.maxTime
               })
             }}
             disabled={!isColorSelected}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
+import { ImageBackground, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Box, Button, Divider, HStack, ScrollView, Stack, Text, Tooltip, VStack } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -379,8 +379,6 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
               </HStack>
 
             </VStack>
-
-
 
           </VStack>
 

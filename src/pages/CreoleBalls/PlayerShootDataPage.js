@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
-import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
+import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
@@ -14,6 +14,9 @@ const PlayerShootDataPage = ({ navigation, route }) => {
   const game = route?.params
 
   const [shoot, setShoot] = useState(0)
+
+  const [numberShoot, setNumberShoot] = useState(1)
+
   const [firstShoot, setFirstShoot] = useState(null)
   const [secondShoot, setSecondShoot] = useState(null)
 
@@ -75,7 +78,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                30:00
+                {`${game?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -111,7 +114,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamA}
               >
-                {`${game?.teamA.slice(0, 3).toUpperCase()}`}
+                {game?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
@@ -140,7 +143,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={game?.colorTeamB}
               >
-                {`${game?.teamB.slice(0, 3).toUpperCase()}`}
+                {game?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -164,7 +167,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 textAlign='left'
                 pt={1}
               >
-                {game?.selectedTeam === game?.teamA ?
+                {game?.selectedTeam === game?.teamA?.nombre ?
                   game?.rosterA.find(member => member.id === game?.selectedPlayer).name :
                   game?.rosterB.find(member => member.id === game?.selectedPlayer).name
                 }
@@ -207,10 +210,11 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('A')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('A')
                   }
                 }}
@@ -237,10 +241,11 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('B')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('B')
                   }
                 }}
@@ -267,10 +272,11 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('M')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('M')
                   }
                 }}
@@ -303,10 +309,11 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('a')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('a')
                   }
                 }}
@@ -333,16 +340,19 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('b')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('b')
                   }
                 }}
               >
                 <Box
-                  bgColor={firstShoot !== 'b' && secondShoot !== 'b' ? colors.gray3 : colors.creoleStartGame.selectedShoot}
+                  bgColor={firstShoot !== 'b' && secondShoot !== 'b' ?
+                    colors.gray3 : colors.creoleStartGame.selectedShoot
+                  }
                   borderRadius={10}
                   shadow={7}
                   w={100}
@@ -363,10 +373,11 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('m')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('m')
                   }
                 }}
@@ -399,10 +410,11 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('N')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('N')
                   }
                 }}
@@ -429,10 +441,11 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <TouchableOpacity
                 activeOpacity={.9}
                 onPress={() => {
-                  if (!firstShoot || shoot === 0) {
+                  if (numberShoot === 1) {
                     setFirstShoot('F')
                   }
-                  if ((firstShoot && !secondShoot) || shoot === 1) {
+
+                  if (numberShoot === 2) {
                     setSecondShoot('F')
                   }
                 }}
@@ -484,9 +497,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 alignItems='center'
                 w={100}
                 h={50}
-                borderWidth={1}
                 borderRadius={10}
                 borderColor={colors.creoleStartGame.teamSelectedTextColor}
+                borderWidth={numberShoot === 1 ? 2 : 1}
+                bgColor={numberShoot === 1 ? colors.creoleStartGame.smoothColor : colors.white}
               >
                 <Text
                   bold
@@ -516,9 +530,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 alignItems='center'
                 w={100}
                 h={50}
-                borderWidth={1}
                 borderRadius={10}
                 borderColor={colors.creoleStartGame.teamSelectedTextColor}
+                borderWidth={numberShoot === 2 ? 2 : 1}
+                bgColor={numberShoot === 2 ? colors.creoleStartGame.smoothColor : colors.white}
               >
                 <Text
                   bold
@@ -531,35 +546,61 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             </VStack>
           </HStack>
 
-          <Stack
-            minW='100%'
-            maxW='100%'
+          <HStack
+            w='100%'
             justifyContent='center'
             alignItems='center'
             mt={4}
+            space={2}
           >
             <Button
-              w={layout.width * .8}
+              w={layout.width * .45}
               h={layout.height * .055}
               borderRadius={10}
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.button.bgPrimary}
+              disabled={numberShoot === 1}
+              bgColor={numberShoot === 1 ? colors.gray2 : colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                setShoot(1)
+                setNumberShoot(1)
               }}
             >
               <Text
                 bold
-                fontSize='md'
-                color={colors.white}
+                fontSize='sm'
+                textAlign='center'
+                color={numberShoot === 1 ? colors.gray : colors.white}
+              >
+                Previo lanzamiento
+              </Text>
+            </Button>
+            <Button
+              w={layout.width * .45}
+              h={layout.height * .055}
+              borderRadius={10}
+              shadow={3}
+              justifyContent='center'
+              alignItems='center'
+              disabled={numberShoot === 2 || !firstShoot}
+              bgColor={numberShoot === 2 || !firstShoot ? colors.gray2 : colors.button.bgPrimary}
+              _pressed={colors.bgSecondary}
+              onPress={() => {
+                setNumberShoot(2)
+              }}
+            >
+              <Text
+                bold
+                fontSize='sm'
+                textAlign='center'
+                color={numberShoot === 2 || !firstShoot ? colors.gray : colors.white}
               >
                 Siguiente lanzamiento
               </Text>
             </Button>
-          </Stack>
+
+          </HStack>
 
         </Stack>
 
@@ -589,8 +630,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               bgColor={colors.gray3}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(game?.selectedTeam === game?.teamA ? 'PlayTeamAPage' : 'PlayTeamBPage', {
-                  selectedTeam: game?.selectedTeam === game?.teamA ? game?.teamA : game?.teamB,
+                navigation?.navigate(game?.selectedTeam === game?.teamA?.nombre ? 'PlayTeamAPage' : 'PlayTeamBPage', {
+                  id: game?.id,
+                  title: game?.title,
+                  selectedTeam: game?.selectedTeam === game?.teamA?.nombre ? game?.teamA?.nombre : game?.teamB?.nombre,
                   initialTeam: game?.initialTeam,
                   teamA: game?.teamA,
                   colorTeamA: game?.colorTeamA,
@@ -600,6 +643,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   scoreTeamB: game?.scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime
                 })
               }}
             >
@@ -621,8 +668,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(game?.teamA !== game?.selectedTeam ? 'PlayTeamAPage' : 'PlayTeamBPage', {
-                  selectedTeam: game?.teamA !== game?.selectedTeam ? game?.teamA : game?.teamB,
+                navigation?.navigate(game?.teamA?.nombre !== game?.selectedTeam ? 'PlayTeamAPage' : 'PlayTeamBPage', {
+                  id: game?.id,
+                  title: game?.title,
+                  selectedTeam: game?.selectedTeam !== game?.teamA?.nombre ? game?.teamA?.nombre : game?.teamB?.nombre,
                   initialTeam: game?.initialTeam,
                   teamA: game?.teamA,
                   colorTeamA: game?.colorTeamA,
@@ -632,6 +681,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                   scoreTeamB: game?.scoreTeamB,
                   rosterA: game?.rosterA,
                   rosterB: game?.rosterB,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime,
                 })
               }}
             >

@@ -256,7 +256,6 @@ const HomePage = ({ navigation }) => {
               text='Aún no se han publicado eventos en el club.'
             />
           </Stack>
-
         ) : events?.length > 0 ? (
           <FlatList
             refreshControl={

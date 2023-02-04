@@ -131,11 +131,26 @@ const CalendarPage = ({ navigation }) => {
         alignItems='center'
       >
         <Divider />
-        {!events || events?.length === 0 ? (
-          <NotFound
-            text='Aún no se han publicado eventos en el club.'
-          />
-        ) : events?.length > 0 || !isLoading ? (
+        {isLoading && events?.length === 0 ? (
+          <Stack
+            mt={2}
+            alignItems='center'
+            justifyContent='center'
+            alignContent='center'
+            alignSelf='center'
+          >
+            <ActivityIndicator size='large' color={colors.primary} />
+          </Stack>
+        ) : !events || events?.length === 0 ? (
+          <Stack
+            px={3}
+          >
+            <NotFound
+              text='Aún no se han publicado eventos en el club.'
+            />
+          </Stack>
+
+        ) : events?.length > 0 ? (
           <FlatList
             refreshControl={
               <RefreshControl

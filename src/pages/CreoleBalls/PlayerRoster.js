@@ -104,6 +104,7 @@ const PlayerRoster = ({ navigation, route }) => {
           </Stack>
 
           <Text
+            pt={2}
             fontSize='2xl'
             bold
             lineHeight={25}
@@ -123,7 +124,7 @@ const PlayerRoster = ({ navigation, route }) => {
           <RosterTeam
             id={1}
             teamID={1}
-            name={teamA}
+            name={teamA?.nombre}
             team={firstTeam}
             roster={firstRoster}
 
@@ -134,7 +135,7 @@ const PlayerRoster = ({ navigation, route }) => {
           <RosterTeam
             id={2}
             teamID={2}
-            name={teamB}
+            name={teamB?.nombre}
             team={secondTeam}
             roster={secondRoster}
 
@@ -172,10 +173,16 @@ const PlayerRoster = ({ navigation, route }) => {
               disabled={firstRoster.length < 4 || secondRoster.length < 4}
               onPress={() => {
                 navigation?.navigate('StartedGamePage', {
+                  id: game?.id,
+                  title: game?.title,
                   teamA: teamA,
                   teamB: teamB,
                   rosterA: firstRoster,
-                  rosterB: secondRoster
+                  rosterB: secondRoster,
+                  date: game?.date,
+                  maxPoints: game?.maxPoints,
+                  forfeit: game?.forfeit,
+                  maxTime: game?.maxTime
                 })
               }}
             >

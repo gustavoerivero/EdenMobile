@@ -100,10 +100,10 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
         minH='85%'
         maxH='85%'
         borderRadius={10}
-        pt={2}
         pl={2}
       >
         <FlatList
+          p={1}
           showsVerticalScrollIndicator={false}
           data={team}
           keyExtractor={item => item?.id}

@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
+import { cutText } from '../../utilities/functions'
+
 const PlayTeamAPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
@@ -179,6 +181,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                 color={game?.colorTeamA}
                 textAlign='left'
                 pt={1}
+                lineHeight={22}
               >
                 {game?.selectedTeam}
               </Text>
@@ -219,7 +222,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                         id: game?.id,
                         title: game?.title,
                         selectedTeam: game?.selectedTeam,
-                        selectedPlayer: item.id,
+                        selectedPlayer: item?.persona?.id,
                         initialTeam: game?.initialTeam,
                         teamA: game?.teamA,
                         colorTeamA: game?.colorTeamA,
@@ -249,7 +252,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                         color={colors.gray}
                         textAlign='center'
                       >
-                        {item.name}
+                        {cutText(`${item?.persona?.nombres} ${item?.persona?.apellidos}`, 35)}
                       </Text>
                     </Box>
                   </TouchableOpacity>

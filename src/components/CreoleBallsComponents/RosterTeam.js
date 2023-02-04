@@ -18,7 +18,7 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
         onPress={() => {
           setChecked(!checked)
 
-          if (roster.some(member => member.name === item.name)) {
+          if (roster.some(member => member?.persona?.id === item?.persona?.id)) {
             remove(item)
           } else {
             add(item)
@@ -33,20 +33,20 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
             w={4}
             h={4}
             bgColor={
-              roster.some(member => member.id === item.id) ?
+              roster.some(member => member?.persona?.id === item?.persona?.id) ?
                 colors.creoleRoster.checkboxColor :
                 colors.creoleRoster.checkboxBackgroundColor
             }
             borderWidth={2}
             borderRadius={2}
             borderColor={
-              roster.some(member => member.id === item.id) ?
+              roster.some(member => member?.persona?.id === item?.persona?.id) ?
                 colors.creoleRoster.checkboxColor :
                 colors.creoleRoster.checkboxInactiveBorderColor
             }
             alignItems='center'
           >
-            {roster.some(member => member.id === item.id) &&
+            {roster.some(member => member?.persona?.id === item?.persona?.id) &&
               <Icon
                 name='md-checkmark-sharp'
                 size={10}
@@ -57,11 +57,11 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
           <Text
             bold
             fontSize='md'
-            color={roster.some(member => member.id === item.id) ?
+            color={roster.some(member => member?.persona?.id === item?.persona?.id) ?
               colors.creoleRoster.checkboxColor :
               colors.creoleRoster.textColor}
           >
-            {item.name}
+            {item?.persona?.nombres} {item?.persona?.apellidos}
           </Text>
         </HStack>
       </TouchableOpacity>

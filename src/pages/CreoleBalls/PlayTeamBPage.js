@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
-import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
+import { VStack, HStack, Stack, Text, Divider, Box, Button, FlatList } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
+
+import { cutText } from '../../utilities/functions'
 
 const PlayTeamBPage = ({ navigation, route }) => {
 
@@ -179,6 +181,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
                 color={game?.colorTeamB}
                 textAlign='left'
                 pt={1}
+                lineHeight={22}
               >
                 {game?.selectedTeam}
               </Text>
@@ -219,7 +222,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
                         id: game?.id,
                         title: game?.title,
                         selectedTeam: game?.selectedTeam,
-                        selectedPlayer: item.id,
+                        selectedPlayer: item?.persona?.id,
                         initialTeam: game?.initialTeam,
                         teamA: game?.teamA,
                         colorTeamA: game?.colorTeamA,
@@ -249,7 +252,7 @@ const PlayTeamBPage = ({ navigation, route }) => {
                         color={colors.gray}
                         textAlign='center'
                       >
-                        {item.name}
+                        {cutText(`${item?.persona?.nombres} ${item?.persona?.apellidos}`, 35)}
                       </Text>
                     </Box>
                   </TouchableOpacity>

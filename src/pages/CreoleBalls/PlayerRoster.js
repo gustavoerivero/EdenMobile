@@ -68,10 +68,10 @@ const PlayerRoster = ({ navigation, route }) => {
 
   const [teamA, setTeamA] = useState(game?.teamA || '')
 
-  const [firstTeam, setFirstTeam] = useState(firstTeamData || [])
+  const [firstTeam, setFirstTeam] = useState(game?.playersTeamA || [])
 
   const [teamB, setTeamB] = useState(game?.teamB || '')
-  const [secondTeam, setSecondTeam] = useState(secondTeamData || [])
+  const [secondTeam, setSecondTeam] = useState(game?.playersTeamB || [])
 
   return (
     <Container

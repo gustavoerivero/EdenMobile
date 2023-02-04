@@ -20,15 +20,11 @@ const CreoleBallsListPage = ({ navigation, route }) => {
 
   const Tournament = new TournamentService()
 
-  const wait = (timeOut) => {
-    return new Promise(resolve => setTimeout(resolve, timeOut))
-  }
-
-  const [modality, setModality] = useState({})
-
   const [isLoading, setIsLoading] = useState(true)
-
   const [events, setEvents] = useState([])
+  const [modality, setModality] = useState({})
+  const [playersTeamA, setPlayersTeamA] = useState([])
+  const [playersTeamB, setPlayersTeamB] = useState([])
   const [refreshing, setRefreshing] = useState()
 
   const onRefresh = useCallback(() => {
@@ -45,6 +41,7 @@ const CreoleBallsListPage = ({ navigation, route }) => {
       const { data } = await Tournament.get(tournament?.id)
 
       let auxData = data?.data
+
 
       let calendar = auxData?.fase_de_torneo[0]?.calendario
       setModality(auxData?.fase_de_torneo[0]?.modalidad)
@@ -160,6 +157,8 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                     forfeit={modality?.tiempo_forfeit_minutos}
                     maxPoints={modality?.puntuacion_maxima}
                     navigation={navigation}
+                    playersTeamA={item?.jugadores_equipo_a || []}
+                    playersTeamB={item?.jugadores_equipo_b || []}
                   />
                 </Stack>
               )}

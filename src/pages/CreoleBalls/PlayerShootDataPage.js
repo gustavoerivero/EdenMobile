@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
+import { cutText } from '../../utilities/functions'
+
 const PlayerShootDataPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
@@ -19,6 +21,12 @@ const PlayerShootDataPage = ({ navigation, route }) => {
 
   const [firstShoot, setFirstShoot] = useState(null)
   const [secondShoot, setSecondShoot] = useState(null)
+
+  const player = game?.selectedTeam === game?.teamA?.nombre ?
+  game?.rosterA.find(member => member?.persona?.id === game?.selectedPlayer) :
+  game?.rosterB.find(member => member?.persona?.id === game?.selectedPlayer)
+
+  const name = `${player?.persona?.nombres} ${player?.persona?.apellidos}`
 
   return (
     <Container
@@ -164,13 +172,10 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <Text
                 fontSize='2xl'
                 color={colors.creoleStartGame.scoreColor}
-                textAlign='left'
+                textAlign='center'
                 pt={1}
               >
-                {game?.selectedTeam === game?.teamA?.nombre ?
-                  game?.rosterA.find(member => member.id === game?.selectedPlayer).name :
-                  game?.rosterB.find(member => member.id === game?.selectedPlayer).name
-                }
+                {cutText(name, 33)}
               </Text>
             </Stack>
           </HStack>

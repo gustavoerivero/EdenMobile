@@ -4,7 +4,19 @@ import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import colors from '../../styled-components/colors'
 import { cutText, getDate, getHour } from '../../utilities/functions'
 
-const CreoleGameCard = ({ navigation, id = 0, title = '', teamA = {}, teamB = {}, date = new Date(), status = 'D', maxPoints = 0, maxTime = 0, forfeit = 0 }) => {
+const CreoleGameCard = ({ 
+  navigation, 
+  id = 0, 
+  title = '', 
+  teamA = {}, 
+  teamB = {}, 
+  date = new Date(), 
+  status = 'D', 
+  maxPoints = 0, 
+  maxTime = 0, 
+  forfeit = 0, 
+  playersTeamA = [], 
+  playersTeamB = [] }) => {
 
   const time = getHour(date)
   const { day, month, year } = getDate(date)
@@ -30,7 +42,9 @@ const CreoleGameCard = ({ navigation, id = 0, title = '', teamA = {}, teamB = {}
             date: date,
             maxPoints: maxPoints,
             forfeit: forfeit,
-            maxTime: maxTime
+            maxTime: maxTime,
+            playersTeamA: playersTeamA,
+            playersTeamB: playersTeamB
           })
           console.log(`Game ID: ${id} pressed...`)
         }}

@@ -256,7 +256,7 @@ const HomePage = ({ navigation }) => {
               text='Aún no se han publicado eventos en el club.'
             />
           </Stack>
-        ) : events?.length > 0 ? (
+        ) : events?.length > 0 && (
           <FlatList
             refreshControl={
               <RefreshControl
@@ -274,16 +274,6 @@ const HomePage = ({ navigation }) => {
             ListFooterComponent={renderLoader}
             onEndReached={loadMoreItem}
           />
-        ) : (
-          <Stack
-            mt={2}
-            alignItems='center'
-            justifyContent='center'
-            alignContent='center'
-            alignSelf='center'
-          >
-            <ActivityIndicator size='large' color={colors.primary} />
-          </Stack>
         )}
       </VStack>
     </Container>

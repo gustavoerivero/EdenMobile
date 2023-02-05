@@ -1,27 +1,37 @@
 import React from 'react'
+
+import { useDispatch } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import colors from '../../styled-components/colors'
 import { cutText, getDate, getHour } from '../../utilities/functions'
 
-const CreoleGameCard = ({ 
-  navigation, 
-  id = 0, 
-  title = '', 
-  teamA = {}, 
-  teamB = {}, 
-  date = new Date(), 
-  status = 'D', 
-  maxPoints = 0, 
-  maxTime = 0, 
-  forfeit = 0, 
-  playersTeamA = [], 
+const CreoleGameCard = ({
+  navigation,
+  id = 0,
+  title = '',
+  teamA = {},
+  teamB = {},
+  date = new Date(),
+  status = 'D',
+  maxPoints = 0,
+  maxTime = 0,
+  forfeit = 0,
+  playersTeamA = [],
   playersTeamB = [] }) => {
 
   const time = getHour(date)
   const { day, month, year } = getDate(date)
 
   const layout = useWindowDimensions()
+
+  const dispatch = useDispatch()
+  
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   return (
     <Box
@@ -34,18 +44,26 @@ const CreoleGameCard = ({
 
       <TouchableOpacity
         onPress={() => {
-          navigation?.navigate('PlayerRoster', {
+
+          const game = {
             id: id,
             title: title,
-            teamA: teamA,
-            teamB: teamB,
             date: date,
             maxPoints: maxPoints,
             forfeit: forfeit,
             maxTime: maxTime,
-            playersTeamA: playersTeamA,
-            playersTeamB: playersTeamB
-          })
+            teamA: teamA,
+            teamB: teamB,
+            teamAScore: 0,
+            teamBScore: 0,
+            teamAMembers: playersTeamA,
+            teamBMembers: playersTeamB,
+            rounds: []
+          }
+
+          handleSubmit(game)
+
+          navigation?.navigate('PlayerRoster', game)
           console.log(`Game ID: ${id} pressed...`)
         }}
       >

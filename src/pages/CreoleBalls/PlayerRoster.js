@@ -1,4 +1,5 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
+import { connect } from 'react-redux'
 import Container from '../../components/Container'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { Stack, VStack, HStack, Text, Divider, Button } from 'native-base'
@@ -29,7 +30,7 @@ const secondRosterReducer = (state, action) => {
   }
 }
 
-const PlayerRoster = ({ navigation, route }) => {
+const PlayerRoster = ({ navigation, route, match }) => {
 
   const game = route?.params
 
@@ -73,6 +74,10 @@ const PlayerRoster = ({ navigation, route }) => {
   const [teamB, setTeamB] = useState(game?.teamB || '')
   const [secondTeam, setSecondTeam] = useState(game?.playersTeamB || [])
 
+  useEffect(() => {
+    console.log(match)
+  }, [])
+
   return (
     <Container
       hiddenNavBar={true}
@@ -111,7 +116,7 @@ const PlayerRoster = ({ navigation, route }) => {
             color={colors.text.primary}
             alignContent='center'
           >
-            {game.title}
+            {match?.title}
           </Text>
         </HStack>
 
@@ -204,4 +209,8 @@ const PlayerRoster = ({ navigation, route }) => {
   )
 }
 
-export default PlayerRoster
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(PlayerRoster)

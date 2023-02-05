@@ -3,11 +3,17 @@ import { ADD_MATCH, ADD_ROUND, DELETE_MATCH, EDIT_ROUND } from './actions'
 const initialState = {
   match: {
     id: null,
+    title: null,
     date: new Date(),
+    maxPoints: 0,
+    forfeit: 0,
+    maxTime: 0,
     teamA: null,
     teamB: null,
     teamAScore: 0,
     teamBScore: 0,
+    teamAMembers: [],
+    teamBMembers: [],
     rounds: []
   }
 }

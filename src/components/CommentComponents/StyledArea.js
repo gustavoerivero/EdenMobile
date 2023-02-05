@@ -24,6 +24,7 @@ const StyledField = ({ style = {}, inputH = null, inputMD = null, textSize = nul
       py={py ? py : 0}
       px={px ? px : 0}
       justifyContent='center'
+
     >
       <HStack
         alignItems='center'
@@ -31,6 +32,7 @@ const StyledField = ({ style = {}, inputH = null, inputMD = null, textSize = nul
       >
         <HStack
           w='100%'
+          justifyContent='center'
         >
           <TextArea
             style={inputStyle}
@@ -48,7 +50,7 @@ const StyledField = ({ style = {}, inputH = null, inputMD = null, textSize = nul
             h={height}
             maxH={45}
             w={{
-              base: inputW ? inputW : '98%',
+              base: inputW ? inputW : '95%',
               md: inputMD ? inputMD : "25%"
             }}
             size={textSize ? textSize : 'md'}

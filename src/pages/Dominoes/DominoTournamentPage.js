@@ -70,31 +70,7 @@ const DominoTournamentPage = ({ navigation, route }) => {
                         </Text>
                       </HStack>
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        console.log(`Favorite button is pressed`)
-                      }}
-                    >
-                      <LinearGradient
-                        colors={styles.bookmarkGradient}
-                        style={styles.bookmarkContainer}
-                      >
-                        <Stack
-                          m={1}
-                          h={8}
-                          w={8}
-                          justifyContent='center'
-                          alignItems='center'
-                        >
-                          <Icon
-                            name='bookmark'
-                            color='white'
-                            size={20}
-                          />
-                        </Stack>
-                      </LinearGradient>
-                    </TouchableOpacity>
+                    
                   </HStack>
                 </LinearGradient>
               </ImageBackground>

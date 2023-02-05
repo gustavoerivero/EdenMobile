@@ -21,7 +21,9 @@ import StyledField from './StyledField'
 
 import { formatDate } from '../../utilities/functions'
 
-const ProfileComponent = ({ navigation }) => {
+const ProfileComponent = ({ navigation, userProp={} }) => {
+
+  const userData = userProp
 
   const {
     state: { user },
@@ -38,9 +40,9 @@ const ProfileComponent = ({ navigation }) => {
 
   const [edit, setEdit] = useState(false)
 
-  const [names, setNames] = useState(user?.user?.usuario?.name || '')
-  const [lastNames, setLastNames] = useState('')
-  const [birthday, setBirthday] = useState(initialDate)
+  const [names, setNames] = useState(userData?.data?.nombres || '')
+  const [lastNames, setLastNames] = useState(userData?.data.apellidos || '')
+  const [birthday, setBirthday] = useState(new Date(userData?.data.fecha_nacimiento))
 
   const calculateAge = (date = new Date()) => {
     let ageDifMs = Date.now() - date.getTime()
@@ -56,14 +58,14 @@ const ProfileComponent = ({ navigation }) => {
   const handleDateSelection = (data) => {
     const date = new Date(data)
     setBirthday(date)
-    console.log(date)
+    //console.log(date)
     //closeModalDate()
   }
 
   const layout = useWindowDimensions()
 
   useEffect(() => {
-    console.log(user)
+    //console.log(user)
   }, [])
 
   return (
@@ -82,7 +84,7 @@ const ProfileComponent = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               if (isConnected) {
-                console.log('User logout')
+                //console.log('User logout')
                 dispatch({ type: 'LOGOUT' })
                 showSuccessToast('¡Esperamos verte proximamente por acá!')
               } else {
@@ -114,7 +116,7 @@ const ProfileComponent = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              console.log(user)
+              //console.log(user)
               setEdit(!edit)
             }}
           >
@@ -160,7 +162,7 @@ const ProfileComponent = ({ navigation }) => {
                 justifyContent='center'
                 alignItems='center'
               >
-                {!image ?
+                {!user.foto == '' ?
                   <Icon
                     name='person'
                     size={65}
@@ -168,7 +170,7 @@ const ProfileComponent = ({ navigation }) => {
                   />
                   :
                   <Image
-                    source={Goose}
+                    source={userData?.data?.foto}
                     w={120}
                     h={120}
                     alt='profile'
@@ -183,7 +185,7 @@ const ProfileComponent = ({ navigation }) => {
               textAlign='center'
               color={colors.gray}
             >
-              {cutText(`${names} ${lastNames}`, 50)}
+              {`${names} ${lastNames}`}
             </Text>
             <Text
               fontSize='md'
@@ -191,7 +193,7 @@ const ProfileComponent = ({ navigation }) => {
               opacity={.5}
               color={colors.gray}
             >
-              {user?.role ? user?.role : 'Usuario'}
+              {userData?.directivo?.posicion}
             </Text>
             <Text
               fontSize='sm'
@@ -250,7 +252,7 @@ const ProfileComponent = ({ navigation }) => {
                   w='75%'
                 >
                   <StyledField
-                    value={names}
+                    value={userData?.nombres}
                     onChangeText={(text) => setNames(text)}
                   />
                 </Stack>
@@ -277,7 +279,7 @@ const ProfileComponent = ({ navigation }) => {
                   w='75%'
                 >
                   <StyledField
-                    value={lastNames}
+                    value={userData?.apellidos}
                     onChangeText={text => setLastNames(text)}
                   />
                 </Stack>
@@ -409,7 +411,25 @@ const ProfileComponent = ({ navigation }) => {
               minW='100%'
               justifyContent='center'
             >
-              <Stack></Stack>
+              <Button
+                onPress={() => setEdit(false)}
+                w='40%'
+                h='100%'
+                borderRadius={10}
+                shadow={3}
+                justifyContent='center'
+                alignItems='center'
+                bgColor={colors.button.bgPrimary}
+              >
+                <Text
+                  bold
+                  fontSize='md'
+                  color={colors.white}
+                >
+                  Cerrar
+                </Text>
+              </Button>
+
               <Button
                 onPress={() => setEdit(false)}
                 w='40%'

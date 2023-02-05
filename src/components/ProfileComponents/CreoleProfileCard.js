@@ -85,7 +85,7 @@ const CreoleProfileCard = ({
           bgColor={colors.navBar.activeColor}
           borderRadius={50}
         />
-        <VStack>
+        <VStack mt={1}>
           <Text
             bold
             fontSize='md'
@@ -94,6 +94,7 @@ const CreoleProfileCard = ({
             Bolas criollas
           </Text>
           <HStack
+          mt={1}
             minH={90}
             h={90}
             maxH={90}
@@ -164,6 +165,8 @@ const CreoleProfileCard = ({
               justifyContent='center'
               alignItems='center'
             >
+
+
               <Text
                 fontSize='xs'
                 lineHeight={12}
@@ -172,6 +175,8 @@ const CreoleProfileCard = ({
               >
                 Capitán de equipo
               </Text>
+
+
             </Stack>
             <Stack
               w={`${100 / 2.5}%`}

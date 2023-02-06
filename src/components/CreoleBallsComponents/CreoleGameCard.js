@@ -10,6 +10,7 @@ import { cutText, getDate, getHour } from '../../utilities/functions'
 
 const CreoleGameCard = ({
   navigation,
+  tournamentID = 0,
   id = 0,
   title = '',
   teamA = {},
@@ -38,42 +39,34 @@ const CreoleGameCard = ({
     <Box
       border='1'
       borderRadius='lg'
-      bgColor={match.id === id ? colors.soft1 : 'white'}
+      bgColor={match ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
-        disabled={match/*.id !==*/ === id}
+        disabled={match.id !== id}
         onPress={() => {
 
-          let uniqueTeamA = {}
-          let uniqueTeamB = {}
-
-          playersTeamA?.forEach(item => {
-            uniqueTeamA[item.usuario.id] = item
-          })
-          playersTeamB?.forEach(item => {
-            uniqueTeamB[item.usuario.id] = item
-          })
-
-          uniqueTeamA = Object.values(uniqueTeamA)
-          uniqueTeamB = Object.values(uniqueTeamB)
-
           const game = {
+            tournamentId: match?.tournamentId || tournamentID,
             id: match?.id || id,
             title: match?.title || title,
             date: match?.date || date,
             maxPoints: match?.maxPoints || maxPoints,
             forfeit: match?.forfeit || forfeit,
             maxTime: match?.maxTime || maxTime,
+            selectedTeam: match?.selectedTeam || null,
+            initialTeam: match?.initialTeam || null,
             teamA: match?.teamA || teamA,
             teamB: match?.teamB || teamB,
             teamAScore: match?.teamAScore || 0,
             teamBScore: match?.teamBScore || 0,
-            teamAMembers: match?.teamAMembers || uniqueTeamA,
+            colorTeamA: match?.colorTeamA || null,
+            colorTeamB: match?.colorTeamB || null,
+            teamAMembers: playersTeamA,
+            teamBMembers: playersTeamB,
             rosterTeamA: match?.rosterTeamA?.length > 0 ? match?.rosterTeamA : [],
-            teamBMembers: match?.teamBMembers || uniqueTeamB,
             rosterTeamB: match?.rosterTeamB?.length > 0 ? match?.rosterTeamB : [],
             rounds: match?.rounds?.length > 0 ? match?.rounds : []
           }

@@ -22,8 +22,8 @@ const TeamPage = ({navigation, route}) => {
           <Stack>
             <Divider />
             <FlatList
-              minH="73%"
-              maxH="73%"
+              minH="69%"
+              maxH="69%"
               mt={1}
               data={team?.teamMembers}
               keyExtractor={item => item?.id}

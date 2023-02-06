@@ -20,9 +20,12 @@ import Modal from '../Modal';
 import StyledField from './StyledField';
 import StyledSwitch from '../StyledSwitch';
 
-const ContactCard = () => {
+const ContactCard = ({userProp={}}) => {
+
+  const userData = userProp
+
   const [email, setEmail] = useState('gustavoerivero.p63@gmail.com');
-  const [phones, setPhones] = useState('+584149561231');
+  const [phones, setPhones] = useState(userProp?.data?.telefono || []);
   const [activePhones, setActivePhones] = useState(true);
 
   const [editModal, setEditModal] = useState(false);
@@ -49,10 +52,25 @@ const ContactCard = () => {
             <HStack alignItems="center" space={2}>
               <Icon name="mail-outline" size={20} color={colors.gray} />
               <Text fontSize="xs" color={colors.gray}>
-                {cutText(email, 42)}
+                {cutText(userData?.data?.email, 42)}
               </Text>
             </HStack>
-            {activePhones && (
+            {
+            phones?.length > 0 && (
+              <VStack>
+              
+              {phones
+              ?.filter(item => item.es_publico === '1')
+              ?.map((item, key) => (
+              
+              <HStack key={phones} alignItems="center" space={2}>
+              <Icon name="phone-portrait-outline" size={20} color={colors.gray} />
+              <Text fontSize="xs" color={colors.gray}> {cutText(item?.numero, 42)} </Text>
+              </HStack>
+              ))}
+              </VStack>
+              )
+            /*activePhones && (
               <HStack key={phones} alignItems="center" space={2}>
                 <Icon
                   name="phone-portrait-outline"
@@ -63,7 +81,8 @@ const ContactCard = () => {
                   {cutText(phones, 42)}
                 </Text>
               </HStack>
-            )}
+            )*/
+            }
           </VStack>
         </VStack>
         <TouchableOpacity
@@ -97,11 +116,40 @@ const ContactCard = () => {
                   </Text>
                 </Stack>
                 <Stack w="80%" justifyContent="center" alignItems="center">
-                  <StyledField value={email} onChangeText={e => setEmail(e)} />
+                  <StyledField value={userProp?.data?.email} onChangeText={e => setEmail(e)} />
                 </Stack>
               </HStack>
-              {phones && (
+
+              { phones?.length == 0 ? (
                 <HStack
+                justifyContent="center"
+                alignItems="center"
+                space={1}>
+                <Stack w="20%" justifyContent="center" alignItems="center">
+                    <Text fontSize="xs" color={colors.gray}>
+                      Teléfonos
+                    </Text>
+                </Stack>
+                <Stack w="60%" justifyContent="center" alignItems="center">
+                  <StyledField
+                    value={''}
+                    onChangeText={text => setPhones(text)}
+                  />
+                </Stack>
+                <Stack w="20%" justifyContent="center" alignItems="center">
+                  <StyledSwitch
+                    value={0}
+                    setValue={setActivePhones}
+                  />
+                </Stack>
+              </HStack>
+              ) : (
+                phones?.length > 0 && (
+                  <VStack>
+                  {phones
+                  ?.map((item, key) => (
+                  
+                  <HStack
                   key={phones}
                   justifyContent="center"
                   alignItems="center"
@@ -115,18 +163,26 @@ const ContactCard = () => {
                   </Stack>
                   <Stack w="60%" justifyContent="center" alignItems="center">
                     <StyledField
-                      value={phones}
+                      value={item?.numero}
                       onChangeText={text => setPhones(text)}
                     />
                   </Stack>
                   <Stack w="20%" justifyContent="center" alignItems="center">
                     <StyledSwitch
-                      value={activePhones}
+                      value={item?.es_publico === '1'}
                       setValue={setActivePhones}
                     />
                   </Stack>
                 </HStack>
-              )}
+
+                  ))}
+                  </VStack>
+                  )
+              )
+}
+              
+            
+            
             </VStack>
             <HStack minW="100%" justifyContent="space-around">
               <Button
@@ -137,8 +193,8 @@ const ContactCard = () => {
                 shadow={3}
                 justifyContent="center"
                 alignItems="center"
-                bgColor={colors.button.bgPrimary}>
-                <Text bold fontSize="md" color={colors.white}>
+                bgColor={colors.gray2}>
+                <Text bold fontSize="md" color={colors.gray}>
                   Cancelar
                 </Text>
               </Button>

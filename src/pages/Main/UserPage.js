@@ -94,7 +94,7 @@ console.log(user?.user?.usuario?.id)
             gamesLost={2}
             points={250}
           />
-          <ContactCard />
+          <ContactCard userProp={userData} />
         </VStack>
         )
       }

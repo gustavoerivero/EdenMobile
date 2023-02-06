@@ -170,7 +170,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                   />
                   :
                   <Image
-                    source={userData?.data?.foto}
+                    source={{uri: userData?.data?.foto}}
                     w={120}
                     h={120}
                     alt='profile'
@@ -193,7 +193,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
               opacity={.5}
               color={colors.gray}
             >
-              {userData?.directivo?.posicion}
+              {userData?.data?.directivo?.posicion}
             </Text>
             <Text
               fontSize='sm'
@@ -252,7 +252,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                   w='75%'
                 >
                   <StyledField
-                    value={userData?.nombres}
+                    value={userData?.data?.nombres}
                     onChangeText={(text) => setNames(text)}
                   />
                 </Stack>
@@ -279,7 +279,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                   w='75%'
                 >
                   <StyledField
-                    value={userData?.apellidos}
+                    value={userData?.data?.apellidos}
                     onChangeText={text => setLastNames(text)}
                   />
                 </Stack>
@@ -409,7 +409,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
             </VStack>
             <HStack
               minW='100%'
-              justifyContent='center'
+              justifyContent='space-around'
             >
               <Button
                 onPress={() => setEdit(false)}
@@ -419,12 +419,12 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={colors.button.bgPrimary}
+                bgColor={colors.gray2}
               >
                 <Text
                   bold
                   fontSize='md'
-                  color={colors.white}
+                  color={colors.gray}
                 >
                   Cerrar
                 </Text>

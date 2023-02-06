@@ -18,7 +18,7 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
         onPress={() => {
           setChecked(!checked)
 
-          if (roster.some(member => member?.persona?.id === item?.persona?.id)) {
+          if (roster.some(member => member?.usuario?.id === item?.usuario?.id)) {
             remove(item)
           } else {
             add(item)
@@ -33,20 +33,20 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
             w={4}
             h={4}
             bgColor={
-              roster.some(member => member?.persona?.id === item?.persona?.id) ?
+              roster.some(member => member?.usuario?.id === item?.usuario?.id) ?
                 colors.creoleRoster.checkboxColor :
                 colors.creoleRoster.checkboxBackgroundColor
             }
             borderWidth={2}
             borderRadius={2}
             borderColor={
-              roster.some(member => member?.persona?.id === item?.persona?.id) ?
+              roster.some(member => member?.usuario?.id === item?.usuario?.id) ?
                 colors.creoleRoster.checkboxColor :
                 colors.creoleRoster.checkboxInactiveBorderColor
             }
             alignItems='center'
           >
-            {roster.some(member => member?.persona?.id === item?.persona?.id) &&
+            {roster.some(member => member?.usuario?.id === item?.usuario?.id) &&
               <Icon
                 name='md-checkmark-sharp'
                 size={10}
@@ -57,11 +57,11 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
           <Text
             bold
             fontSize='md'
-            color={roster.some(member => member?.persona?.id === item?.persona?.id) ?
+            color={roster.some(member => member?.usuario?.id === item?.usuario?.id) ?
               colors.creoleRoster.checkboxColor :
               colors.creoleRoster.textColor}
           >
-            {item?.persona?.nombres} {item?.persona?.apellidos}
+            {item?.usuario?.nombres} {item?.usuario?.apellidos}
           </Text>
         </HStack>
       </TouchableOpacity>

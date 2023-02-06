@@ -34,6 +34,7 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [teams, setTeams] = useState([]);
+  const [calendar, setCalendar] = useState(false)
 
   const event = route?.params;
 
@@ -42,7 +43,11 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
       Tournament.get(event?.id)
         .then(res => {
           let {data} = res
+
+          setCalendar(data?.data?.fase_de_torneo[0]?.calendario?.length > 0 || false)
+
           data = data?.data?.fase_de_torneo[0]?.equipo
+          
           setTeams(data)
           setIsLoading(false)
         })
@@ -264,7 +269,7 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
                     openDelay={200}>
                     <TouchableOpacity
                       activeOpacity={0.75}
-                      disabled={false /*!event.tournament*/}
+                      disabled={!calendar}
                       onPress={() => {
                         console.log(`Game list button is pressed`);
                         navigation?.navigate('CreoleBallsListPage', {
@@ -284,7 +289,7 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
                         h={12}
                         borderRadius={50}
                         bgColor={
-                          event?.tournament ? colors.icon.primary : colors.gray2
+                          calendar ? colors.icon.primary : colors.gray2
                         }
                         shadow={3}
                         alignItems="center"
@@ -292,7 +297,7 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
                         pl={0.5}>
                         <Icon
                           name="list-circle-outline"
-                          color={event?.tournament ? colors.white : colors.gray}
+                          color={calendar ? colors.white : colors.gray}
                           size={40}
                         />
                       </Box>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/creole/actions'
 
 import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
@@ -20,7 +20,8 @@ const CreoleGameCard = ({
   maxTime = 0,
   forfeit = 0,
   playersTeamA = [],
-  playersTeamB = [] }) => {
+  playersTeamB = [],
+  match }) => {
 
   const time = getHour(date)
   const { day, month, year } = getDate(date)
@@ -28,7 +29,7 @@ const CreoleGameCard = ({
   const layout = useWindowDimensions()
 
   const dispatch = useDispatch()
-  
+
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
   }
@@ -37,28 +38,44 @@ const CreoleGameCard = ({
     <Box
       border='1'
       borderRadius='lg'
-      bgColor='white'
+      bgColor={match.id === id ? colors.soft1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
+        disabled={match/*.id !==*/ === id}
         onPress={() => {
 
+          let uniqueTeamA = {}
+          let uniqueTeamB = {}
+
+          playersTeamA?.forEach(item => {
+            uniqueTeamA[item.usuario.id] = item
+          })
+          playersTeamB?.forEach(item => {
+            uniqueTeamB[item.usuario.id] = item
+          })
+
+          uniqueTeamA = Object.values(uniqueTeamA)
+          uniqueTeamB = Object.values(uniqueTeamB)
+
           const game = {
-            id: id,
-            title: title,
-            date: date,
-            maxPoints: maxPoints,
-            forfeit: forfeit,
-            maxTime: maxTime,
-            teamA: teamA,
-            teamB: teamB,
-            teamAScore: 0,
-            teamBScore: 0,
-            teamAMembers: playersTeamA,
-            teamBMembers: playersTeamB,
-            rounds: []
+            id: match?.id || id,
+            title: match?.title || title,
+            date: match?.date || date,
+            maxPoints: match?.maxPoints || maxPoints,
+            forfeit: match?.forfeit || forfeit,
+            maxTime: match?.maxTime || maxTime,
+            teamA: match?.teamA || teamA,
+            teamB: match?.teamB || teamB,
+            teamAScore: match?.teamAScore || 0,
+            teamBScore: match?.teamBScore || 0,
+            teamAMembers: match?.teamAMembers || uniqueTeamA,
+            rosterTeamA: match?.rosterTeamA?.length > 0 ? match?.rosterTeamA : [],
+            teamBMembers: match?.teamBMembers || uniqueTeamB,
+            rosterTeamB: match?.rosterTeamB?.length > 0 ? match?.rosterTeamB : [],
+            rounds: match?.rounds?.length > 0 ? match?.rounds : []
           }
 
           handleSubmit(game)
@@ -184,4 +201,8 @@ const CreoleGameCard = ({
   )
 }
 
-export default CreoleGameCard
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(CreoleGameCard)

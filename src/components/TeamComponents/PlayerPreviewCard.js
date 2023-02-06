@@ -1,7 +1,7 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
-import {Box, HStack, VStack, Text, Image, Stack} from 'native-base';
+import { Box, HStack, VStack, Text, Image, Stack } from 'native-base';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -41,19 +41,13 @@ const PlayerPreviewCard = ({
           )}
         </Stack>
         <VStack minW="60%" maxW="60%" minH="65" justifyContent="center">
-          <Stack space={0}>
-            <Text bold fontSize="sm" color={colors.text.description}>
+          <Stack space={1}>
+            <Text bold fontSize="sm" lineHeight={15} color={colors.text.description}>
               {playerName}
             </Text>
-            {playerPosition === 'Capitán' ? (
-              <Text fontSize="xs" bold color={colors.primary}>
-                {playerPosition}
-              </Text>
-            ) : (
-              <Text fontSize="xs" bold color={colors.secondary}>
-                {playerPosition}
-              </Text>
-            )}
+            <Text fontSize="xs" bold color={playerPosition === 'Capitán' ? colors.primary : colors.secondary}>
+              {playerPosition}
+            </Text>
           </Stack>
         </VStack>
         <TouchableOpacity

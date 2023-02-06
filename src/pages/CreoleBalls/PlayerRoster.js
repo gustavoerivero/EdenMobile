@@ -1,5 +1,8 @@
-import React, { useState, useReducer, useEffect } from 'react'
-import { connect } from 'react-redux'
+import React, { useState, useReducer } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import Container from '../../components/Container'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { Stack, VStack, HStack, Text, Divider, Button } from 'native-base'
@@ -7,20 +10,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import colors from '../../styled-components/colors'
 import RosterTeam from '../../components/CreoleBallsComponents/RosterTeam'
-import { firstTeamData } from './data/teamA'
-import { secondTeamData } from './data/teamB'
 
-const firstRosterReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_MEMBER':
-      return [...state, action.payload]
-    case 'REMOVE_MEMBER':
-      return action.payload
-    default: return state
-  }
-}
-
-const secondRosterReducer = (state, action) => {
+const rosterReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_MEMBER':
       return [...state, action.payload]
@@ -32,12 +23,10 @@ const secondRosterReducer = (state, action) => {
 
 const PlayerRoster = ({ navigation, route, match }) => {
 
-  const game = route?.params
-
   const layout = useWindowDimensions()
 
-  const [firstRoster, firstDispatch] = useReducer(firstRosterReducer, [])
-  const [secondRoster, secondDispatch] = useReducer(secondRosterReducer, [])
+  const [firstRoster, firstDispatch] = useReducer(rosterReducer, match.rosterTeamA)
+  const [secondRoster, secondDispatch] = useReducer(rosterReducer, match.rosterTeamB)
 
   const addFirstRoster = (player) => {
     firstDispatch({
@@ -67,16 +56,11 @@ const PlayerRoster = ({ navigation, route, match }) => {
     })
   }
 
-  const [teamA, setTeamA] = useState(game?.teamA || '')
+  const dispatch = useDispatch()
 
-  const [firstTeam, setFirstTeam] = useState(game?.playersTeamA || [])
-
-  const [teamB, setTeamB] = useState(game?.teamB || '')
-  const [secondTeam, setSecondTeam] = useState(game?.playersTeamB || [])
-
-  useEffect(() => {
-    console.log(match)
-  }, [])
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   return (
     <Container
@@ -129,8 +113,8 @@ const PlayerRoster = ({ navigation, route, match }) => {
           <RosterTeam
             id={1}
             teamID={1}
-            name={teamA?.nombre}
-            team={firstTeam}
+            name={match.teamA.nombre}
+            team={match.teamAMembers}
             roster={firstRoster}
 
             add={addFirstRoster}
@@ -140,8 +124,8 @@ const PlayerRoster = ({ navigation, route, match }) => {
           <RosterTeam
             id={2}
             teamID={2}
-            name={teamB?.nombre}
-            team={secondTeam}
+            name={match.teamB.nombre}
+            team={match.teamBMembers}
             roster={secondRoster}
 
             add={addSecondRoster}
@@ -177,18 +161,28 @@ const PlayerRoster = ({ navigation, route, match }) => {
               }
               disabled={firstRoster.length < 4 || secondRoster.length < 4}
               onPress={() => {
-                navigation?.navigate('StartedGamePage', {
-                  id: game?.id,
-                  title: game?.title,
-                  teamA: teamA,
-                  teamB: teamB,
-                  rosterA: firstRoster,
-                  rosterB: secondRoster,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime
-                })
+
+                const game = {
+                  id: match.id,
+                  title: match.title,
+                  date: match.date,
+                  maxPoints: match.maxPoints,
+                  forfeit: match.forfeit,
+                  maxTime: match.maxTime,
+                  teamA: match.teamA,
+                  teamB: match.teamB,
+                  teamAScore: match.teamAScore,
+                  teamBScore: match.teamBScore,
+                  teamAMembers: match.teamAMembers,
+                  rosterTeamA: firstRoster,
+                  teamBMembers: match.teamBMembers,
+                  rosterTeamB: secondRoster,
+                  rounds: []
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate('StartedGamePage', game)
               }}
             >
               <Text

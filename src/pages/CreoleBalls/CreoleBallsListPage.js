@@ -5,13 +5,11 @@ import { Divider, FlatList, HStack, Stack, Text, VStack } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
-import useLoading from '../../hooks/useLoading'
 
 import colors from '../../styled-components/colors'
 import CreoleGameCard from '../../components/CreoleBallsComponents/CreoleGameCard'
 import NotFound from '../../components/NotFound'
 
-import ScheduleService from '../../services/calendar/CalendarService'
 import TournamentService from '../../services/tournaments/TournamentsService'
 
 const CreoleBallsListPage = ({ navigation, route }) => {
@@ -23,14 +21,14 @@ const CreoleBallsListPage = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [events, setEvents] = useState([])
   const [modality, setModality] = useState({})
-  const [playersTeamA, setPlayersTeamA] = useState([])
-  const [playersTeamB, setPlayersTeamB] = useState([])
-  const [refreshing, setRefreshing] = useState()
+  const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = useCallback(() => {
+    setRefreshing(true)
     setIsLoading(true)
     setEvents([])
     getData()
+    setRefreshing(false)
   }, [])
 
   const getData = async () => {
@@ -41,11 +39,9 @@ const CreoleBallsListPage = ({ navigation, route }) => {
       const { data } = await Tournament.get(tournament?.id)
 
       let auxData = data?.data
-
-
       let calendar = auxData?.fase_de_torneo[0]?.calendario
-      setModality(auxData?.fase_de_torneo[0]?.modalidad)
 
+      setModality(auxData?.fase_de_torneo[0]?.modalidad)
       setEvents(calendar)
 
       setIsLoading(false)
@@ -157,8 +153,8 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                     forfeit={modality?.tiempo_forfeit_minutos}
                     maxPoints={modality?.puntuacion_maxima}
                     navigation={navigation}
-                    playersTeamA={item?.jugadores_equipo_a || []}
-                    playersTeamB={item?.jugadores_equipo_b || []}
+                    playersTeamA={item?.equipo_a?.jugadores || []}
+                    playersTeamB={item?.equipo_b?.jugadores || []}
                   />
                 </Stack>
               )}

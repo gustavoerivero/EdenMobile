@@ -1,21 +1,29 @@
 import React, { useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
-import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
+import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const ScoreSetPage = ({ navigation, route }) => {
+const ScoreSetPage = ({ navigation, match }) => {
 
   const layout = useWindowDimensions()
-
-  const game = route?.params
 
   const [scoreTeamA, setScoreTeamA] = useState(0)
   const [scoreTeamB, setScoreTeamB] = useState(0)
   const [isSetScore, setIsSetScore] = useState(false)
+  
+  const dispatch = useDispatch()
+
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   return (
     <Container
@@ -75,7 +83,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                {`${game?.maxTime}:00` || '00:00'}
+                {`${match?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -109,16 +117,16 @@ const ScoreSetPage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamA}
+                color={match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
-                {game?.teamA?.abreviatura}
+                {match?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamA}
+                {match?.teamAScore}
               </Text>
             </HStack>
 
@@ -133,14 +141,14 @@ const ScoreSetPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamB}
+                {match?.teamBScore}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamB}
+                color={match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
-                {game?.teamB?.abreviatura}
+                {match?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -216,7 +224,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                 >
                   <Icon
                     name='people'
-                    color={game?.colorTeamA}
+                    color={match?.colorTeamA}
                     size={120}
                   />
                 </Box>
@@ -227,7 +235,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamA?.nombre}
+                  {match?.teamA?.nombre}
                 </Text>
               </VStack>
 
@@ -248,7 +256,7 @@ const ScoreSetPage = ({ navigation, route }) => {
 
                   <Icon
                     name='people'
-                    color={game?.colorTeamB}
+                    color={match?.colorTeamB}
                     size={120}
                   />
                 </Box>
@@ -259,7 +267,7 @@ const ScoreSetPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamB?.nombre}
+                  {match?.teamB?.nombre}
                 </Text>
               </VStack>
 
@@ -473,24 +481,36 @@ const ScoreSetPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('RoundNextPage', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: game?.selectedTeam,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA + scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB + scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime
-                })
+                
+                const game = {
+                  started: match?.started,
+                  completed: match?.completed,
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: match?.selectedTeam,
+                  initialTeam: match?.initialTeam,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore + scoreTeamA,
+                  teamBScore: match?.teamBScore + scoreTeamB,
+                  colorTeamA: match?.colorTeamA,
+                  colorTeamB: match?.colorTeamB,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: match?.rounds
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate('RoundNextPage', game)
+
               }}
             >
               <Text
@@ -509,4 +529,8 @@ const ScoreSetPage = ({ navigation, route }) => {
   )
 }
 
-export default ScoreSetPage
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(ScoreSetPage)

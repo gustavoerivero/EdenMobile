@@ -1,4 +1,8 @@
 import React, { useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
 import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
@@ -7,14 +11,18 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const ColorTeamPage = ({ navigation, route }) => {
+const ColorTeamPage = ({ navigation, route, match }) => {
 
   const layout = useWindowDimensions()
 
-  const game = route?.params
+  const [isColorSelected, setIsColorSelected] = useState(match?.colorTeamA ? true : false)
+  const [colorSelected, setColorSelected] = useState(match?.colorTeamA === colors.creoleStartGame.teamAColor ? true : false)
 
-  const [isColorSelected, setIsColorSelected] = useState(false)
-  const [colorSelected, setColorSelected] = useState(false)
+  const dispatch = useDispatch()
+
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   return (
     <Container
@@ -74,7 +82,7 @@ const ColorTeamPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                {`${game?.maxTime}:00` || '00:00'}
+                {`${match?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -110,14 +118,14 @@ const ColorTeamPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {game?.teamA?.abreviatura}
+                {match?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {match?.teamAScore || 0}
               </Text>
             </HStack>
 
@@ -132,14 +140,14 @@ const ColorTeamPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {match?.teamBScore || 0}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {game?.teamB?.abreviatura}
+                {match?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -176,7 +184,7 @@ const ColorTeamPage = ({ navigation, route }) => {
               textAlign='center'
               pt={1}
             >
-              {game?.initialTeam}
+              {match?.initialTeam?.nombre}
             </Text>
           </Stack>
 
@@ -282,24 +290,44 @@ const ColorTeamPage = ({ navigation, route }) => {
             bgColor={isColorSelected ? colors.button.bgPrimary : colors.gray2}
             _pressed={colors.bgSecondary}
             onPress={() => {
-              navigation?.navigate('PlayTeamAPage', {
-                id: game?.id,
-                title: game?.title,
-                selectedTeam: game?.selectedTeam,
-                initialTeam: game?.initialTeam,
-                teamA: game?.teamA,
+
+              const round = {
+                id: 1,
+                number: 1,
+                teamAScore: 0,
+                teamBScore: 0,
+                teamAMembers: [],
+                teamBMembers: []
+              }
+
+              const game = {
+                started: match?.started,
+                completed: match?.completed,
+                tournamentId: match?.tournamentId,
+                id: match?.id,
+                title: match?.title,
+                date: match?.date,
+                maxPoints: match?.maxPoints,
+                forfeit: match?.forfeit,
+                maxTime: match?.maxTime,
+                selectedTeam: match?.selectedTeam || null,
+                initialTeam: match?.initialTeam || null,
+                teamA: match?.teamA,
+                teamB: match?.teamB,
+                teamAScore: match?.teamAScore || 0,
+                teamBScore: match?.teamBScore || 0,
                 colorTeamA: colorSelected ? colors.creoleStartGame.teamAColor : colors.creoleStartGame.teamBColor,
-                teamB: game?.teamB,
                 colorTeamB: !colorSelected ? colors.creoleStartGame.teamAColor : colors.creoleStartGame.teamBColor,
-                scoreTeamA: 0,
-                scoreTeamB: 0,
-                rosterA: game?.rosterA,
-                rosterB: game?.rosterB,
-                date: game?.date,
-                maxPoints: game?.maxPoints,
-                forfeit: game?.forfeit,
-                maxTime: game?.maxTime
-              })
+                teamAMembers: match?.teamAMembers,
+                teamBMembers: match?.teamBMembers,
+                rosterTeamA: match?.rosterTeamA,
+                rosterTeamB: match?.rosterTeamB,
+                rounds: match?.rounds?.length > 0 ? match?.rounds : [round]
+              }
+    
+              handleSubmit(game)
+
+              navigation?.navigate('PlayTeamAPage', game)
             }}
             disabled={!isColorSelected}
           >
@@ -318,4 +346,8 @@ const ColorTeamPage = ({ navigation, route }) => {
   )
 }
 
-export default ColorTeamPage
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(ColorTeamPage)

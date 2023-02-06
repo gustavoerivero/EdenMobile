@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
-import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
+import { VStack, HStack, Stack, Text, Divider, Box, Button, FlatList } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
@@ -9,11 +13,15 @@ import colors from '../../styled-components/colors'
 
 import { cutText } from '../../utilities/functions'
 
-const PlayTeamAPage = ({ navigation, route }) => {
+const PlayTeamAPage = ({ navigation, match }) => {
 
   const layout = useWindowDimensions()
 
-  const game = route?.params
+  const dispatch = useDispatch()
+
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   return (
     <Container
@@ -73,7 +81,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                {`${game?.maxTime}:00` || '00:00'}
+                {`${match?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -107,16 +115,16 @@ const PlayTeamAPage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamA}
+                color={match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
-                {game?.teamA?.abreviatura}
+                {match?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamA}
+                {match?.teamAScore}
               </Text>
             </HStack>
 
@@ -131,14 +139,14 @@ const PlayTeamAPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamB}
+                {match?.teamBScore}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamB}
+                color={match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
-                {game?.teamB?.abreviatura}
+                {match?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -166,7 +174,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
               >
                 <Icon
                   name='people'
-                  color={game?.colorTeamA}
+                  color={match?.colorTeamA}
                   size={50}
                 />
               </Box>
@@ -178,26 +186,26 @@ const PlayTeamAPage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='2xl'
-                color={game?.colorTeamA}
+                color={match?.colorTeamA}
                 textAlign='left'
                 pt={1}
                 lineHeight={22}
               >
-                {game?.selectedTeam}
+                {match?.selectedTeam?.nombre}
               </Text>
             </Stack>
           </HStack>
 
           <Stack
             minH={5}
-            bgColor={game?.colorTeamA}
+            bgColor={match?.colorTeamA}
           >
           </Stack>
 
           <Divider />
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={game?.selectedTeam === game?.teamA?.nombre ? game?.rosterA : game?.rosterB}
+            data={match?.selectedTeam?.nombre === match?.teamA?.nombre ? match?.rosterTeamA : match?.rosterTeamB}
             minH='50%'
             maxH='50%'
             keyExtractor={item => item?.id}
@@ -218,25 +226,35 @@ const PlayTeamAPage = ({ navigation, route }) => {
                   <TouchableOpacity
                     activeOpacity={.9}
                     onPress={() => {
-                      navigation?.navigate('PlayerShootDataPage', {
-                        id: game?.id,
-                        title: game?.title,
-                        selectedTeam: game?.selectedTeam,
-                        selectedPlayer: item?.persona?.id,
-                        initialTeam: game?.initialTeam,
-                        teamA: game?.teamA,
-                        colorTeamA: game?.colorTeamA,
-                        teamB: game?.teamB,
-                        colorTeamB: game?.colorTeamB,
-                        scoreTeamA: game?.scoreTeamA,
-                        scoreTeamB: game?.scoreTeamB,
-                        rosterA: game?.rosterA,
-                        rosterB: game?.rosterB,
-                        date: game?.date,
-                        maxPoints: game?.maxPoints,
-                        forfeit: game?.forfeit,
-                        maxTime: game?.maxTime
-                      })
+
+                      const game = {
+                        started: match?.started,
+                        completed: match?.completed,
+                        tournamentId: match?.tournamentId,
+                        id: match?.id,
+                        title: match?.title,
+                        date: match?.date,
+                        maxPoints: match?.maxPoints,
+                        forfeit: match?.forfeit,
+                        maxTime: match?.maxTime,
+                        selectedTeam: match?.selectedTeam,
+                        initialTeam: match?.initialTeam,
+                        teamA: match?.teamA,
+                        teamB: match?.teamB,
+                        teamAScore: match?.teamAScore,
+                        teamBScore: match?.teamBScore,
+                        colorTeamA: match?.colorTeamA,
+                        colorTeamB: match?.colorTeamB,
+                        teamAMembers: match?.teamAMembers,
+                        teamBMembers: match?.teamBMembers,
+                        rosterTeamA: match?.rosterTeamA,
+                        rosterTeamB: match?.rosterTeamB,
+                        rounds: match?.rounds
+                      }
+
+                      handleSubmit(game)
+
+                      navigation?.navigate('PlayerShootDataPage', { ...game, selectedPlayer: item?.usuario.id })
                     }}
                   >
                     <Box
@@ -252,7 +270,7 @@ const PlayTeamAPage = ({ navigation, route }) => {
                         color={colors.gray}
                         textAlign='center'
                       >
-                        {cutText(`${item?.persona?.nombres} ${item?.persona?.apellidos}`, 35)}
+                        {cutText(`${item?.usuario?.nombres} ${item?.usuario?.apellidos}`, 35)}
                       </Text>
                     </Box>
                   </TouchableOpacity>
@@ -278,24 +296,36 @@ const PlayTeamAPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('PlayTeamBPage', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: game?.selectedTeam !== game?.teamA?.nombre ? game?.teamA?.nombre : game?.teamB?.nombre,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime,
-                })
+
+                const game = {
+                  started: match?.started,
+                  completed: match?.completed,
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: match?.selectedTeam?.nombre !== match?.teamA?.nombre ? match?.teamA : match?.teamB,
+                  initialTeam: match?.initialTeam,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore,
+                  teamBScore: match?.teamBScore,
+                  colorTeamA: match?.colorTeamA,
+                  colorTeamB: match?.colorTeamB,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: match?.rounds
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate('PlayTeamBPage', game)
+
               }}
             >
               <Text
@@ -336,24 +366,35 @@ const PlayTeamAPage = ({ navigation, route }) => {
               bgColor={colors.gray3}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('CreoleResult', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: game?.selectedTeam,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime,
-                })
+
+                const game = {
+                  started: match?.started,
+                  completed: match?.completed,
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: match?.selectedTeam,
+                  initialTeam: match?.initialTeam,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore,
+                  teamBScore: match?.teamBScore,
+                  colorTeamA: match?.colorTeamA,
+                  colorTeamB: match?.colorTeamB,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: match?.rounds
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate('CreoleResult', game)
               }}
             >
               <Text
@@ -374,24 +415,35 @@ const PlayTeamAPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('ScoreSetPage', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: game?.selectedTeam,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime,
-                })
+
+                const game = {
+                  started: match?.started,
+                  completed: match?.completed,
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: match?.selectedTeam,
+                  initialTeam: match?.initialTeam,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore,
+                  teamBScore: match?.teamBScore,
+                  colorTeamA: match?.colorTeamA,
+                  colorTeamB: match?.colorTeamB,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: match?.rounds
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate('ScoreSetPage', game)
               }}
             >
               <Text
@@ -410,4 +462,8 @@ const PlayTeamAPage = ({ navigation, route }) => {
   )
 }
 
-export default PlayTeamAPage
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(PlayTeamAPage)

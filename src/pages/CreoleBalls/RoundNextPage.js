@@ -1,4 +1,8 @@
 import React, { useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
 import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
@@ -7,13 +11,19 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const RoundNextPage = ({ navigation, route }) => {
+const RoundNextPage = ({ navigation, route, match }) => {
 
   const layout = useWindowDimensions()
 
   const game = route?.params
 
   const [selectedTeam, setSelectedTeam] = useState(null)
+
+  const dispatch = useDispatch()
+
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   return (
     <Container
@@ -73,7 +83,7 @@ const RoundNextPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                {`${game?.maxTime}:00` || '00:00'}
+                {`${match?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -107,16 +117,16 @@ const RoundNextPage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamA}
+                color={match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
-                {game?.teamA?.abreviatura}
+                {match?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamA}
+                {match?.teamAScore}
               </Text>
             </HStack>
 
@@ -131,14 +141,14 @@ const RoundNextPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamB}
+                {match?.teamBScore}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamB}
+                color={match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
-                {game?.teamB?.abreviatura}
+                {match?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -182,11 +192,13 @@ const RoundNextPage = ({ navigation, route }) => {
                 <TouchableOpacity
                   activeOpacity={.9}
                   onPress={() => {
-                    setSelectedTeam(game?.teamA?.nombre)
+                    setSelectedTeam(match?.teamA?.nombre)
                   }}
                 >
                   <Box
-                    bgColor={selectedTeam === game?.teamA?.nombre ? game?.colorTeamA : colors.gray3}
+                    bgColor={selectedTeam === match?.teamA?.nombre ?
+                      match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB :
+                      colors.gray3}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -196,7 +208,9 @@ const RoundNextPage = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={selectedTeam !== game?.teamA?.nombre ? game?.colorTeamA : colors.gray}
+                      color={selectedTeam !== match?.teamA?.nombre ?
+                        match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB :
+                        colors.gray}
                       size={120}
                     />
                   </Box>
@@ -208,7 +222,7 @@ const RoundNextPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamA?.nombre}
+                  {match?.teamA?.nombre}
                 </Text>
               </VStack>
 
@@ -220,11 +234,13 @@ const RoundNextPage = ({ navigation, route }) => {
                 <TouchableOpacity
                   activeOpacity={.9}
                   onPress={() => {
-                    setSelectedTeam(game?.teamB?.nombre)
+                    setSelectedTeam(match?.teamB?.nombre)
                   }}
                 >
                   <Box
-                    bgColor={selectedTeam === game?.teamB?.nombre ? game?.colorTeamB : colors.gray3}
+                    bgColor={selectedTeam === match?.teamB?.nombre ?
+                      match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB :
+                      colors.gray3}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -234,7 +250,9 @@ const RoundNextPage = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={selectedTeam !== game?.teamB?.nombre ? game?.colorTeamB : colors.gray}
+                      color={selectedTeam !== match?.teamB?.nombre ?
+                        match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB :
+                        colors.gray}
                       size={120}
                     />
                   </Box>
@@ -246,7 +264,7 @@ const RoundNextPage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamB?.nombre}
+                  {match?.teamB?.nombre}
                 </Text>
               </VStack>
 
@@ -282,24 +300,39 @@ const RoundNextPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(selectedTeam === game?.teamA?.nombre ? 'PlayTeamAPage' : 'PlayTeamBPage', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: selectedTeam,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime
-                })
+
+                const game = {
+                  started: match?.started,
+                  completed: match?.completed,
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: match?.selectedTeam,
+                  initialTeam: match?.initialTeam,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore,
+                  teamBScore: match?.teamBScore,
+                  colorTeamA: match?.colorTeamA,
+                  colorTeamB: match?.colorTeamB,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: match?.rounds
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate(selectedTeam === match?.teamA.nombre &&
+                  match?.initialTeam?.nombre === match?.teamA?.nombre ?
+                  'PlayTeamAPage' : 'PlayTeamBPage'
+                )
+
               }}
             >
               <Text
@@ -318,4 +351,8 @@ const RoundNextPage = ({ navigation, route }) => {
   )
 }
 
-export default RoundNextPage
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(RoundNextPage)

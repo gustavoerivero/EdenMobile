@@ -39,16 +39,18 @@ const CreoleGameCard = ({
     <Box
       border='1'
       borderRadius='lg'
-      bgColor={match ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
+      bgColor={match.started ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
-        disabled={match.id !== id}
+        disabled={match.started ? /*match.id !== id */ false : false}
         onPress={() => {
 
           const game = {
+            started: match?.started,
+            completed: match?.completed,
             tournamentId: match?.tournamentId || tournamentID,
             id: match?.id || id,
             title: match?.title || title,

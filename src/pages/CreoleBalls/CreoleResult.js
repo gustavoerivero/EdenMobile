@@ -1,19 +1,25 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
-import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
+import { useWindowDimensions } from 'react-native'
+
+import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const CreoleResult = ({ navigation, route }) => {
+const CreoleResult = ({ navigation, route, match }) => {
 
   const layout = useWindowDimensions()
 
-  const game = route?.params
+  const dispatch = useDispatch()
 
-  const [selectedTeam, setSelectedTeam] = useState(null)
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   return (
     <Container
@@ -64,7 +70,7 @@ const CreoleResult = ({ navigation, route }) => {
                   maxW='30%'
                 >
                   <Box
-                    bgColor={colors.creoleStartGame.teamAColor}
+                    bgColor={match?.teamA?.nombre === match?.initialTeam?.nombre ? match?.colorTeamA : match?.colorTeamB}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -91,14 +97,14 @@ const CreoleResult = ({ navigation, route }) => {
                     textAlign='center'
                     pt={1}
                   >
-                    {game?.teamA?.nombre}
+                    {match?.teamA?.nombre}
                   </Text>
                   <Text
                     bold
                     fontSize='6xl'
                     color={colors.creoleStartGame.scoreColor}
                   >
-                    {game?.scoreTeamA}
+                    {match?.teamAScore}
                   </Text>
                 </VStack>
               </HStack>
@@ -119,7 +125,7 @@ const CreoleResult = ({ navigation, route }) => {
                   maxW='30%'
                 >
                   <Box
-                    bgColor={colors.creoleStartGame.teamBColor}
+                    bgColor={match?.teamA?.nombre !== match?.initialTeam?.nombre ? match?.colorTeamA : match?.colorTeamB}
                     borderRadius={10}
                     shadow={7}
                     w={150}
@@ -146,14 +152,14 @@ const CreoleResult = ({ navigation, route }) => {
                     textAlign='center'
                     pt={1}
                   >
-                    {game?.teamB?.nombre}
+                    {match?.teamB?.nombre}
                   </Text>
                   <Text
                     bold
                     fontSize='6xl'
                     color={colors.creoleStartGame.scoreColor}
                   >
-                    {game?.scoreTeamB}
+                    {match?.teamBScore}
                   </Text>
                 </VStack>
               </HStack>
@@ -217,10 +223,10 @@ const CreoleResult = ({ navigation, route }) => {
                     textAlign='center'
                     color={colors.creoleStartGame.scoreColor}
                   >
-                    {game?.scoreTeamA === game?.scoreTeamB ? 'Empate' :
-                      game?.scoreTeamA > game?.scoreTeamB ?
-                        `Equipo ${game?.teamA?.nombre}` :
-                        `Equipo ${game?.teamB?.nombre}`
+                    {match?.teamAScore === match?.teamBScore ? 'Empate' :
+                      match?.teamAScore > match?.teamBScore ?
+                        `Equipo ${match?.teamA?.nombre}` :
+                        `Equipo ${match?.teamB?.nombre}`
                     }
                   </Text>
                 </Stack>
@@ -275,4 +281,8 @@ const CreoleResult = ({ navigation, route }) => {
   )
 }
 
-export default CreoleResult
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(CreoleResult)

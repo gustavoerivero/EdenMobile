@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { addMatch, deleteMatch } from '../../redux/creole/actions'
 
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
@@ -18,10 +18,14 @@ const StartedGamePage = ({ navigation, match }) => {
   const [coinPressed, setCoinPressed] = useState(false)
   const [shoot, setShoot] = useState(match?.selectedTeam ? true : false)
   const [coinTeam, setCoinTeam] = useState(match?.selectedTeam ? 
-    match?.selectedTeam === match?.teamA?.nombre : false)
+    match?.selectedTeam?.nombre === match?.teamA?.nombre : false)
   const [passPage, setPassPage] = useState(false)
   
   const dispatch = useDispatch()
+
+  const handleDelete = (matchID = 1) => {
+    dispatch(deleteMatch(matchID))
+  }
 
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
@@ -49,6 +53,8 @@ const StartedGamePage = ({ navigation, match }) => {
     setTimeout(() => {
 
       const game = {
+        started: match?.started,
+        completed: match?.completed,
         tournamentId: match?.tournamentId,
         id: match?.id,
         title: match?.title,
@@ -56,8 +62,8 @@ const StartedGamePage = ({ navigation, match }) => {
         maxPoints: match?.maxPoints,
         forfeit: match?.forfeit,
         maxTime: match?.maxTime,
-        selectedTeam: coin ? match?.teamA?.nombre : match?.teamB?.nombre ,
-        initialTeam: coin ? match?.teamA?.nombre : match?.teamB?.nombre,
+        selectedTeam: coin ? match?.teamA : match?.teamB,
+        initialTeam: coin ? match?.teamA : match?.teamB,
         teamA: match?.teamA,
         teamB: match?.teamB,
         teamAScore: match?.teamAScore || 0,
@@ -107,7 +113,10 @@ const StartedGamePage = ({ navigation, match }) => {
               minW='33%'
             >
               <TouchableOpacity
-                onPress={() => navigation?.goBack()}
+                onPress={() => {
+                  handleDelete(match?.id)
+                  navigation?.goBack()
+                }}
               >
                 <Icon
                   name='arrow-back-outline'
@@ -180,7 +189,7 @@ const StartedGamePage = ({ navigation, match }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {match?.teamAScore || 0}
               </Text>
             </HStack>
 
@@ -195,7 +204,7 @@ const StartedGamePage = ({ navigation, match }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                0
+                {match?.teamBScore || 0}
               </Text>
               <Text
                 bold
@@ -337,6 +346,8 @@ const StartedGamePage = ({ navigation, match }) => {
               onPress={() => {
 
                 const game = {
+                  started: match?.started,
+                  completed: match?.completed,
                   tournamentId: match?.tournamentId,
                   id: match?.id,
                   title: match?.title,
@@ -344,8 +355,8 @@ const StartedGamePage = ({ navigation, match }) => {
                   maxPoints: match?.maxPoints,
                   forfeit: match?.forfeit,
                   maxTime: match?.maxTime,
-                  selectedTeam: coinTeam ? match?.teamA?.nombre : match?.teamB?.nombre,
-                  initialTeam: coinTeam ? match?.teamA?.nombre : match?.teamB?.nombre,
+                  selectedTeam: coinTeam ? match?.teamA : match?.teamB,
+                  initialTeam: coinTeam ? match?.teamA : match?.teamB,
                   teamA: match?.teamA,
                   teamB: match?.teamB,
                   teamAScore: match?.teamAScore || 0,

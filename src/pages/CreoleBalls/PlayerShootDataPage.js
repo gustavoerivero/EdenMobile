@@ -27,14 +27,22 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
 
   const [numberShoot, setNumberShoot] = useState(1)
 
+  const rounds = match?.rounds
+
   const [firstShoot, setFirstShoot] = useState(null)
   const [secondShoot, setSecondShoot] = useState(null)
 
   const player = match?.selectedTeam?.nombre === match?.teamA?.nombre ?
-  match?.rosterTeamA.find(member => member?.usuario?.id === game?.selectedPlayer) :
-  match?.rosterTeamB.find(member => member?.usuario?.id === game?.selectedPlayer)
+    match?.rosterTeamA.find(member => member?.usuario?.id === game?.selectedPlayer) :
+    match?.rosterTeamB.find(member => member?.usuario?.id === game?.selectedPlayer)
 
   const name = `${player?.usuario?.nombres} ${player?.usuario?.apellidos}`
+
+  const updateRound = (round = {}, player = {}) => {
+    const { teamAMembers, teamBMembers } = round
+    const team = match?.selectedTeam?.nombre === match?.teamA?.nombre ? 'teamAMembers' : 'teamBMembers'
+    
+  }
 
   return (
     <Container

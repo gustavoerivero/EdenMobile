@@ -13,11 +13,9 @@ import colors from '../../styled-components/colors'
 
 import { cutText } from '../../utilities/functions'
 
-const PlayTeamBPage = ({ navigation, route, match }) => {
+const PlayTeamBPage = ({ navigation, match }) => {
 
   const layout = useWindowDimensions()
-
-  const game = route?.params
 
   const dispatch = useDispatch()
 
@@ -255,7 +253,6 @@ const PlayTeamBPage = ({ navigation, route, match }) => {
                       }
 
                       handleSubmit(game)
-
 
                       navigation?.navigate('PlayerShootDataPage', { ...game, selectedPlayer: item?.usuario.id })
                     }}

@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react'
+import React, { useReducer } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/creole/actions'
@@ -21,7 +21,7 @@ const rosterReducer = (state, action) => {
   }
 }
 
-const PlayerRoster = ({ navigation, route, match }) => {
+const PlayerRoster = ({ navigation, match }) => {
 
   const layout = useWindowDimensions()
 
@@ -163,21 +163,26 @@ const PlayerRoster = ({ navigation, route, match }) => {
               onPress={() => {
 
                 const game = {
-                  id: match.id,
-                  title: match.title,
-                  date: match.date,
-                  maxPoints: match.maxPoints,
-                  forfeit: match.forfeit,
-                  maxTime: match.maxTime,
-                  teamA: match.teamA,
-                  teamB: match.teamB,
-                  teamAScore: match.teamAScore,
-                  teamBScore: match.teamBScore,
-                  teamAMembers: match.teamAMembers,
+                  tournamentId: match?.tournamentId || tournamentID,
+                  id: match?.id || id,
+                  title: match?.title || title,
+                  date: match?.date || date,
+                  maxPoints: match?.maxPoints || maxPoints,
+                  forfeit: match?.forfeit || forfeit,
+                  maxTime: match?.maxTime || maxTime,
+                  selectedTeam: match?.selectedTeam || null,
+                  initialTeam: match?.initialTeam || null,
+                  teamA: match?.teamA || teamA,
+                  teamB: match?.teamB || teamB,
+                  teamAScore: match?.teamAScore || 0,
+                  teamBScore: match?.teamBScore || 0,
+                  colorTeamA: match?.colorTeamA || null,
+                  colorTeamB: match?.colorTeamB || null,
+                  teamAMembers: match?.teamAMembers?.length > 0 ? match?.teamAMembers : playersTeamA,
+                  teamBMembers: match?.teamBMembers?.length > 0 ? match?.teamBMembers : playersTeamB,
                   rosterTeamA: firstRoster,
-                  teamBMembers: match.teamBMembers,
                   rosterTeamB: secondRoster,
-                  rounds: []
+                  rounds: match?.rounds?.length > 0 ? match?.rounds : []
                 }
 
                 handleSubmit(game)

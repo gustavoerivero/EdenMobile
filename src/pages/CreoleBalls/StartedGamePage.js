@@ -1,4 +1,8 @@
 import React, { useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
 import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
@@ -7,16 +11,21 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const StartedGamePage = ({ navigation, route }) => {
+const StartedGamePage = ({ navigation, match }) => {
 
   const layout = useWindowDimensions()
 
-  const game = route?.params
-
   const [coinPressed, setCoinPressed] = useState(false)
-  const [shoot, setShoot] = useState(false)
-  const [coinTeam, setCoinTeam] = useState(false)
+  const [shoot, setShoot] = useState(match?.selectedTeam ? true : false)
+  const [coinTeam, setCoinTeam] = useState(match?.selectedTeam ? 
+    match?.selectedTeam === match?.teamA?.nombre : false)
   const [passPage, setPassPage] = useState(false)
+  
+  const dispatch = useDispatch()
+
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
 
   const coinThrow = () => {
 
@@ -38,20 +47,33 @@ const StartedGamePage = ({ navigation, route }) => {
     }, throws * 500)
 
     setTimeout(() => {
-      navigation?.navigate('ColorTeamPage', {
-        id: game?.id,
-        title: game?.title,
-        selectedTeam: coin ? game?.teamA?.nombre : game?.teamB?.nombre,
-        initialTeam: coin ? game?.teamA?.nombre : game?.teamB?.nombre,
-        teamA: game?.teamA,
-        teamB: game?.teamB,
-        rosterA: game?.rosterA,
-        rosterB: game?.rosterB,
-        date: game?.date,
-        maxPoints: game?.maxPoints,
-        forfeit: game?.forfeit,
-        maxTime: game?.maxTime
-      })
+
+      const game = {
+        tournamentId: match?.tournamentId,
+        id: match?.id,
+        title: match?.title,
+        date: match?.date,
+        maxPoints: match?.maxPoints,
+        forfeit: match?.forfeit,
+        maxTime: match?.maxTime,
+        selectedTeam: coin ? match?.teamA?.nombre : match?.teamB?.nombre ,
+        initialTeam: coin ? match?.teamA?.nombre : match?.teamB?.nombre,
+        teamA: match?.teamA,
+        teamB: match?.teamB,
+        teamAScore: match?.teamAScore || 0,
+        teamBScore: match?.teamBScore || 0,
+        colorTeamA: match?.colorTeamA || null,
+        colorTeamB: match?.colorTeamB || null,
+        teamAMembers: match?.teamAMembers,
+        teamBMembers: match?.teamBMembers,
+        rosterTeamA: match?.rosterTeamA,
+        rosterTeamB: match?.rosterTeamB,
+        rounds: match?.rounds?.length > 0 ? match?.rounds : []
+      }
+
+      handleSubmit(game)
+
+      navigation?.navigate('ColorTeamPage', game)
       setPassPage(false)
     }, 5000)
 
@@ -115,7 +137,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                {`${game?.maxTime}:00` || '00:00'}
+                {`${match?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -151,7 +173,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {`${game?.teamA?.abreviatura}`}
+                {`${match?.teamA?.abreviatura}`}
               </Text>
               <Text
                 bold
@@ -180,7 +202,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.text}
               >
-                {`${game?.teamB?.abreviatura}`}
+                {`${match?.teamB?.abreviatura}`}
               </Text>
 
             </HStack>
@@ -247,7 +269,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 textAlign='center'
                 pt={1}
               >
-                {game?.teamA?.nombre}
+                {match?.teamA?.nombre}
               </Text>
             </VStack>
 
@@ -292,7 +314,7 @@ const StartedGamePage = ({ navigation, route }) => {
                 textAlign='center'
                 pt={1}
               >
-                {game?.teamB?.nombre}
+                {match?.teamB?.nombre}
               </Text>
             </VStack>
 
@@ -313,20 +335,33 @@ const StartedGamePage = ({ navigation, route }) => {
               bgColor={!coinPressed && shoot ? colors.button.bgPrimary : colors.gray2}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('ColorTeamPage', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: coinTeam ? game?.teamA?.nombre : game?.teamB?.nombre,
-                  initialTeam: coinTeam ? game?.teamA?.nombre : game?.teamB?.nombre,
-                  teamA: game?.teamA,
-                  teamB: game?.teamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime
-                })
+
+                const game = {
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: coinTeam ? match?.teamA?.nombre : match?.teamB?.nombre,
+                  initialTeam: coinTeam ? match?.teamA?.nombre : match?.teamB?.nombre,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore || 0,
+                  teamBScore: match?.teamBScore || 0,
+                  colorTeamA: match?.colorTeamA || null,
+                  colorTeamB: match?.colorTeamB || null,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: match?.rounds?.length > 0 ? match?.rounds : []
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate('ColorTeamPage', game)
               }}
               disabled={coinPressed || !shoot}
             >
@@ -385,7 +420,7 @@ const StartedGamePage = ({ navigation, route }) => {
               fontSize='xl'
               color={colors.creoleStartGame.text}
             >
-              {coinTeam ? game.teamA?.nombre : game.teamB?.nombre}
+              {coinTeam ? match.teamA?.nombre : match.teamB?.nombre}
             </Text>
           }
         </VStack>
@@ -395,4 +430,8 @@ const StartedGamePage = ({ navigation, route }) => {
   )
 }
 
-export default StartedGamePage
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(StartedGamePage)

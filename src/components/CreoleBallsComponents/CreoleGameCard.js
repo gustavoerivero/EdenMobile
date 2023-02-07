@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
-import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { useDispatch, connect, useSelector } from 'react-redux'
+import { addMatch } from '../../redux/config/actions'
 
 import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
@@ -24,7 +24,11 @@ const CreoleGameCard = ({
   forfeit = 0,
   playersTeamA = [],
   playersTeamB = [],
-  match }) => {
+  teamAScore = 0,
+  teamBScore = 0,
+  match, 
+  domino
+}) => {
 
   const time = getHour(date)
   const { day, month, year } = getDate(date)
@@ -45,6 +49,8 @@ const CreoleGameCard = ({
 
   useFocusEffect(
     useCallback(() => {
+      console.log('Match')
+      console.log(match)
       setIsScorer(user?.user?.roles?.find(item => item === 'anotador') || false)
     }, [match, user])
   )
@@ -53,13 +59,13 @@ const CreoleGameCard = ({
     <Box
       border='1'
       borderRadius='lg'
-      bgColor={isScorer && match.started ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
+      bgColor={status !== 'D' ? true : isScorer && domino?.started ? colors.gray1 : isScorer && match?.started ? match?.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
-        disabled={!isScorer ? true : match.started ? match.id !== id : false}
+        disabled={status !== 'D' ? true : !isScorer ? true : domino?.started ? true : match?.started ? match?.id !== id : false}
         onPress={() => {
 
           const game = {
@@ -76,8 +82,8 @@ const CreoleGameCard = ({
             initialTeam: match?.initialTeam || null,
             teamA: match?.teamA || teamA,
             teamB: match?.teamB || teamB,
-            teamAScore: match?.teamAScore || 0,
-            teamBScore: match?.teamBScore || 0,
+            teamAScore: match?.teamAScore || teamAScore,
+            teamBScore: match?.teamBScore || teamBScore,
             colorTeamA: match?.colorTeamA || null,
             colorTeamB: match?.colorTeamB || null,
             teamAMembers: playersTeamA,
@@ -146,7 +152,7 @@ const CreoleGameCard = ({
                     fontSize='3xl'
                     textAlign='center'
                   >
-                    {match.started && match.id === id ? match?.teamAScore : 0}
+                    {match?.started && match?.id === id ? match?.teamAScore : teamAScore}
                   </Text>
                   <Text
                     color={colors.text.primary}
@@ -174,7 +180,7 @@ const CreoleGameCard = ({
                     textAlign='center'
                     color={colors.text.primary}
                   >
-                    {match.started && match.id === id ? match?.teamBScore : 0}
+                    {match?.started && match?.id === id ? match?.teamBScore : teamBScore}
                   </Text>
                   <Text
                     fontSize='md'
@@ -211,7 +217,8 @@ const CreoleGameCard = ({
 }
 
 const mapStateToProps = (state) => ({
-  match: state.match
+  match: state.match,
+  domino: state.domino
 })
 
 export default connect(mapStateToProps)(CreoleGameCard)

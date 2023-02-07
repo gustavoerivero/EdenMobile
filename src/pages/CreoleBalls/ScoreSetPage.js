@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { addMatch } from '../../redux/config/actions'
 
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
@@ -19,7 +19,7 @@ const ScoreSetPage = ({ navigation, match }) => {
   const [scoreTeamA, setScoreTeamA] = useState(0)
   const [scoreTeamB, setScoreTeamB] = useState(0)
   const [isSetScore, setIsSetScore] = useState(false)
-  
+
   const dispatch = useDispatch()
 
   const handleSubmit = (match = {}) => {
@@ -300,12 +300,17 @@ const ScoreSetPage = ({ navigation, match }) => {
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={(scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8 ?
+                bgColor={match?.teamAScore + scoreTeamA >= Number(match?.maxPoints) ||
+                  match?.teamBScore + scoreTeamB >= Number(match?.maxPoints) ||
+                  (scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8 ?
                   colors.gray2 :
                   colors.button.bgPrimary
                 }
                 _pressed={colors.bgSecondary}
-                disabled={(scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8}
+                disabled={match?.teamAScore + scoreTeamA >= Number(match?.maxPoints) ||
+                  match?.teamBScore + scoreTeamB >= Number(match?.maxPoints) ||
+                  (scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8
+                }
                 onPress={() => {
                   if (scoreTeamB === 0 || !isSetScore || scoreTeamA < 8) {
                     setScoreTeamA(scoreTeamA + 1)
@@ -316,7 +321,9 @@ const ScoreSetPage = ({ navigation, match }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={(scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8 ?
+                  color={match?.teamAScore + scoreTeamA >= Number(match?.maxPoints) ||
+                    match?.teamBScore + scoreTeamB >= Number(match?.maxPoints) ||
+                    (scoreTeamB !== 0 && isSetScore) || scoreTeamA === 8 ?
                     colors.gray :
                     colors.white
                   }
@@ -386,13 +393,19 @@ const ScoreSetPage = ({ navigation, match }) => {
                 shadow={3}
                 justifyContent='center'
                 alignItems='center'
-                bgColor={(scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8 ?
+                bgColor={match?.teamAScore + scoreTeamA >= Number(match?.maxPoints) ||
+                  match?.teamBScore + scoreTeamB >= Number(match?.maxPoints) ||
+                    (scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8 ?
                   colors.gray2 :
                   colors.button.bgPrimary
                 }
                 _pressed={colors.bgSecondary}
-                disabled={(scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8}
+                disabled={match?.teamAScore + scoreTeamA >= Number(match?.maxPoints) ||
+                  match?.teamBScore + scoreTeamB >= Number(match?.maxPoints) ||
+                    (scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8
+                }
                 onPress={() => {
+                  console.log(match?.teamBScore)
                   if (scoreTeamA === 0 || !isSetScore || scoreTeamB < 8) {
                     setScoreTeamB(scoreTeamB + 1)
                     setIsSetScore(true)
@@ -402,7 +415,9 @@ const ScoreSetPage = ({ navigation, match }) => {
                 <Text
                   bold
                   fontSize='md'
-                  color={(scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8 ?
+                  color={match?.teamAScore + scoreTeamA >= Number(match?.maxPoints) ||
+                    match?.teamBScore + scoreTeamB >= Number(match?.maxPoints) ||
+                      (scoreTeamA !== 0 && isSetScore) || scoreTeamB === 8 ?
                     colors.gray :
                     colors.white
                   }
@@ -492,12 +507,12 @@ const ScoreSetPage = ({ navigation, match }) => {
                 let rounds = match?.rounds
                 let len = match?.rounds?.length
                 let round = match?.rounds[len - 1]
-                
+
                 round['teamAScore'] = scoreTeamA
                 round['teamBScore'] = scoreTeamB
 
                 rounds[len - 1] = round
-                
+
                 const game = {
                   started: match?.started,
                   completed: match?.completed,
@@ -505,7 +520,7 @@ const ScoreSetPage = ({ navigation, match }) => {
                   id: match?.id,
                   title: match?.title,
                   date: match?.date,
-                  maxPoints: match?.maxPoints,
+                  maxPoints: Number(match?.maxPoints),
                   forfeit: match?.forfeit,
                   maxTime: match?.maxTime,
                   selectedTeam: match?.selectedTeam,

@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useState } from 'react'
 import {
   ActivityIndicator,
   ImageBackground,
   TouchableOpacity,
-} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
+} from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
+import LinearGradient from 'react-native-linear-gradient'
 import {
   Box,
   Button,
@@ -16,53 +16,53 @@ import {
   Text,
   Tooltip,
   VStack,
-} from 'native-base';
-import Icon from 'react-native-vector-icons/Ionicons';
+} from 'native-base'
+import Icon from 'react-native-vector-icons/Ionicons'
 
-import Container from '../../components/Container';
+import Container from '../../components/Container'
 
-import styles from './styled-components/styles';
-import colors from '../../styled-components/colors';
+import styles from './styled-components/styles'
+import colors from '../../styled-components/colors'
 
-import {cutText} from '../../utilities/functions';
-import TeamPreviewCard from '../../components/TeamPreviewCard';
+import { cutText } from '../../utilities/functions'
+import TeamPreviewCard from '../../components/TeamPreviewCard'
 
-import TournamentService from '../../services/tournaments/TournamentsService';
+import TournamentService from '../../services/tournaments/TournamentsService'
 
-const CreoleBallsTournamentPage = ({navigation, route}) => {
-  const Tournament = new TournamentService();
+const CreoleBallsTournamentPage = ({ navigation, route }) => {
+  const Tournament = new TournamentService()
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [teams, setTeams] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
+  const [teams, setTeams] = useState([])
   const [calendar, setCalendar] = useState(false)
 
-  const event = route?.params;
+  const event = route?.params
 
   const getData = async () => {
     if (isLoading) {
       Tournament.get(event?.id)
         .then(res => {
-          let {data} = res
+          let { data } = res
 
           setCalendar(data?.data?.fase_de_torneo[0]?.calendario?.length > 0 || false)
 
           data = data?.data?.fase_de_torneo[0]?.equipo
-          
+
           setTeams(data)
           setIsLoading(false)
         })
         .catch(error => {
-          console.log(`Tournament error: ${error}`);
-          setIsLoading(false);
-        });
+          console.log(`Tournament error: ${error}`)
+          setIsLoading(false)
+        })
     }
-  };
+  }
 
   useFocusEffect(
     useCallback(() => {
-      getData();
+      getData()
     }, [teams]),
-  );
+  )
 
   return (
     <Container hiddenNavBar={true} statusBarColor={colors.infoCard.bottomColor}>
@@ -90,7 +90,7 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
                     alignItems="center">
                     <TouchableOpacity
                       onPress={() => {
-                        navigation?.goBack();
+                        navigation?.goBack()
                       }}>
                       <HStack space={1}>
                         <Icon
@@ -265,13 +265,13 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
                   <Tooltip
                     label="Juegos"
                     placement="bottom right"
-                    _text={{color: 'black'}}
+                    _text={{ color: 'black' }}
                     openDelay={200}>
                     <TouchableOpacity
                       activeOpacity={0.75}
                       disabled={!calendar}
                       onPress={() => {
-                        console.log(`Game list button is pressed`);
+                        console.log(`Game list button is pressed`)
                         navigation?.navigate('CreoleBallsListPage', {
                           id: event.id,
                           type: event.type,
@@ -282,7 +282,7 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
                           area: event.area,
                           description: event.description,
                           image: event.image,
-                        });
+                        })
                       }}>
                       <Box
                         w={12}
@@ -311,8 +311,8 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
                   shadow={3}
                   w="40%"
                   onPress={() => {
-                    console.log('Comment button is pressed');
-                    navigation?.navigate('Comentarios', event);
+                    console.log('Comment button is pressed')
+                    navigation?.navigate('Comentarios', event)
                   }}>
                   Comentar
                 </Button>
@@ -322,7 +322,7 @@ const CreoleBallsTournamentPage = ({navigation, route}) => {
         </VStack>
       </ScrollView>
     </Container>
-  );
-};
+  )
+}
 
-export default CreoleBallsTournamentPage;
+export default CreoleBallsTournamentPage

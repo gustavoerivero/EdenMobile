@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { deleteMatch } from '../redux/creole/actions'
+import { deleteMatch } from '../redux/config/actions'
 
-import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, useWindowDimensions } from 'react-native'
 import { HStack, Stack, Text } from 'native-base'
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -18,7 +18,7 @@ import colors from '../styled-components/colors'
 import { useFocusEffect } from '@react-navigation/native'
 import TournamentService from '../services/tournaments/TournamentsService'
 
-const NavBar = ({ hidden = false, logout = true, match }) => {
+const NavBar = ({ hidden = false, logout = true, match, domino }) => {
 
   const { isConnected, recognizeConnection } = useConnection()
   const { dispatch } = useAuthContext()
@@ -35,12 +35,14 @@ const NavBar = ({ hidden = false, logout = true, match }) => {
   const layout = useWindowDimensions()
 
   const [isScorer, setIsScorer] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
 
   useFocusEffect(
     useCallback(() => {
       const scorer = user?.user?.roles?.find(item => item === 'anotador') || false
       setIsScorer(scorer)
+      console.log(match)
       if (scorer && match?.completed) {
         showWarningToast('Aún no se ha registrado el partido.')
         //console.log(match)
@@ -50,6 +52,8 @@ const NavBar = ({ hidden = false, logout = true, match }) => {
 
   const sendData = async () => {
     try {
+      console.log('Sending data...')
+      setIsLoading(true)
       Tournament.save(match)
         .then(res => {
           const { data, status } = res
@@ -59,16 +63,21 @@ const NavBar = ({ hidden = false, logout = true, match }) => {
           if (status >= 200 && status <= 299) {
             reduxDispatch(deleteMatch(match?.id))
             showSuccessToast('El partido ha sido registrado con éxito.')
+
+            setIsLoading(false)
           } else {
             showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+            setIsLoading(false)
           }
         })
         .catch(error => {
           console.log(`Error scorer: ${error}`)
           showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+          setIsLoading(false)
         })
 
     } catch (error) {
+      setIsLoading(false)
       console.log(`Error sending data: ${error}`)
       showErrorToast('No se pudo registrar el partido. Intente más tarde.')
     }
@@ -88,10 +97,12 @@ const NavBar = ({ hidden = false, logout = true, match }) => {
             justifyContent='center'
             minW={layout.width * .5}
           >
-            {isScorer && match?.completed ?
+            {isScorer && (match?.completed || domino?.completed) ?
               <TouchableOpacity
+                disabled={!isScorer && (!match?.completed || !domino?.completed)}
                 onPress={() => {
-                  sendData()
+                  if (match?.completed || domino?.completed)
+                    sendData()
                 }}
               >
                 <HStack
@@ -103,11 +114,21 @@ const NavBar = ({ hidden = false, logout = true, match }) => {
                   alignItems='center'
                   pr={3}
                 >
-                  <MaterialIcon
-                    name='celebration'
-                    color={colors.hard1}
-                    size={25}
-                  />
+                  {isLoading ?
+                    <Stack
+                      alignItems='center'
+                      justifyContent='center'
+                      alignContent='center'
+                      alignSelf='center'>
+                      <ActivityIndicator size='large' color={colors.hard1} />
+                    </Stack>
+                    :
+                    <MaterialIcon
+                      name='celebration'
+                      color={colors.hard1}
+                      size={25}
+                    />
+                  }
                 </HStack>
               </TouchableOpacity>
               : !isConnected ?

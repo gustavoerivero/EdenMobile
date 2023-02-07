@@ -1,30 +1,93 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+
+import { useSelector, useDispatch, connect } from 'react-redux'
+
 import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import colors from '../../styled-components/colors'
-import { cutText } from '../../utilities/functions'
+import { cutText, getDate, getHour } from '../../utilities/functions'
 
-const DominoGameCard = ({ navigation, id, title, teamA, teamB }) => {
+import useAuthContext from '../../hooks/useAuthContext'
+import { useFocusEffect } from '@react-navigation/native'
+import { addDomino } from '../../redux/config/actions'
+
+const DominoGameCard = ({
+  navigation,
+  tournamentID = 0,
+  id = 0,
+  title = '',
+  date = new Date(),
+  teamA = {},
+  teamB = {},
+  teamAMembers = [],
+  teamBMembers = [],
+  scorer = 1,
+  rounds = [],
+  maxPoints = 100,
+  status = 'D',
+  match, 
+  domino
+}) => {
+
+  const time = getHour(date)
+  const { day, month, year } = getDate(date)
 
   const layout = useWindowDimensions()
+
+  const dispatch = useDispatch()
+
+  const {
+    state: { user }
+  } = useAuthContext()
+
+  const handleSubmit = (domino = {}) => {
+    dispatch(addDomino(domino))
+  }
+
+  const [isScorer, setIsScorer] = useState(false)
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log(match)
+      setIsScorer(user?.user?.roles?.find(item => item === 'anotador') || false)
+    }, [match, domino, user])
+  )
 
   return (
     <Box
       border='1'
       borderRadius='lg'
-      bgColor='white'
+      bgColor={isScorer && match?.started ? colors.gray1 : isScorer && domino?.started ? domino?.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
+        disabled={!isScorer ? true : match?.started ? true : domino?.started ? domino?.id !== id : false}
         onPress={() => {
-          navigation?.navigate('DominoRoster', {
-            id: id,
-            title: title,
-            teamA: teamA,
-            teamB: teamB,
-          })
+
+          const game = {
+            started: domino?.started,
+            completed: domino?.completed,
+            tournamentId: domino?.tournamentId || tournamentID,
+            id: domino?.id || id,
+            title: domino?.title || title,
+            date: domino?.date || date,
+            maxPoints: domino?.maxPoints || maxPoints,
+            selectedTeam: null,
+            initialTeam: null,
+            teamA: domino?.teamA || teamA,
+            teamB: domino?.teamB || teamB,
+            teamAScore: domino?.teamAScore || 0,
+            teamBScore: domino?.teamBScore || 0,
+            teamAMembers: teamAMembers || [],
+            teamBMembers: teamBMembers || [],
+            rounds: domino?.rounds?.length > 0 ? domino?.rounds : []
+          }
+
+          handleSubmit(game)
+
+          navigation?.navigate('DominoRoster', game)
           console.log(`Game ID: ${id} pressed...`)
         }}
       >
@@ -38,16 +101,29 @@ const DominoGameCard = ({ navigation, id, title, teamA, teamB }) => {
             minH={70}
             alignItems='center'
           >
-            <Stack
-              w={layout.width * .35}     >
+            <VStack
+              w={layout.width * .35}
+            >
               <Text
                 fontSize='md'
                 bold
                 color={colors.text.primary}
               >
-                Juego N°{id}
+                Juego Nro. {id}
               </Text>
-            </Stack>
+              <Text
+                fontSize='2xs'
+                color={colors.text.primary}
+              >
+                {`${day} de ${month} de ${year}`}
+              </Text>
+              <Text
+                fontSize='2xs'
+                color={colors.gray}
+              >
+                {time}
+              </Text>
+            </VStack>
             <Stack
               w={layout.width * .45}
             >
@@ -68,15 +144,16 @@ const DominoGameCard = ({ navigation, id, title, teamA, teamB }) => {
                     fontSize='3xl'
                     textAlign='center'
                   >
-                    0
+                    {domino?.started && domino?.id === id ? domino?.teamAScore : 0}
                   </Text>
                   <Text
                     color={colors.text.primary}
                     fontSize='md'
+                    bold
                     fontWeight='thin'
                     textAlign='center'
                   >
-                    {cutText(teamA, 10)}
+                    {cutText(teamA?.abreviatura, 10)}
                   </Text>
                 </VStack>
                 <Divider
@@ -95,15 +172,16 @@ const DominoGameCard = ({ navigation, id, title, teamA, teamB }) => {
                     textAlign='center'
                     color={colors.text.primary}
                   >
-                    0
+                    {domino?.started && domino?.id === id ? domino?.teamBScore : 0}
                   </Text>
                   <Text
                     fontSize='md'
                     fontWeight='thin'
+                    bold
                     textAlign='center'
                     color={colors.text.primary}
                   >
-                    {cutText(teamB, 10)}
+                    {cutText(teamB?.abreviatura, 10)}
                   </Text>
                 </VStack>
               </HStack>
@@ -115,15 +193,24 @@ const DominoGameCard = ({ navigation, id, title, teamA, teamB }) => {
           >
             <Text
               color={colors.text.primary}
-              fontSize='sm'
+              fontSize='xs'
             >
-              El juego no ha finalizado...
+              {status === 'D' ?
+                'El juego aún no ha comenzado' :
+                status === 'P' ? 'El juego está en progreso' :
+                  'El juego ha finalizado'
+              }
             </Text>
           </Stack>
         </VStack>
       </TouchableOpacity>
-    </Box>
+    </Box >
   )
 }
 
-export default DominoGameCard
+const mapStateToProps = (state) => ({
+  match: state.match,
+  domino: state.domino
+})
+
+export default connect(mapStateToProps)(DominoGameCard)

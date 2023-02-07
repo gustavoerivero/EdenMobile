@@ -8,8 +8,10 @@ import colors from '../../styled-components/colors'
 
 import { cutText } from '../../utilities/functions'
 
-const PlayerContactCard = ({playerEmail = '', playerPhones = ''}) => {
+const PlayerContactCard = ({playerProp={}, playerEmail = '', playerPhones = ''}) => {
 
+  const playerData = playerProp
+  const [phones, setPhones] = useState(playerData?.telefono || []);
 
   return (
     <Box
@@ -57,28 +59,25 @@ const PlayerContactCard = ({playerEmail = '', playerPhones = ''}) => {
                 fontSize='xs'
                 color={colors.gray}
               >
-                {cutText(playerEmail, 42)}
+                {cutText(playerData?.email, 42)}
               </Text>
             </HStack>
-            {playerPhones &&
-              <HStack
-                key={playerPhones}
-                alignItems='center'
-                space={2}
-              >
-                <Icon
-                  name='phone-portrait-outline'
-                  size={20}
-                  color={colors.gray}
-                />
-                <Text
-                  fontSize='xs'
-                  color={colors.gray}
-                >
-                  {cutText(playerPhones, 42)}
-                </Text>
+            {
+            phones?.length > 0 && (
+              <VStack>
+              
+              {phones
+              ?.filter(item => item.es_publico === '1')
+              ?.map((item, key) => (
+              
+              <HStack key={phones} alignItems="center" space={2}>
+              <Icon name="phone-portrait-outline" size={20} color={colors.gray} />
+              <Text fontSize="xs" color={colors.gray}> {cutText(item?.numero, 42)} </Text>
               </HStack>
-            }
+              ))}
+              </VStack>
+              )
+}
           </VStack>
         </VStack>
       </HStack>

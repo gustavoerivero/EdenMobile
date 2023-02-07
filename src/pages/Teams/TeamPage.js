@@ -31,7 +31,7 @@ const TeamPage = ({navigation, route}) => {
               renderItem={({item}) => (
                 <Stack p={1}>
                   <PlayerPreviewCard
-                    playerID={item?.id}
+                    playerID={item?.usuario?.id}
                     playerName={
                       item?.usuario.nombres + ' ' + item?.usuario.apellidos
                     }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { Box, HStack, Image, Stack, Text, VStack, Divider } from 'native-base'
@@ -10,7 +10,12 @@ import colors from '../../styled-components/colors'
 
 import { cutText } from '../../utilities/functions'
 
-const PlayerProfileComponent = ({ navigation, player = {}, image = '' }) => {
+const PlayerProfileComponent = ({ navigation, player = {}, image = '', position = '' }) => {
+
+  const playerData = player
+
+  const [names, setNames] = useState(playerData?.nombres || '')
+  const [lastNames, setLastNames] = useState(playerData?.apellidos || '')
 
   return (
     <Box
@@ -63,14 +68,15 @@ const PlayerProfileComponent = ({ navigation, player = {}, image = '' }) => {
               maxW={125}
               minH={125}
               maxH={125}
+
               borderColor={colors.navBar.activeColor}
-              borderWidth={player?.playerImage ? 0 : 2}
-              borderRadius={player?.playerImage ? 0 : 100}
-              bgColor={player?.playerImage ? null : colors.white}
+              borderWidth={playerData?.foto ? 0 : 2}
+              borderRadius={playerData?.foto ? 0 : 100}
+              bgColor={playerData?.foto ? null : colors.white}
               justifyContent='center'
               alignItems='center'
             >
-              {!player?.playerImage ?
+              {!playerData?.foto ?
                 <Icon
                   name='person'
                   size={65}
@@ -78,10 +84,10 @@ const PlayerProfileComponent = ({ navigation, player = {}, image = '' }) => {
                 />
                 :
                 <Image
-                  source={{ uri: player?.playerImage }}
+                  source={{uri: playerData?.foto}}
                   w={120}
                   h={120}
-                  alt={player?.playerName}
+                  alt={playerData?.nombres}
                 />
               }
             </Box>
@@ -91,7 +97,7 @@ const PlayerProfileComponent = ({ navigation, player = {}, image = '' }) => {
               textAlign='center'
               color={colors.gray}
             >
-              {cutText(player?.playerName, 50)}
+              {cutText(`${names} ${lastNames}`, 50)}
             </Text>
             <Text
               fontSize='sm'
@@ -99,7 +105,7 @@ const PlayerProfileComponent = ({ navigation, player = {}, image = '' }) => {
               opacity={.5}
               color={colors.gray}
             >
-              {player?.playerPosition}
+              {playerData?.directivo?.posicion || position}
             </Text>
           </Stack>
 

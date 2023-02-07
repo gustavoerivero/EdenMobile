@@ -18,6 +18,11 @@ class UserService {
     const { data, status } = await http.get(`${URL}/${ID}`)
     return { data, status }
   }
+
+  async updateUser(values) {
+    const { data, status } = await http.post(`${URL}/actualizar/basico`, values )
+    return { data, status }
+  }
 }
 
 export default UserService

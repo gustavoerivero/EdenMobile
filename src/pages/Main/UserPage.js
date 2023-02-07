@@ -32,7 +32,7 @@ const UserPage = ({ navigation }) => {
 
   const getData = async () => {
 
-    if (loaded) {
+    
       try {
         setIsLoading(true)
         console.log(user?.user?.usuario?.id)
@@ -41,15 +41,12 @@ const UserPage = ({ navigation }) => {
         setUserData(data)
         //console.log(data)
         setIsLoading(false)
-        setLoaded(false)
 
       } catch (error) {
         console.log(`User error: ${error}`)
         showErrorToast('No se pudo obtener los datos del Usuario')
         setIsLoading(false)
-        setLoaded(false)
       }
-    }
   }
 
   useFocusEffect(
@@ -74,7 +71,7 @@ const UserPage = ({ navigation }) => {
           </Stack>
         ) : (
           <VStack p={5} mt={15} space={3.5} minH="100%" alignItems="center">
-            <ProfileComponent userProp={userData} />
+            <ProfileComponent navigation={navigation} userProp={userData} />
             <CreoleProfileCard
               gamesPlayed={7}
               gamesWon={3}

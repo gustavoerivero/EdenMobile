@@ -21,8 +21,11 @@ import StyledField from './StyledField'
 
 import { formatDate } from '../../utilities/functions'
 
+import UserService from '../../services/user/UserService'
+
 const ProfileComponent = ({ navigation, userProp={} }) => {
 
+  const User = new UserService()
   const userData = userProp
 
   const {
@@ -35,6 +38,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
 
   const { isConnected, recognizeConnection } = useConnection()
   const { showSuccessToast } = useCustomToast()
+  const [isLoading, setIsLoading] = useState(false)
 
   const [image, setImage] = useState(1)
 
@@ -43,6 +47,10 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
   const [names, setNames] = useState(userData?.data?.nombres || '')
   const [lastNames, setLastNames] = useState(userData?.data.apellidos || '')
   const [birthday, setBirthday] = useState(new Date(userData?.data.fecha_nacimiento))
+
+  const [namesUpdate, setNamesUpdate] = useState(names || '')
+  const [lastNamesUpdate, setLastNamesUpdate] = useState(lastNames || '')
+  const [birthdayUpdate, setBirthdayUpdate] = useState(birthday)
 
   const calculateAge = (date = new Date()) => {
     let ageDifMs = Date.now() - date.getTime()
@@ -55,18 +63,64 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
   const openModalDate = () => setModalDateVisible(true)
   const closeModalDate = () => setModalDateVisible(false)
 
-  const handleDateSelection = (data) => {
-    const date = new Date(data)
-    setBirthday(date)
-    //console.log(date)
-    //closeModalDate()
-  }
-
   const layout = useWindowDimensions()
 
   useEffect(() => {
     //console.log(user)
   }, [])
+
+  //TextInputChanger
+  const handleChangeName = newNames => {
+    setNamesUpdate(newNames)
+  }
+  const handleChangeLastName = newLastNames => {
+    setLastNamesUpdate(newLastNames)
+  }
+  const handleDateSelection = (data) => {
+    const date = new Date(data)
+    setBirthdayUpdate(date)
+    //setBirthday(date)
+    //console.log(date)
+    //closeModalDate()
+  }
+
+
+//CancelBotton
+  const handleCancel = () => {
+    setNamesUpdate(names)
+    setLastNamesUpdate(lastNames),
+    setBirthdayUpdate(birthday)
+    setEdit(false)
+  }
+
+  const onSubmit = async (values) => {
+    setIsLoading(true)
+    try {
+
+      const userUpdateInfo = {
+        id : userData?.data?.id,
+        nombres : namesUpdate,
+        apellidos : lastNamesUpdate,
+        fecha_nacimiento : birthdayUpdate
+}
+
+     const response = await User.updateUser(userUpdateInfo)
+
+      showSuccessToast('Datos actualizados con éxito')
+
+      setIsLoading(false)
+      setEdit(false)
+      navigation?.navigate('Profile')
+    } catch (error) {
+      //showErrorToast('No se pudieron actualizar tus datos')
+      console.log(`User error: ${error}`)
+        showErrorToast('No se pudieron actualizar tus datos')
+      setIsLoading(false)
+    }
+    
+
+    
+  }
 
   return (
     <Box
@@ -252,8 +306,8 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                   w='75%'
                 >
                   <StyledField
-                    value={userData?.data?.nombres}
-                    onChangeText={(text) => setNames(text)}
+                    value={namesUpdate}
+                    onChangeText={handleChangeName}
                   />
                 </Stack>
               </HStack>
@@ -279,8 +333,8 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                   w='75%'
                 >
                   <StyledField
-                    value={userData?.data?.apellidos}
-                    onChangeText={text => setLastNames(text)}
+                    value={lastNamesUpdate}
+                    onChangeText={handleChangeLastName}
                   />
                 </Stack>
               </HStack>
@@ -319,7 +373,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                       fontSize='xs'
                       color={colors.textField.text}
                     >
-                      {formatDate(birthday.toISOString())}
+                      {formatDate(birthdayUpdate.toISOString())}
                     </Text>
                   </Box>
                 </Stack>
@@ -412,7 +466,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
               justifyContent='space-around'
             >
               <Button
-                onPress={() => setEdit(false)}
+                onPress={handleCancel}
                 w='40%'
                 h='100%'
                 borderRadius={10}
@@ -431,7 +485,9 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
               </Button>
 
               <Button
-                onPress={() => setEdit(false)}
+              isLoading={isLoading}
+              isDisabled={isLoading || namesUpdate == '' || lastNamesUpdate == ''}
+                onPress={onSubmit}
                 w='40%'
                 h='100%'
                 borderRadius={10}

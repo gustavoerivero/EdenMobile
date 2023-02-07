@@ -27,7 +27,7 @@ const PlayerPreviewCard = ({
           justifyContent="center"
           alignItems="center">
           {playerImage ? (
-            <Image src={playerImage} alt={playerName} h="50" w="50" />
+            <Image src={playerImage} alt={playerName} h="50" w="50" borderRadius={100}/>
           ) : (
             <Box
               w="50"

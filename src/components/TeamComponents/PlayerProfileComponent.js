@@ -88,6 +88,7 @@ const PlayerProfileComponent = ({ navigation, player = {}, image = '', position 
                   w={120}
                   h={120}
                   alt={playerData?.nombres}
+                  borderRadius={100}
                 />
               }
             </Box>

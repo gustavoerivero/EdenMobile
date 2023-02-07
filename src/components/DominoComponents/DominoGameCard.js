@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-import { useSelector, useDispatch, connect } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 
 import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
@@ -21,10 +21,12 @@ const DominoGameCard = ({
   teamB = {},
   teamAMembers = [],
   teamBMembers = [],
-  scorer = 1,
+  maxTime = 0,
   rounds = [],
   maxPoints = 100,
   status = 'D',
+  teamAScore = 0,
+  teamBScore = 0,
   match, 
   domino
 }) => {
@@ -48,7 +50,6 @@ const DominoGameCard = ({
 
   useFocusEffect(
     useCallback(() => {
-      console.log(match)
       setIsScorer(user?.user?.roles?.find(item => item === 'anotador') || false)
     }, [match, domino, user])
   )
@@ -73,16 +74,17 @@ const DominoGameCard = ({
             id: domino?.id || id,
             title: domino?.title || title,
             date: domino?.date || date,
+            maxTime: domino?.maxTime || maxTime,
             maxPoints: domino?.maxPoints || maxPoints,
             selectedTeam: null,
             initialTeam: null,
             teamA: domino?.teamA || teamA,
             teamB: domino?.teamB || teamB,
-            teamAScore: domino?.teamAScore || 0,
-            teamBScore: domino?.teamBScore || 0,
+            teamAScore: domino?.teamAScore || teamAScore,
+            teamBScore: domino?.teamBScore || teamBScore,
             teamAMembers: teamAMembers || [],
             teamBMembers: teamBMembers || [],
-            rounds: domino?.rounds?.length > 0 ? domino?.rounds : []
+            rounds: domino?.rounds?.length > 0 ? domino?.rounds : rounds
           }
 
           handleSubmit(game)
@@ -144,7 +146,7 @@ const DominoGameCard = ({
                     fontSize='3xl'
                     textAlign='center'
                   >
-                    {domino?.started && domino?.id === id ? domino?.teamAScore : 0}
+                    {domino?.started && domino?.id === id ? domino?.teamAScore : teamAScore}
                   </Text>
                   <Text
                     color={colors.text.primary}
@@ -172,7 +174,7 @@ const DominoGameCard = ({
                     textAlign='center'
                     color={colors.text.primary}
                   >
-                    {domino?.started && domino?.id === id ? domino?.teamBScore : 0}
+                    {domino?.started && domino?.id === id ? domino?.teamBScore : teamBScore}
                   </Text>
                   <Text
                     fontSize='md'

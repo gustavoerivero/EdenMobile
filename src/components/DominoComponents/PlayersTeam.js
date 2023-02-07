@@ -3,7 +3,7 @@ import { VStack, Text, Box, HStack, FlatList } from 'native-base'
 
 import colors from '../../styled-components/colors'
 
-const PlayersTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], setRoster, add, remove, r }) => {
+const PlayersTeam = ({ id = 0, name = '', team = [] }) => {
 
   const renderItem = ({ item }) => {
     return (
@@ -16,7 +16,7 @@ const PlayersTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], se
           fontSize='md'
           color={colors.creoleRoster.textColor}
         >
-          {item.name}
+          {item?.usuario?.nombres} {item?.usuario?.apellidos}
         </Text>
       </HStack>
     )
@@ -60,7 +60,7 @@ const PlayersTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], se
         <FlatList
           showsVerticalScrollIndicator={false}
           data={team}
-          keyExtractor={item => item?.id}
+          keyExtractor={item => item?.usuario?.id}
           renderItem={renderItem}
         />
       </Box>

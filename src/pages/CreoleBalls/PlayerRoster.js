@@ -1,6 +1,6 @@
 import React, { useCallback, useReducer } from 'react'
 
-import { useDispatch, connect, useSelector } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/config/actions'
 
 import Container from '../../components/Container'

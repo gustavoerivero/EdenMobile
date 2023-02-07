@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-import { useDispatch, connect, useSelector } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/config/actions'
 
 import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
@@ -49,10 +49,8 @@ const CreoleGameCard = ({
 
   useFocusEffect(
     useCallback(() => {
-      console.log('Match')
-      console.log(match)
       setIsScorer(user?.user?.roles?.find(item => item === 'anotador') || false)
-    }, [match, user])
+    }, [match, domino, user])
   )
 
   return (

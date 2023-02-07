@@ -149,10 +149,17 @@ const DominoListPage = ({ navigation, route }) => {
                     teamAMembers={item?.equipo_a?.jugadores}
                     teamBMembers={item?.equipo_b?.jugadores}
                     date={item?.fecha}
-                    scorer={item?.anotador}
-                    rounds={item?.rounds}
+                    rounds={item?.rounds || []}
+                    maxTime={modality?.tiempo_maximo_minutos}
+                    maxPoints={modality?.puntuacion_maxima}
                     status={item?.estado}
                     navigation={navigation}
+                    teamAScore={item?.ronda?.length > 0 ? 
+                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_a) : 0
+                    }
+                    teamBScore={item?.ronda?.length > 0 ? 
+                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_b) : 0
+                    }
                   />
                 </Stack>
               )}

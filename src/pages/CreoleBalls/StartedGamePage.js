@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-import { useDispatch, connect, useSelector } from 'react-redux'
-import { addMatch, deleteMatch } from '../../redux/config/actions'
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/config/actions'
 
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
@@ -22,10 +22,6 @@ const StartedGamePage = ({ navigation, match, domino }) => {
   const [passPage, setPassPage] = useState(false)
   
   const dispatch = useDispatch()
-
-  const handleDelete = (matchID = 1) => {
-    dispatch(deleteMatch(matchID))
-  }
 
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))

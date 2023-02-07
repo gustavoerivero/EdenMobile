@@ -52,10 +52,6 @@ const CreoleResult = ({ navigation, match }) => {
     }
   }
 
-  const handleSubmit = (match = {}) => {
-    sendData(match)
-  }
-
   useFocusEffect(
     useCallback(() => {
       //console.log(match)

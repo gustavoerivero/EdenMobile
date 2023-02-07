@@ -42,12 +42,12 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
     useCallback(() => {
       const scorer = user?.user?.roles?.find(item => item === 'anotador') || false
       setIsScorer(scorer)
-      console.log(match)
-      if (scorer && match?.completed) {
+      console.log(domino)
+      if (scorer && (match?.completed || domino?.completed)) {
         showWarningToast('Aún no se ha registrado el partido.')
         //console.log(match)
       }
-    }, [match, user])
+    }, [match, user, domino])
   )
 
   const sendData = async () => {
@@ -202,7 +202,8 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
 }
 
 const mapStateToProps = (state) => ({
-  match: state.match
+  match: state.match,
+  domino: state.domino
 })
 
 export default connect(mapStateToProps)(NavBar)

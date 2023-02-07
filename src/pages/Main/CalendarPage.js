@@ -34,6 +34,7 @@ const CalendarPage = ({ navigation }) => {
     setCurrentPage(1)
     setIsNextPage(true)
     setIsLoading(false)
+    getData()
   }, [])
 
   const getData = async () => {

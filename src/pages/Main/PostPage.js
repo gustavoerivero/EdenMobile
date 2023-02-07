@@ -53,6 +53,7 @@ const PostPage = ({ navigation }) => {
     setEvents([])
     setCurrentPage(1)
     setIsNextPage(true)
+    getData()
   }
 
   const getCategory = (text) => {

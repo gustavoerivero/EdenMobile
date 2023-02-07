@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch, deleteMatch } from '../../redux/creole/actions'
+import { addMatch } from '../../redux/config/actions'
 
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
-const StartedGamePage = ({ navigation, match }) => {
+const StartedGamePage = ({ navigation, match, domino }) => {
 
   const layout = useWindowDimensions()
 
@@ -22,10 +22,6 @@ const StartedGamePage = ({ navigation, match }) => {
   const [passPage, setPassPage] = useState(false)
   
   const dispatch = useDispatch()
-
-  const handleDelete = (matchID = 1) => {
-    dispatch(deleteMatch(matchID))
-  }
 
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
@@ -114,7 +110,6 @@ const StartedGamePage = ({ navigation, match }) => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  handleDelete(match?.id)
                   navigation?.goBack()
                 }}
               >
@@ -442,7 +437,8 @@ const StartedGamePage = ({ navigation, match }) => {
 }
 
 const mapStateToProps = (state) => ({
-  match: state.match
+  match: state.match,
+  domino: state.match
 })
 
 export default connect(mapStateToProps)(StartedGamePage)

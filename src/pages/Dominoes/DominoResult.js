@@ -1,17 +1,54 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useWindowDimensions } from 'react-native'
 
-import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
+import { useDispatch, connect } from 'react-redux'
+import { deleteDomino } from '../../redux/config/actions'
+
+import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
+import useCustomToast from '../../hooks/useCustomToast'
+import TournamentService from '../../services/tournaments/TournamentsService'
 
-const DominoResult = ({ navigation, route }) => {
+const DominoResult = ({ navigation, route, match, domino }) => {
 
   const layout = useWindowDimensions()
 
+  const Tournament = new TournamentService()
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+
   const game = route?.params
+
+  const dispatch = useDispatch()
+
+  const sendData = async (domino = {}) => {
+    
+    setIsLoading(true)
+    try {
+      const { data, status } = await Tournament.save(domino)
+
+      console.log({ data, status })
+
+      if (status >= 200 && status <= 299) {
+        dispatch(deleteMatch(domino?.id))
+        showSuccessToast('El partido ha sido registrado con éxito.')
+        navigation?.navigate('Home')
+        setIsLoading(false)
+      } else {
+        showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+        navigation?.navigate('Home')
+        setIsLoading(false)
+      }
+
+    } catch (error) {
+      console.log(`Error sending data: ${error}`)
+      showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+      setIsLoading(false)
+      navigation?.navigate('Home')
+    }
+  }
 
   return (
     <Container
@@ -72,8 +109,8 @@ const DominoResult = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={game?.scoreTeamA === game?.scoreTeamB ? colors.gray :
-                        game?.scoreTeamA > game?.scoreTeamB ?
+                      color={domino?.teamAScore === domino?.teamBScore ? colors.gray :
+                        domino?.teamAScore > domino?.teamBScore ?
                           colors.creoleStartGame.textWinner :
                           colors.gray
                       }
@@ -93,14 +130,14 @@ const DominoResult = ({ navigation, route }) => {
                     textAlign='center'
                     pt={1}
                   >
-                    {game?.teamA}
+                    {domino?.teamA?.nombre}
                   </Text>
                   <Text
                     bold
                     fontSize='6xl'
                     color={colors.creoleStartGame.scoreColor}
                   >
-                    {game?.scoreTeamA}
+                    {domino?.teamAScore}
                   </Text>
                 </VStack>
               </HStack>
@@ -131,8 +168,8 @@ const DominoResult = ({ navigation, route }) => {
                   >
                     <Icon
                       name='people'
-                      color={game?.scoreTeamA === game?.scoreTeamB ? colors.gray :
-                        game?.scoreTeamA < game?.scoreTeamB ?
+                      color={domino?.teamAScore === domino?.teamBScore ? colors.gray :
+                        domino?.teamAScore < domino?.teamBScore ?
                           colors.creoleStartGame.textWinner :
                           colors.gray
                       }
@@ -152,14 +189,14 @@ const DominoResult = ({ navigation, route }) => {
                     textAlign='center'
                     pt={1}
                   >
-                    {game?.teamB}
+                    {domino?.teamB?.nombre}
                   </Text>
                   <Text
                     bold
                     fontSize='6xl'
                     color={colors.creoleStartGame.scoreColor}
                   >
-                    {game?.scoreTeamB}
+                    {domino?.teamBScore}
                   </Text>
                 </VStack>
               </HStack>
@@ -223,10 +260,10 @@ const DominoResult = ({ navigation, route }) => {
                     textAlign='center'
                     color={colors.creoleStartGame.scoreColor}
                   >
-                    {game?.scoreTeamA === game?.scoreTeamB ? 'Empate' :
-                      game?.scoreTeamA > game?.scoreTeamB ?
-                        `Equipo ${game?.teamA}` :
-                        `Equipo ${game?.teamB}`
+                    {domino?.teamAScore === domino?.teamBScore ? 'Empate' :
+                      domino?.teamAScore > domino?.teamBScore ?
+                        `Equipo ${domino?.teamA}` :
+                        `Equipo ${domino?.teamB}`
                     }
                   </Text>
                 </Stack>
@@ -281,4 +318,9 @@ const DominoResult = ({ navigation, route }) => {
   )
 }
 
-export default DominoResult
+const mapStateToProps = (state) => ({
+  match: state.match,
+  domino: state.domino
+})
+
+export default connect(mapStateToProps)(DominoResult)

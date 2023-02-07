@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+
 import { TouchableOpacity, useWindowDimensions, Modal } from 'react-native'
 
 import { Box, Button, HStack, Image, Stack, Text, VStack, Divider } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import CalendarPicker from 'react-native-calendar-picker'
 
@@ -13,9 +17,6 @@ import useConnection from '../../hooks/useConnection'
 import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
 
-import { cutText } from '../../utilities/functions'
-
-import Goose from '../../assets/images/goose.jpg'
 import StyledModal from '../Modal'
 import StyledField from './StyledField'
 
@@ -23,7 +24,7 @@ import { formatDate } from '../../utilities/functions'
 
 import UserService from '../../services/user/UserService'
 
-const ProfileComponent = ({ navigation, userProp={} }) => {
+const ProfileComponent = ({ navigation, userProp = {}, loaded = false, setLoaded, match, domino }) => {
 
   const User = new UserService()
   const userData = userProp
@@ -33,11 +34,13 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
     dispatch
   } = useAuthContext()
 
+  const reduxDispatch = useDispatch()
+
   const initialDate = new Date(`${new Date().getFullYear() - 16}-${new Date().getDay() + 1}-${new Date().getMonth() + 1}`)
   const endDate = new Date(`${new Date().getFullYear() - 99}-${new Date().getDay() + 1}-${new Date().getMonth() + 1}`)
 
   const { isConnected, recognizeConnection } = useConnection()
-  const { showSuccessToast } = useCustomToast()
+  const { showSuccessToast, showWarningToast, showErrorToast } = useCustomToast()
   const [isLoading, setIsLoading] = useState(false)
 
   const [image, setImage] = useState(1)
@@ -110,12 +113,14 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
 
       setIsLoading(false)
       setEdit(false)
+      setLoaded(true)
       navigation?.navigate('Profile')
     } catch (error) {
       //showErrorToast('No se pudieron actualizar tus datos')
       console.log(`User error: ${error}`)
         showErrorToast('No se pudieron actualizar tus datos')
       setIsLoading(false)
+      setLoaded(true)
     }
     
 
@@ -137,34 +142,46 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
         >
           <TouchableOpacity
             onPress={() => {
-              if (isConnected) {
-                //console.log('User logout')
-                dispatch({ type: 'LOGOUT' })
-                showSuccessToast('¡Esperamos verte proximamente por acá!')
+              if (match?.completed) {
+                console.log('Se tiene un partido almacenado.')
+                showErrorToast('No se pudo registrar el partido. Intente más tarde.')
               } else {
-                recognizeConnection()
+                if (isConnected) {
+                  //console.log('User logout')
+                  dispatch({ type: 'LOGOUT' })
+                  showSuccessToast('¡Esperamos verte proximamente por acá!')
+                } else {
+                  recognizeConnection()
+                }
               }
+
             }}
           >
             <Box
               h={35}
               w={35}
               borderRadius={50}
-              bgColor={isConnected ? colors.navBar.activeColor : colors.navBar.inactiveColor}
+              bgColor={match?.completed || isConnected ? colors.navBar.activeColor : colors.navBar.inactiveColor}
               justifyContent='center'
               alignItems='center'
             >
-              {isConnected ?
-                <Icon
-                  name='log-out-outline'
+              {match?.completed ?
+                <MaterialIcon
+                  name='celebration'
                   size={20}
                   color={colors.white}
                 /> :
-                <MaterialIcon
-                  name='connection'
-                  size={20}
-                  color={colors.white}
-                />
+                isConnected ?
+                  <Icon
+                    name='log-out-outline'
+                    size={20}
+                    color={colors.white}
+                  /> :
+                  <MaterialCommunityIcon
+                    name='connection'
+                    size={20}
+                    color={colors.white}
+                  />
               }
             </Box>
           </TouchableOpacity>
@@ -224,7 +241,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
                   />
                   :
                   <Image
-                    source={{uri: userData?.data?.foto}}
+                    source={{ uri: userData?.data?.foto }}
                     w={120}
                     h={120}
                     alt='profile'
@@ -247,7 +264,7 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
               opacity={.5}
               color={colors.gray}
             >
-              {userData?.data?.directivo?.posicion}
+              {userData?.data?.directivo?.posicion || user?.user?.roles?.find(item => item === 'anotador') ? 'Anotador' : 'Usuario'}
             </Text>
             <Text
               fontSize='sm'
@@ -512,4 +529,9 @@ const ProfileComponent = ({ navigation, userProp={} }) => {
   )
 }
 
-export default ProfileComponent
+const mapStateToProps = (state) => ({
+  match: state.match,
+  domino: state.domino
+})
+
+export default connect(mapStateToProps)(ProfileComponent)

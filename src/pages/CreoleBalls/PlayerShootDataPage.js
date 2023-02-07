@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { addMatch } from '../../redux/config/actions'
 
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 

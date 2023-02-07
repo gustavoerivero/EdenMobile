@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { addMatch } from '../../redux/config/actions'
 
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
@@ -315,6 +315,7 @@ const PlayTeamAPage = ({ navigation, match }) => {
                 >
                   <TouchableOpacity
                     activeOpacity={.9}
+                    disabled={match?.teamAScore >= Number(match?.maxPoints) || match?.teamBScore >= Number(match?.maxPoints)}
                     onPress={() => {
 
                       const game = {
@@ -324,7 +325,7 @@ const PlayTeamAPage = ({ navigation, match }) => {
                         id: match?.id,
                         title: match?.title,
                         date: match?.date,
-                        maxPoints: match?.maxPoints,
+                        maxPoints: Number(match?.maxPoints),
                         forfeit: match?.forfeit,
                         maxTime: match?.maxTime,
                         selectedTeam: match?.selectedTeam,
@@ -348,7 +349,7 @@ const PlayTeamAPage = ({ navigation, match }) => {
                     }}
                   >
                     <Box
-                      bgColor={colors.gray3}
+                      bgColor={match?.teamAScore >= Number(match?.maxPoints) || match?.teamBScore >= Number(match?.maxPoints) ? colors.gray2 : colors.gray1}
                       justifyContent='center'
                       alignItems='center'
                       borderRadius={10}
@@ -394,7 +395,7 @@ const PlayTeamAPage = ({ navigation, match }) => {
                   id: match?.id,
                   title: match?.title,
                   date: match?.date,
-                  maxPoints: match?.maxPoints,
+                  maxPoints: Number(match?.maxPoints),
                   forfeit: match?.forfeit,
                   maxTime: match?.maxTime,
                   selectedTeam: match?.selectedTeam?.nombre !== match?.teamA?.nombre ? match?.teamA : match?.teamB,
@@ -459,12 +460,12 @@ const PlayTeamAPage = ({ navigation, match }) => {
 
                 const game = {
                   started: match?.started,
-                  completed: match?.completed,
+                  completed: true,
                   tournamentId: match?.tournamentId,
                   id: match?.id,
                   title: match?.title,
                   date: match?.date,
-                  maxPoints: match?.maxPoints,
+                  maxPoints: Number(match?.maxPoints),
                   forfeit: match?.forfeit,
                   maxTime: match?.maxTime,
                   selectedTeam: match?.selectedTeam,
@@ -502,8 +503,9 @@ const PlayTeamAPage = ({ navigation, match }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              disabled={!endingRound}
-              bgColor={endingRound ? colors.button.bgPrimary : colors.gray2}
+              disabled={!endingRound || match?.teamAScore >= Number(match?.maxPoints) || match?.teamBScore >= Number(match?.maxPoints)}
+              bgColor={endingRound && match?.teamAScore < Number(match?.maxPoints) && match?.teamBScore < Number(match?.maxPoints) ? 
+                colors.button.bgPrimary : colors.gray2}
               _pressed={colors.bgSecondary}
               onPress={() => {
 
@@ -514,7 +516,7 @@ const PlayTeamAPage = ({ navigation, match }) => {
                   id: match?.id,
                   title: match?.title,
                   date: match?.date,
-                  maxPoints: match?.maxPoints,
+                  maxPoints: Number(match?.maxPoints),
                   forfeit: match?.forfeit,
                   maxTime: match?.maxTime,
                   selectedTeam: match?.selectedTeam,
@@ -540,7 +542,8 @@ const PlayTeamAPage = ({ navigation, match }) => {
               <Text
                 bold
                 fontSize='md'
-                color={endingRound ? colors.white : colors.gray}
+                color={endingRound && match?.teamAScore < Number(match?.maxPoints) && match?.teamBScore < Number(match?.maxPoints) ? 
+                  colors.white : colors.gray}
               >
                 Finalizar tiro
               </Text>

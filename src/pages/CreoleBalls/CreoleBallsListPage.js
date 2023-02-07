@@ -156,6 +156,12 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                     navigation={navigation}
                     playersTeamA={item?.equipo_a?.jugadores || []}
                     playersTeamB={item?.equipo_b?.jugadores || []}
+                    teamAScore={item?.ronda?.length > 0 ? 
+                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_a) : 0
+                    }
+                    teamBScore={item?.ronda?.length > 0 ? 
+                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_b) : 0
+                    }
                   />
                 </Stack>
               )}

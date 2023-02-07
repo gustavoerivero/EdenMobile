@@ -1,28 +1,32 @@
-import React, { useState, useReducer } from 'react'
+import React, { useCallback, useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addDomino } from '../../redux/config/actions'
+
 import Container from '../../components/Container'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { Stack, VStack, HStack, Text, Divider, Button } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import colors from '../../styled-components/colors'
-import { firstTeamData } from './data/teamA'
-import { secondTeamData } from './data/teamB'
 import PlayersTeam from '../../components/DominoComponents/PlayersTeam'
+import { useFocusEffect } from '@react-navigation/native'
 
-const DominoRoster = ({ navigation, route }) => {
-
-  const game = route?.params
+const DominoRoster = ({ navigation, route, domino, match }) => {
 
   const layout = useWindowDimensions()
 
-  const [firstRoster, setFirstRoster] = useState(firstTeamData)
-  const [secondRoster, setSecondRoster] = useState(secondTeamData)
+  const dispatch = useDispatch()
 
-  const [teamA, setTeamA] = useState(game?.teamA || '')
-  const [firstTeam, setFirstTeam] = useState(firstTeamData || [])
+  const handleSubmit = (domino = {}) => {
+    dispatch(addDomino(domino))
+  }
 
-  const [teamB, setTeamB] = useState(game?.teamB || '')
-  const [secondTeam, setSecondTeam] = useState(secondTeamData || [])
+  useFocusEffect(
+    useCallback(() => {
+      console.log(domino)
+    }, [domino])
+  )
 
   return (
     <Container
@@ -61,7 +65,7 @@ const DominoRoster = ({ navigation, route }) => {
             color={colors.text.primary}
             alignContent='center'
           >
-            {game.title}
+            {domino?.title}
           </Text>
         </HStack>
 
@@ -74,16 +78,14 @@ const DominoRoster = ({ navigation, route }) => {
           <PlayersTeam
             id={1}
             teamID={1}
-            name={teamA}
-            team={firstTeam}
-            roster={firstRoster}
+            name={domino?.teamA?.nombre}
+            team={domino?.teamAMembers}
           />
           <PlayersTeam
             id={2}
             teamID={2}
-            name={teamB}
-            team={secondTeam}
-            roster={secondRoster}
+            name={domino?.teamB?.nombre}
+            team={domino?.teamBMembers}
           />
         </Stack>
 
@@ -109,26 +111,49 @@ const DominoRoster = ({ navigation, route }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.button.bgPrimary}
+              bgColor={domino?.teamAMembers?.length < 2 || domino?.teamBMembers?.length < 2 ? colors.gray2 : colors.button.bgPrimary}
+              disabled={domino?.teamAMembers?.length < 2 || domino?.teamBMembers?.length < 2}
               onPress={() => {
-                navigation?.navigate('StartedDominoGamePage', {
-                  round: 1,
-                  points: 50,
-                  teamA: teamA,
-                  teamB: teamB,
-                  rosterA: firstRoster,
-                  rosterB: secondRoster,
-                  colorTeamA: colors.creoleStartGame.teamAColor,
-                  colorTeamB: colors.creoleStartGame.teamBColor,
-                  scoreTeamA: 0,
-                  scoreTeamB: 0,
-                })
+
+                const round = {
+                  id: domino?.rounds?.length > 0 ? domino?.rounds?.length + 1 : 1,
+                  number: domino?.rounds?.length > 0 ? domino?.rounds?.length + 1 : 1,
+                  teamAScore: 0,
+                  teamBScore: 0,
+                  isLocked: false,
+                  teamAMembers: domino?.teamAMembers,
+                  teamBMembers: domino?.teamBMembers
+                }
+
+                const game = {
+                  started: true,
+                  completed: domino?.completed,
+                  tournamentId: domino?.tournamentId,
+                  id: domino?.id,
+                  title: domino?.title,
+                  date: domino?.date,
+                  maxTime: domino?.maxTime,
+                  maxPoints: domino?.maxPoints,
+                  selectedTeam: null,
+                  initialTeam: null,
+                  teamA: domino?.teamA,
+                  teamB: domino?.teamB,
+                  teamAScore: domino?.teamAScore,
+                  teamBScore: domino?.teamBScore,
+                  teamAMembers: domino?.teamAMembers,
+                  teamBMembers: domino?.teamBMembers,
+                  rounds: domino?.rounds?.length > 0 ? domino?.rounds : [round]
+                }
+      
+                handleSubmit(game)
+
+                navigation?.navigate('StartedDominoGamePage', game)
               }}
             >
               <Text
                 bold
                 fontSize='md'
-                color={colors.white}
+                color={domino?.teamAMembers?.length < 2 || domino?.teamBMembers?.length < 2 ? colors.gray : colors.white}
               >
                 Iniciar juego
               </Text>
@@ -140,4 +165,9 @@ const DominoRoster = ({ navigation, route }) => {
   )
 }
 
-export default DominoRoster
+const mapStateToProps = (state) => ({
+  match: state.match,
+  domino: state.domino
+})
+
+export default connect(mapStateToProps)(DominoRoster)

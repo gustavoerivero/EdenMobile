@@ -1,5 +1,7 @@
-import React from 'react'
-import { ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
+import React, { useState, useCallback } from 'react'
+import { ActivityIndicator, ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
+
 import LinearGradient from 'react-native-linear-gradient'
 import { Box, Button, Divider, HStack, ScrollView, Stack, Text, Tooltip, VStack } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -12,11 +14,43 @@ import colors from '../../styled-components/colors'
 import { cutText } from '../../utilities/functions'
 import TeamPreviewCard from '../../components/TeamPreviewCard'
 
+import TournamentService from '../../services/tournaments/TournamentsService'
+
 const DominoTournamentPage = ({ navigation, route }) => {
 
-  const layout = useWindowDimensions()
+  const Tournament = new TournamentService()
+
+  const [isLoading, setIsLoading] = useState(true)
+  const [teams, setTeams] = useState([])
+  const [calendar, setCalendar] = useState(false)
 
   const event = route?.params
+
+  const getData = async () => {
+    if (isLoading) {
+      Tournament.get(event?.id)
+        .then(res => {
+          let { data } = res
+
+          setCalendar(data?.data?.fase_de_torneo[0]?.calendario?.length > 0 || false)
+
+          data = data?.data?.fase_de_torneo[0]?.equipo
+
+          setTeams(data)
+          setIsLoading(false)
+        })
+        .catch(error => {
+          console.log(`Tournament error: ${error}`)
+          setIsLoading(false)
+        })
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getData()
+    }, [teams]),
+  )
 
   return (
     <Container
@@ -70,7 +104,7 @@ const DominoTournamentPage = ({ navigation, route }) => {
                         </Text>
                       </HStack>
                     </TouchableOpacity>
-                    
+
                   </HStack>
                 </LinearGradient>
               </ImageBackground>
@@ -255,32 +289,41 @@ const DominoTournamentPage = ({ navigation, route }) => {
                   >
                     Equipos del torneo
                   </Text>
-                  {!event?.tournament ?
-                    <Text
-                      fontSize='sm'
-                      color={colors.text.description}
-                      italic
-                    >
-                      Aún no hay equipos registrados en el torneo.
-                    </Text>
-                    :
-                    <VStack>
-                      {event?.tournament?.map((item, key) => (
-                        <Stack
-                          key={key}
-                          m={1}
-                        >
-                          <TeamPreviewCard
-                            teamID={item.id}
-                            teamName={item.name}
-                            teamImage={item.image}
-                            teamMembers={item.members}
-                            navigation={navigation}
-                          />
-                        </Stack>
-                      ))}
-                    </VStack>
-                  }
+                  {isLoading && teams?.length === 0 ? (
+                    <Stack
+                      mt={2}
+                      alignItems="center"
+                      justifyContent="center"
+                      alignContent="center"
+                      alignSelf="center">
+                      <ActivityIndicator size="large" color={colors.primary} />
+                    </Stack>
+                  ) : !teams || teams?.length === 0 ? (
+                    <Stack px={3}>
+                      <Text
+                        fontSize="sm"
+                        color={colors.text.description}
+                        italic>
+                        Aún no hay equipos registrados en el torneo.
+                      </Text>
+                    </Stack>
+                  ) : (
+                    teams?.length > 0 && (
+                      <VStack>
+                        {teams?.map((item, key) => (
+                          <Stack key={key} m={1}>
+                            <TeamPreviewCard
+                              teamID={item.id}
+                              teamName={item.nombre}
+                              teamImage={item.logo}
+                              teamMembers={item.jugadores}
+                              navigation={navigation}
+                            />
+                          </Stack>
+                        ))}
+                      </VStack>
+                    )
+                  )}
                 </VStack>
               </Stack>
 
@@ -305,7 +348,7 @@ const DominoTournamentPage = ({ navigation, route }) => {
                   >
                     <TouchableOpacity
                       activeOpacity={.75}
-                      disabled={false /*!event.tournament*/}
+                      disabled={!calendar}
                       onPress={() => {
                         console.log(`Game list button is pressed`)
                         navigation?.navigate('DominoListPage', {
@@ -325,15 +368,16 @@ const DominoTournamentPage = ({ navigation, route }) => {
                         w={12}
                         h={12}
                         borderRadius={50}
-                        bgColor={event?.tournament ? colors.icon.primary : colors.gray2}
+                        bgColor={
+                          calendar ? colors.icon.primary : colors.gray2
+                        }
                         shadow={3}
-                        alignItems='center'
-                        justifyContent='center'
-                        pl={.5}
-                      >
+                        alignItems="center"
+                        justifyContent="center"
+                        pl={0.5}>
                         <Icon
-                          name='list-circle-outline'
-                          color={event?.tournament ? colors.white : colors.gray}
+                          name="list-circle-outline"
+                          color={calendar ? colors.white : colors.gray}
                           size={40}
                         />
                       </Box>

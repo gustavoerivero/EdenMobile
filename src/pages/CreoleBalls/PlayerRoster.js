@@ -1,7 +1,7 @@
-import React, { useReducer } from 'react'
+import React, { useCallback, useReducer } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { addMatch } from '../../redux/config/actions'
 
 import Container from '../../components/Container'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import colors from '../../styled-components/colors'
 import RosterTeam from '../../components/CreoleBallsComponents/RosterTeam'
+import { useFocusEffect } from '@react-navigation/native'
 
 const rosterReducer = (state, action) => {
   switch (action.type) {
@@ -21,7 +22,7 @@ const rosterReducer = (state, action) => {
   }
 }
 
-const PlayerRoster = ({ navigation, match }) => {
+const PlayerRoster = ({ navigation, domino, match }) => {
 
   const layout = useWindowDimensions()
 
@@ -61,6 +62,12 @@ const PlayerRoster = ({ navigation, match }) => {
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log(match)
+    }, [match])
+  )
 
   return (
     <Container
@@ -113,8 +120,8 @@ const PlayerRoster = ({ navigation, match }) => {
           <RosterTeam
             id={1}
             teamID={1}
-            name={match.teamA.nombre}
-            team={match.teamAMembers}
+            name={match?.teamA?.nombre}
+            team={match?.teamAMembers}
             roster={firstRoster}
 
             add={addFirstRoster}
@@ -124,8 +131,8 @@ const PlayerRoster = ({ navigation, match }) => {
           <RosterTeam
             id={2}
             teamID={2}
-            name={match.teamB.nombre}
-            team={match.teamBMembers}
+            name={match?.teamB?.nombre}
+            team={match?.teamBMembers}
             roster={secondRoster}
 
             add={addSecondRoster}
@@ -211,7 +218,8 @@ const PlayerRoster = ({ navigation, match }) => {
 }
 
 const mapStateToProps = (state) => ({
-  match: state.match
+  match: state.match,
+  domino: state.domino
 })
 
 export default connect(mapStateToProps)(PlayerRoster)

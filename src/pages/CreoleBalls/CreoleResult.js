@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { deleteMatch } from '../../redux/config/actions'
 
 import { useWindowDimensions } from 'react-native'
 
@@ -11,20 +11,50 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 import { useFocusEffect } from '@react-navigation/native'
+import TournamentService from '../../services/tournaments/TournamentsService'
+import useCustomToast from '../../hooks/useCustomToast'
 
-const CreoleResult = ({ navigation, route, match }) => {
+const CreoleResult = ({ navigation, match }) => {
 
   const layout = useWindowDimensions()
 
   const dispatch = useDispatch()
 
-  const handleSubmit = (match = {}) => {
-    dispatch(addMatch(match))
+  const Tournament = new TournamentService()
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const sendData = async (match = {}) => {
+    
+    setIsLoading(true)
+    try {
+      const { data, status } = await Tournament.save(match)
+
+      console.log({ data, status })
+
+      if (status >= 200 && status <= 299) {
+        dispatch(deleteMatch(match?.id))
+        showSuccessToast('El partido ha sido registrado con éxito.')
+        navigation?.navigate('Home')
+        setIsLoading(false)
+      } else {
+        showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+        navigation?.navigate('Home')
+        setIsLoading(false)
+      }
+
+    } catch (error) {
+      console.log(`Error sending data: ${error}`)
+      showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+      setIsLoading(false)
+      navigation?.navigate('Home')
+    }
   }
 
   useFocusEffect(
     useCallback(() => {
-      console.log(match)
+      //console.log(match)
     }, [match])
   )
 
@@ -266,16 +296,17 @@ const CreoleResult = ({ navigation, route, match }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.button.bgPrimary}
+              bgColor={isLoading ? colors.gray1 : colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('Home')
+                sendData(match)
               }}
+              isLoading={isLoading}
             >
               <Text
                 bold
                 fontSize='md'
-                color={colors.white}
+                color={isLoading ? colors.gray : colors.white}
               >
                 Registrar juego
               </Text>

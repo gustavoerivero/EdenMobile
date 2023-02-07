@@ -1,4 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addDomino } from '../../redux/config/actions'
+
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
 import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
@@ -8,17 +12,34 @@ import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 import StyledDominoNumberField from '../../components/DominoComponents/StyledDominoNumberField'
 import StyledSwitch from '../../components/StyledSwitch'
+import { useFocusEffect } from '@react-navigation/native'
 
-const StartedDominoGamePage = ({ navigation, route }) => {
+const StartedDominoGamePage = ({ navigation, route, domino, match }) => {
 
   const layout = useWindowDimensions()
-
-  const game = route?.params
 
   const [scoreTeamA, setScoreTeamA] = useState(0)
   const [scoreTeamB, setScoreTeamB] = useState(0)
 
+  const [isCharged, setIsCharged] = useState(false)
+
   const [isLocked, setIsLocked] = useState(false)
+
+  const dispatch = useDispatch()
+
+  const handleSubmit = (domino = {}) => {
+    dispatch(addDomino(domino))
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      setScoreTeamA(0)
+      setScoreTeamB(0)
+      setIsLocked(false)
+      setIsCharged(true)
+    }, [domino, isCharged])
+  )
+
 
   return (
     <Container
@@ -78,7 +99,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                30:00
+                {`${domino?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -86,8 +107,16 @@ const StartedDominoGamePage = ({ navigation, route }) => {
               minW='33%'
               minH='100%'
               maxH='100%'
+              justifyContent='flex-end'
+              alignItems='center'
             >
-
+              <Text
+                bold
+                fontSize='md'
+                color={colors.creoleStartGame.timeColor}
+              >
+                {`Hasta ${domino?.maxPoints} ptos`}
+              </Text>
             </Stack>
 
           </HStack>
@@ -112,16 +141,16 @@ const StartedDominoGamePage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamA}
+                color={colors.creoleStartGame.teamAColor}
               >
-                {`${game?.teamA.slice(0, 3).toUpperCase()}`}
+                {domino?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamA}
+                {domino?.teamAScore}
               </Text>
             </HStack>
 
@@ -136,14 +165,14 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamB}
+                {domino?.teamBScore}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamB}
+                color={colors.creoleStartGame.teamBColor}
               >
-                {`${game?.teamB.slice(0, 3).toUpperCase()}`}
+                {domino?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -189,7 +218,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
               textAlign='left'
               bold
             >
-              Ronda N° {game?.round}
+              Ronda Nro. {domino?.rounds?.length}
             </Text>
           </Stack>
 
@@ -230,7 +259,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamA}
+                  {domino?.teamA?.nombre}
                 </Text>
               </VStack>
 
@@ -262,7 +291,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                   textAlign='center'
                   pt={1}
                 >
-                  {game?.teamB}
+                  {domino?.teamB?.nombre}
                 </Text>
               </VStack>
 
@@ -285,7 +314,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                 value={scoreTeamA}
                 onChangeText={text => {
                   const value = Number(text)
-                  if (!isNaN(value)) {
+                  if (value >= 0 || value <= domino?.maxPoints) {
                     setScoreTeamA(value);
                   }
                 }}
@@ -305,7 +334,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
                 value={scoreTeamB}
                 onChangeText={text => {
                   const value = Number(text)
-                  if (!isNaN(value)) {
+                  if (value >= 0 || value <= domino?.maxPoints) {
                     setScoreTeamB(value);
                   }
                 }}
@@ -335,7 +364,7 @@ const StartedDominoGamePage = ({ navigation, route }) => {
               setValue={setIsLocked}
             />
           </HStack>
-
+          
         </Stack>
 
         <VStack
@@ -361,29 +390,79 @@ const StartedDominoGamePage = ({ navigation, route }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.button.bgPrimary}
+              disabled={(!scoreTeamA && scoreTeamA > 0) ||
+                (!scoreTeamB && scoreTeamB > 0) ||
+                domino?.teamAScore + scoreTeamA > domino?.maxPoints ||
+                domino?.teamBScore + scoreTeamB > domino?.maxPoints
+              }
+              bgColor={(!scoreTeamA && scoreTeamA > 0) ||
+                (!scoreTeamB && scoreTeamB > 0) ||
+                domino?.teamAScore + scoreTeamA > domino?.maxPoints ||
+                domino?.teamBScore + scoreTeamB > domino?.maxPoints
+                ? colors.gray2 : colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(game?.scoreTeamA + scoreTeamA < game?.points &&
-                  game?.scoreTeamB + scoreTeamB < game?.points ? 'StartedDominoGamePage' : 'DominoResult', {
-                  points: game?.points,
-                  round: game?.scoreTeamA + scoreTeamA < game?.points &&
-                    game?.scoreTeamB + scoreTeamB < game?.points ? game?.round + 1 : game?.round,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA + scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB + scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                })
+
+
+
+                const round = {
+                  id: domino?.rounds?.length + 1,
+                  number: domino?.rounds?.length + 1,
+                  teamAScore: Number(scoreTeamA) >= 0 ? Number(scoreTeamA) : 0,
+                  teamBScore: Number(scoreTeamB) >= 0 ? Number(scoreTeamB) : 0,
+                  isLocked: isLocked,
+                  teamAMembers: domino?.teamAMembers,
+                  teamBMembers: domino?.teamBMembers
+                }
+
+                const totalScoreTeamA = (Number(scoreTeamA) >= 0 ? Number(scoreTeamA) : 0) + Number(domino?.teamAScore)
+                const totalScoreTeamB = (Number(scoreTeamB) >= 0 ? Number(scoreTeamB) : 0) + Number(domino?.teamBScore)
+
+                const game = {
+                  started: domino?.started,
+                  completed: totalScoreTeamA >= domino?.maxPoints ||
+                    totalScoreTeamB >= domino?.maxPoints ?
+                    true : domino?.completed,
+                  tournamentId: domino?.tournamentId,
+                  id: domino?.id,
+                  title: domino?.title,
+                  date: domino?.date,
+                  maxTime: domino?.maxTime,
+                  maxPoints: domino?.maxPoints,
+                  selectedTeam: null,
+                  initialTeam: null,
+                  teamA: domino?.teamA,
+                  teamB: domino?.teamB,
+                  teamAScore: totalScoreTeamA,
+                  teamBScore: totalScoreTeamB,
+                  teamAMembers: domino?.teamAMembers,
+                  teamBMembers: domino?.teamBMembers,
+                  rounds: [...domino?.rounds, round]
+                }
+
+                handleSubmit(game)
+
+                setScoreTeamA(0)
+                setScoreTeamB(0)
+                setIsLocked(false)
+                setIsCharged(false)
+
+                const route = totalScoreTeamA >= domino?.maxPoints || totalScoreTeamB >= domino?.maxPoints ?
+                  'DominoResult' : 'StartedDominoGamePage'
+
+                navigation?.navigate(route, game)
+
               }}
             >
               <Text
                 bold
                 fontSize='md'
-                color={colors.white}
+                color={(!scoreTeamA && scoreTeamA > 0) ||
+                  (!scoreTeamB && scoreTeamB > 0) ||
+                  domino?.teamAScore + scoreTeamA > domino?.maxPoints ||
+                  domino?.teamBScore + scoreTeamB > domino?.maxPoints ?
+                  colors.gray : colors.white
+                }
               >
                 Finalizar ronda
               </Text>
@@ -396,4 +475,9 @@ const StartedDominoGamePage = ({ navigation, route }) => {
   )
 }
 
-export default StartedDominoGamePage
+const mapStateToProps = (state) => ({
+  match: state.match,
+  domino: state.domino
+})
+
+export default connect(mapStateToProps)(StartedDominoGamePage)

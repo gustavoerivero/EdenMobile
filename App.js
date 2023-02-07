@@ -7,7 +7,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { AuthProvider } from './src/context/AuthContext'
 import StackNavigation from './src/navigation/StackNavigation'
 
-import store from './src/redux/creole/store'
+import store from './src/redux/config/store'
 
 import 'moment-es6'
 

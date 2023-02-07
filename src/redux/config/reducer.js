@@ -1,10 +1,10 @@
-import { ADD_MATCH, ADD_ROUND, DELETE_MATCH, EDIT_ROUND } from './actions'
+import { ADD_MATCH, DELETE_MATCH, ADD_DOMINO, DELETE_DOMINO } from './actions'
 
 const initialState = {
   match: {
     started: false,
     completed: false,
-    tournamentId: null, 
+    tournamentId: null,
     id: null,
     title: null,
     date: new Date(),
@@ -24,6 +24,25 @@ const initialState = {
     rosterTeamA: [],
     rosterTeamB: [],
     rounds: []
+  },
+  domino: {
+    started: false,
+    completed: false,
+    tournamentId: null,
+    id: null,
+    title: null,
+    date: new Date(),
+    maxPoints: 0,
+    maxTime: 0,
+    selectedTeam: null,
+    initialTeam: null,
+    teamA: null,
+    teamB: null,
+    teamAScore: 0,
+    teamBScore: 0,
+    teamAMembers: [],
+    teamBMembers: [],
+    rounds: []
   }
 }
 
@@ -38,34 +57,21 @@ export default (state = initialState, action = null) => {
 
     case DELETE_MATCH: {
       return {
-        ...state,
-        match: initialState
+        match: initialState.match
       }
     }
 
-    case ADD_ROUND: {
+    case ADD_DOMINO: {
       return {
         ...state,
-        rounds: [...state.rounds, action.payload]
+        domino: { ...state.domino, ...action.payload }
       }
     }
 
-    case EDIT_ROUND: {
+    case DELETE_DOMINO: {
       return {
         ...state,
-        rounds: state.rounds.map(round => {
-          if (round.id === action.roundData.id) {
-            return {
-              roundData: round.roundData.map(data => {
-                if (data.id === action.roundData.id) {
-                  return action.roundData
-                }
-                return data
-              })
-            }
-          }
-          return round
-        })
+        domino: initialState.domino
       }
     }
 

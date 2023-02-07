@@ -29,9 +29,11 @@ const CalendarPage = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = useCallback(() => {
+    setIsLoading(true)
     setEvents([])
     setCurrentPage(1)
     setIsNextPage(true)
+    setIsLoading(false)
   }, [])
 
   const getData = async () => {
@@ -131,7 +133,7 @@ const CalendarPage = ({ navigation }) => {
         alignItems='center'
       >
         <Divider />
-        {isLoading && events?.length === 0 ? (
+        {isLoading ? (
           <Stack
             mt={2}
             alignItems='center'

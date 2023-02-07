@@ -39,16 +39,18 @@ const CreoleGameCard = ({
     <Box
       border='1'
       borderRadius='lg'
-      bgColor={match ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
+      bgColor={match.started ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
-        disabled={match.id !== id}
+        disabled={match.started ? /*match.id !== id */ false : false}
         onPress={() => {
 
           const game = {
+            started: match?.started,
+            completed: match?.completed,
             tournamentId: match?.tournamentId || tournamentID,
             id: match?.id || id,
             title: match?.title || title,
@@ -95,7 +97,7 @@ const CreoleGameCard = ({
                 bold
                 color={colors.text.primary}
               >
-                Juego N°{id}
+                Juego Nro. {id}
               </Text>
               <Text
                 fontSize='2xs'
@@ -130,7 +132,7 @@ const CreoleGameCard = ({
                     fontSize='3xl'
                     textAlign='center'
                   >
-                    0
+                    {match.started && match.id === id ? match?.teamAScore : 0}
                   </Text>
                   <Text
                     color={colors.text.primary}
@@ -158,7 +160,7 @@ const CreoleGameCard = ({
                     textAlign='center'
                     color={colors.text.primary}
                   >
-                    0
+                    {match.started && match.id === id ? match?.teamBScore : 0}
                   </Text>
                   <Text
                     fontSize='md'

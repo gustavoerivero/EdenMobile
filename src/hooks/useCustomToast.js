@@ -5,7 +5,7 @@ import colors from '../styled-components/colors'
 
 const { width } = Dimensions.get('window')
 
-const Toast = ({ id = 0, text = 'Hello World!', color = colors.primary, bgColor = colors.secundary}) => (
+const Toast = ({ id = 0, bgIconColor = null, iconColor = 'white', outline = false, text = 'Hello World!', color = colors.primary, bgColor = colors.secundary }) => (
   <HStack
     id={id}
     h='20'
@@ -17,11 +17,11 @@ const Toast = ({ id = 0, text = 'Hello World!', color = colors.primary, bgColor 
     space={2}
     alignItems='center'
   >
-    <Avatar bgColor={color}>
+    <Avatar bgColor={bgIconColor || color}>
       <Icon
-        name='information'
+        name={`information`}
         size={30}
-        color='white'
+        color={iconColor}
       />
     </Avatar>
     <Text color={color} bold pr={2} textAlign='justify' >
@@ -41,6 +41,19 @@ const useCustomToast = () => {
     })
   }
 
+  const showWarningToast = (text = '') => {
+    toast.show({
+      render: ({ id }) => {
+        return <Toast
+          id={id}
+          text={text}
+          color={colors.error.warningText}
+          bgColor={colors.error.warning}
+        />
+      },
+    })
+  }
+
   const showErrorToast = (text = '') => {
     toast.show({
       render: ({ id }) => {
@@ -49,9 +62,19 @@ const useCustomToast = () => {
     })
   }
 
+  const showCustomToast = (text = '', color = colors.gray, bgColor = colors.bgPrimary) => {
+    toast.show({
+      render: ({ id }) => {
+        return <Toast id={id} text={text} color={color} bgColor={bgColor} />
+      },
+    })
+  }
+
   return {
     showSuccessToast,
+    showWarningToast,
     showErrorToast,
+    showCustomToast,
   }
 }
 

@@ -2,6 +2,8 @@ import { ADD_MATCH, ADD_ROUND, DELETE_MATCH, EDIT_ROUND } from './actions'
 
 const initialState = {
   match: {
+    started: false,
+    completed: false,
     tournamentId: null, 
     id: null,
     title: null,

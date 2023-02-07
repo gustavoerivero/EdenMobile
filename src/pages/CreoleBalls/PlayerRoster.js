@@ -163,6 +163,8 @@ const PlayerRoster = ({ navigation, match }) => {
               onPress={() => {
 
                 const game = {
+                  started: match?.started || true,
+                  completed: match?.completed,
                   tournamentId: match?.tournamentId || tournamentID,
                   id: match?.id || id,
                   title: match?.title || title,

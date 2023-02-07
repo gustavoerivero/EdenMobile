@@ -1,8 +1,8 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {ScrollView, Text, VStack, Stack} from 'native-base'
-import {ActivityIndicator} from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { ScrollView, Text, VStack, Stack } from 'native-base'
+import { ActivityIndicator } from 'react-native';
 
-import {useFocusEffect} from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 
 import Container from '../../components/Container'
 
@@ -18,7 +18,7 @@ import Modal from '../../components/Modal'
 
 import UserService from '../../services/user/UserService'
 
-const UserPage = ({navigation}) => {
+const UserPage = ({ navigation }) => {
 
   const User = new UserService()
 
@@ -27,16 +27,15 @@ const UserPage = ({navigation}) => {
   const [loaded, setLoaded] = useState(true)
 
   const {
-    state: {isAuthenticated, user},
+    state: { isAuthenticated, user },
   } = useAuthContext()
 
   const getData = async () => {
 
-    
-      if (loaded) {
-        try {
+    if (loaded) {
+      try {
         setIsLoading(true)
-console.log(user?.user?.usuario?.id)
+        console.log(user?.user?.usuario?.id)
         let { data } = await User.getUserByID(user?.user?.usuario?.id)
 
         setUserData(data)
@@ -46,11 +45,11 @@ console.log(user?.user?.usuario?.id)
 
       } catch (error) {
         console.log(`User error: ${error}`)
-          showErrorToast('No se pudo obtener los datos del Usuario')
-          setIsLoading(false)
-          setLoaded(false)
+        showErrorToast('No se pudo obtener los datos del Usuario')
+        setIsLoading(false)
+        setLoaded(false)
       }
-      }
+    }
   }
 
   useFocusEffect(
@@ -66,38 +65,38 @@ console.log(user?.user?.usuario?.id)
           <LoginForm />
         ) : isLoading ? (
           <Stack
-                      mt={2}
-                      alignItems="center"
-                      justifyContent="center"
-                      alignContent="center"
-                      alignSelf="center">
-                      <ActivityIndicator size="large" color={colors.primary} />
-                    </Stack>
+            mt={2}
+            alignItems="center"
+            justifyContent="center"
+            alignContent="center"
+            alignSelf="center">
+            <ActivityIndicator size="large" color={colors.primary} />
+          </Stack>
         ) : (
           <VStack p={5} mt={15} space={3.5} minH="100%" alignItems="center">
-          <ProfileComponent userProp={userData} />
-          <CreoleProfileCard
-            gamesPlayed={7}
-            gamesWon={3}
-            gamesLost={4}
-            arrimeBueno={12}
-            arrimeMalo={2}
-            bocheBueno={0}
-            bocheMalo={4}
-            marranaBuena={1}
-            marranaMala={0}
-            mingoFuera={1}
-          />
-          <DominoesProfileCard
-            gamesPlayed={6}
-            gamesWon={4}
-            gamesLost={2}
-            points={250}
-          />
-          <ContactCard userProp={userData} />
-        </VStack>
+            <ProfileComponent userProp={userData} />
+            <CreoleProfileCard
+              gamesPlayed={7}
+              gamesWon={3}
+              gamesLost={4}
+              arrimeBueno={12}
+              arrimeMalo={2}
+              bocheBueno={0}
+              bocheMalo={4}
+              marranaBuena={1}
+              marranaMala={0}
+              mingoFuera={1}
+            />
+            <DominoesProfileCard
+              gamesPlayed={6}
+              gamesWon={4}
+              gamesLost={2}
+              points={250}
+            />
+            <ContactCard userProp={userData} />
+          </VStack>
         )
-      }
+        }
       </ScrollView>
     </Container>
   )

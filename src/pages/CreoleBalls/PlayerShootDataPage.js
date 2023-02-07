@@ -1,4 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+
+import { useDispatch, connect } from 'react-redux'
+import { addMatch } from '../../redux/creole/actions'
+
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
 import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
@@ -8,25 +12,70 @@ import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
 import { cutText } from '../../utilities/functions'
+import { useFocusEffect } from '@react-navigation/native'
 
-const PlayerShootDataPage = ({ navigation, route }) => {
+const PlayerShootDataPage = ({ navigation, route, match }) => {
 
   const layout = useWindowDimensions()
 
+  const dispatch = useDispatch()
+
+  const handleSubmit = (match = {}) => {
+    dispatch(addMatch(match))
+  }
+
   const game = route?.params
 
-  const [shoot, setShoot] = useState(0)
+  let round = match?.rounds[match?.rounds?.length - 1]
+
+  const player = match?.selectedTeam?.nombre === match?.teamA?.nombre ?
+    match?.rosterTeamA.find(member => member?.usuario?.id === game?.selectedPlayer) :
+    match?.rosterTeamB.find(member => member?.usuario?.id === game?.selectedPlayer)
+
+  const name = `${player?.usuario?.nombres} ${player?.usuario?.apellidos}`
+
+  const updateRound = (round = {}, player = {}, firstShoot = null, secondShoot = null) => {
+
+    const team = match?.selectedTeam?.nombre === match?.teamA?.nombre ? 'teamAMembers' : 'teamBMembers'
+
+    const playerIndex = round[team]?.findIndex(p => p?.playerID === player?.usuario?.id)
+
+    const aux = {
+      roundNumber: round?.number,
+      playerID: player?.usuario?.id,
+      firstShoot,
+      secondShoot
+    }
+
+    if (playerIndex === -1) {
+      round[team]?.push(aux)
+    } else {
+      round[team][playerIndex] = aux
+    }
+
+    return { ...round }
+
+  }
+
+  const getPlayer = (round, playerID) => {
+    const { teamAMembers, teamBMembers } = round
+    const allPlayers = [...teamAMembers, ...teamBMembers]
+    return allPlayers?.find(player => player?.playerID === playerID) || null
+  }
 
   const [numberShoot, setNumberShoot] = useState(1)
 
   const [firstShoot, setFirstShoot] = useState(null)
   const [secondShoot, setSecondShoot] = useState(null)
 
-  const player = game?.selectedTeam === game?.teamA?.nombre ?
-  game?.rosterA.find(member => member?.persona?.id === game?.selectedPlayer) :
-  game?.rosterB.find(member => member?.persona?.id === game?.selectedPlayer)
-
-  const name = `${player?.persona?.nombres} ${player?.persona?.apellidos}`
+  useFocusEffect(
+    useCallback(() => {
+      console.log(getPlayer(round, player?.usuario?.id))
+      setNumberShoot(1)
+      setFirstShoot(getPlayer(round, player?.usuario?.id) && getPlayer(round, player?.usuario?.id)?.firstShoot || null)
+      setSecondShoot(getPlayer(round, player?.usuario?.id) && getPlayer(round, player?.usuario?.id)?.secondShoot || null)
+    }, [round, player])
+  )
 
   return (
     <Container
@@ -86,7 +135,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='md'
                 color={colors.creoleStartGame.timeColor}
               >
-                {`${game?.maxTime}:00` || '00:00'}
+                {`${match?.maxTime}:00` || '00:00'}
               </Text>
             </Stack>
 
@@ -112,7 +161,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
             space={2}
           >
             <HStack
-              minW={layout.width * .48}
+              minW='48%'
               alignItems='center'
               justifyContent='center'
               space={10}
@@ -120,16 +169,18 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamA}
+                color={match?.initialTeam?.nombre === match?.selectedTeam?.nombre &&
+                  match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB
+                }
               >
-                {game?.teamA?.abreviatura}
+                {match?.teamA?.abreviatura}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamA}
+                {match?.teamAScore}
               </Text>
             </HStack>
 
@@ -144,14 +195,16 @@ const PlayerShootDataPage = ({ navigation, route }) => {
                 fontSize='4xl'
                 color={colors.creoleStartGame.scoreColor}
               >
-                {game?.scoreTeamB}
+                {match?.teamBScore}
               </Text>
               <Text
                 bold
                 fontSize='4xl'
-                color={game?.colorTeamB}
+                color={match?.initialTeam?.nombre !== match?.selectedTeam?.nombre &&
+                  match?.initialTeam?.abreviatura === match?.teamB?.abreviatura ? match?.colorTeamB : match?.colorTeamA
+                }
               >
-                {game?.teamB?.abreviatura}
+                {match?.teamB?.abreviatura}
               </Text>
 
             </HStack>
@@ -182,7 +235,7 @@ const PlayerShootDataPage = ({ navigation, route }) => {
 
           <Stack
             minH={5}
-            bgColor={game?.initialTeam === game?.selectedTeam ? game?.colorTeamA : game?.colorTeamB}
+            bgColor={match?.initialTeam?.nombre === match?.selectedTeam?.nombre ? match?.colorTeamA : match?.colorTeamB}
             mb={2}
           >
           </Stack>
@@ -635,24 +688,39 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               bgColor={colors.gray3}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(game?.selectedTeam === game?.teamA?.nombre ? 'PlayTeamAPage' : 'PlayTeamBPage', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: game?.selectedTeam === game?.teamA?.nombre ? game?.teamA?.nombre : game?.teamB?.nombre,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime
-                })
+
+                let rounds = match?.rounds
+                rounds[match?.rounds?.length - 1] = updateRound(round, player, firstShoot, secondShoot)
+
+                const game = {
+                  started: match?.started,
+                  completed: match?.completed,
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: match?.selectedTeam,
+                  initialTeam: match?.initialTeam,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore,
+                  teamBScore: match?.teamBScore,
+                  colorTeamA: match?.colorTeamA,
+                  colorTeamB: match?.colorTeamB,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: rounds
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate(match?.selectedTeam?.nombre === match?.teamA?.nombre ? 'PlayTeamAPage' : 'PlayTeamBPage', game)
+
               }}
             >
               <Text
@@ -673,24 +741,39 @@ const PlayerShootDataPage = ({ navigation, route }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate(game?.teamA?.nombre !== game?.selectedTeam ? 'PlayTeamAPage' : 'PlayTeamBPage', {
-                  id: game?.id,
-                  title: game?.title,
-                  selectedTeam: game?.selectedTeam !== game?.teamA?.nombre ? game?.teamA?.nombre : game?.teamB?.nombre,
-                  initialTeam: game?.initialTeam,
-                  teamA: game?.teamA,
-                  colorTeamA: game?.colorTeamA,
-                  teamB: game?.teamB,
-                  colorTeamB: game?.colorTeamB,
-                  scoreTeamA: game?.scoreTeamA,
-                  scoreTeamB: game?.scoreTeamB,
-                  rosterA: game?.rosterA,
-                  rosterB: game?.rosterB,
-                  date: game?.date,
-                  maxPoints: game?.maxPoints,
-                  forfeit: game?.forfeit,
-                  maxTime: game?.maxTime,
-                })
+
+                let rounds = match?.rounds
+                rounds[match?.rounds?.length - 1] = updateRound(round, player, firstShoot, secondShoot)
+
+                const game = {
+                  started: match?.started,
+                  completed: match?.completed,
+                  tournamentId: match?.tournamentId,
+                  id: match?.id,
+                  title: match?.title,
+                  date: match?.date,
+                  maxPoints: match?.maxPoints,
+                  forfeit: match?.forfeit,
+                  maxTime: match?.maxTime,
+                  selectedTeam: match?.selectedTeam?.nombre !== match?.teamA?.nombre ? match?.teamA : match?.teamB,
+                  initialTeam: match?.initialTeam,
+                  teamA: match?.teamA,
+                  teamB: match?.teamB,
+                  teamAScore: match?.teamAScore,
+                  teamBScore: match?.teamBScore,
+                  colorTeamA: match?.colorTeamA,
+                  colorTeamB: match?.colorTeamB,
+                  teamAMembers: match?.teamAMembers,
+                  teamBMembers: match?.teamBMembers,
+                  rosterTeamA: match?.rosterTeamA,
+                  rosterTeamB: match?.rosterTeamB,
+                  rounds: rounds
+                }
+
+                handleSubmit(game)
+
+                navigation?.navigate(match?.selectedTeam?.nombre !== match?.teamA?.nombre ? 'PlayTeamAPage' : 'PlayTeamBPage', game)
+
               }}
             >
               <Text
@@ -709,4 +792,8 @@ const PlayerShootDataPage = ({ navigation, route }) => {
   )
 }
 
-export default PlayerShootDataPage
+const mapStateToProps = (state) => ({
+  match: state.match
+})
+
+export default connect(mapStateToProps)(PlayerShootDataPage)

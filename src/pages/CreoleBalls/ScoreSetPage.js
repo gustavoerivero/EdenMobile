@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/creole/actions'
@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
+import { useFocusEffect } from '@react-navigation/native'
 
 const ScoreSetPage = ({ navigation, match }) => {
 
@@ -24,6 +25,12 @@ const ScoreSetPage = ({ navigation, match }) => {
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log(match?.rounds[match?.rounds?.length - 1])
+    }, [])
+  )
 
   return (
     <Container
@@ -194,7 +201,7 @@ const ScoreSetPage = ({ navigation, match }) => {
               textAlign='left'
               bold
             >
-              Tiro Nro. 1
+              Tiro Nro. {match?.rounds?.length}
             </Text>
           </Stack>
 
@@ -481,6 +488,15 @@ const ScoreSetPage = ({ navigation, match }) => {
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
+
+                let rounds = match?.rounds
+                let len = match?.rounds?.length
+                let round = match?.rounds[len - 1]
+                
+                round['teamAScore'] = scoreTeamA
+                round['teamBScore'] = scoreTeamB
+
+                rounds[len - 1] = round
                 
                 const game = {
                   started: match?.started,
@@ -504,7 +520,7 @@ const ScoreSetPage = ({ navigation, match }) => {
                   teamBMembers: match?.teamBMembers,
                   rosterTeamA: match?.rosterTeamA,
                   rosterTeamB: match?.rosterTeamB,
-                  rounds: match?.rounds
+                  rounds: rounds
                 }
 
                 handleSubmit(game)

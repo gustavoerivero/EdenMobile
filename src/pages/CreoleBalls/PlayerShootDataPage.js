@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/creole/actions'
@@ -12,6 +12,7 @@ import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
 import { cutText } from '../../utilities/functions'
+import { useFocusEffect } from '@react-navigation/native'
 
 const PlayerShootDataPage = ({ navigation, route, match }) => {
 
@@ -25,12 +26,7 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
 
   const game = route?.params
 
-  const [numberShoot, setNumberShoot] = useState(1)
-
-  const rounds = match?.rounds
-
-  const [firstShoot, setFirstShoot] = useState(null)
-  const [secondShoot, setSecondShoot] = useState(null)
+  let round = match?.rounds[match?.rounds?.length - 1]
 
   const player = match?.selectedTeam?.nombre === match?.teamA?.nombre ?
     match?.rosterTeamA.find(member => member?.usuario?.id === game?.selectedPlayer) :
@@ -38,11 +34,48 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
 
   const name = `${player?.usuario?.nombres} ${player?.usuario?.apellidos}`
 
-  const updateRound = (round = {}, player = {}) => {
-    const { teamAMembers, teamBMembers } = round
+  const updateRound = (round = {}, player = {}, firstShoot = null, secondShoot = null) => {
+
     const team = match?.selectedTeam?.nombre === match?.teamA?.nombre ? 'teamAMembers' : 'teamBMembers'
-    
+
+    const playerIndex = round[team]?.findIndex(p => p?.playerID === player?.usuario?.id)
+
+    const aux = {
+      roundNumber: round?.number,
+      playerID: player?.usuario?.id,
+      firstShoot,
+      secondShoot
+    }
+
+    if (playerIndex === -1) {
+      round[team]?.push(aux)
+    } else {
+      round[team][playerIndex] = aux
+    }
+
+    return { ...round }
+
   }
+
+  const getPlayer = (round, playerID) => {
+    const { teamAMembers, teamBMembers } = round
+    const allPlayers = [...teamAMembers, ...teamBMembers]
+    return allPlayers?.find(player => player?.playerID === playerID) || null
+  }
+
+  const [numberShoot, setNumberShoot] = useState(1)
+
+  const [firstShoot, setFirstShoot] = useState(null)
+  const [secondShoot, setSecondShoot] = useState(null)
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log(getPlayer(round, player?.usuario?.id))
+      setNumberShoot(1)
+      setFirstShoot(getPlayer(round, player?.usuario?.id) && getPlayer(round, player?.usuario?.id)?.firstShoot || null)
+      setSecondShoot(getPlayer(round, player?.usuario?.id) && getPlayer(round, player?.usuario?.id)?.secondShoot || null)
+    }, [round, player])
+  )
 
   return (
     <Container
@@ -656,6 +689,9 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
 
+                let rounds = match?.rounds
+                rounds[match?.rounds?.length - 1] = updateRound(round, player, firstShoot, secondShoot)
+
                 const game = {
                   started: match?.started,
                   completed: match?.completed,
@@ -678,7 +714,7 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
                   teamBMembers: match?.teamBMembers,
                   rosterTeamA: match?.rosterTeamA,
                   rosterTeamB: match?.rosterTeamB,
-                  rounds: match?.rounds
+                  rounds: rounds
                 }
 
                 handleSubmit(game)
@@ -706,6 +742,9 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
 
+                let rounds = match?.rounds
+                rounds[match?.rounds?.length - 1] = updateRound(round, player, firstShoot, secondShoot)
+
                 const game = {
                   started: match?.started,
                   completed: match?.completed,
@@ -728,7 +767,7 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
                   teamBMembers: match?.teamBMembers,
                   rosterTeamA: match?.rosterTeamA,
                   rosterTeamB: match?.rosterTeamB,
-                  rounds: match?.rounds
+                  rounds: rounds
                 }
 
                 handleSubmit(game)

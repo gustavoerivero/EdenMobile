@@ -301,6 +301,17 @@ const RoundNextPage = ({ navigation, route, match }) => {
               _pressed={colors.bgSecondary}
               onPress={() => {
 
+                const len = match?.rounds?.length
+
+                const round = {
+                  id: len + 1,
+                  number: len + 1,
+                  teamAScore: 0,
+                  teamBScore: 0,
+                  teamAMembers: [],
+                  teamBMembers: []
+                }
+
                 const game = {
                   started: match?.started,
                   completed: match?.completed,
@@ -323,7 +334,7 @@ const RoundNextPage = ({ navigation, route, match }) => {
                   teamBMembers: match?.teamBMembers,
                   rosterTeamA: match?.rosterTeamA,
                   rosterTeamB: match?.rosterTeamB,
-                  rounds: match?.rounds
+                  rounds: [...match?.rounds, round]
                 }
 
                 handleSubmit(game)

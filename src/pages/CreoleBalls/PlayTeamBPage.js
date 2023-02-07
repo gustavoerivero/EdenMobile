@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/creole/actions'
@@ -12,16 +12,97 @@ import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 
 import { cutText } from '../../utilities/functions'
+import { useFocusEffect } from '@react-navigation/native'
+import useCustomToast from '../../hooks/useCustomToast'
 
 const PlayTeamBPage = ({ navigation, match }) => {
 
   const layout = useWindowDimensions()
+
+  const { showWarningToast } = useCustomToast()
 
   const dispatch = useDispatch()
 
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
   }
+
+  const [teamAShoots, setTeamAShoots] = useState(0)
+  const [teamBShoots, setTeamBShoots] = useState(0)
+  const [totalShoots, setTotalShoots] = useState(0)
+
+  const [isMingoOut, setIsMingoOut] = useState(false)
+
+  const [endingRound, setEndingRound] = useState(false)
+
+  const [isChecked, setIsChecked] = useState(false)
+
+  const getShootCount = (rounds = [], roundNumber = 0) => {
+    let teamAShootCount = 0
+    let teamBShootCount = 0
+
+    rounds?.forEach(round => {
+
+      if (round?.number === roundNumber) {
+        round?.teamAMembers?.forEach(member => {
+          if (member?.firstShoot) teamAShootCount++
+          if (member?.secondShoot) teamAShootCount++
+        })
+
+        round?.teamBMembers?.forEach(member => {
+          if (member?.firstShoot) teamBShootCount++
+          if (member?.secondShoot) teamBShootCount++
+        })
+      }
+
+    })
+
+    return {
+      teamAShootCount,
+      teamBShootCount
+    }
+  }
+
+  const hasShoot = (rounds, roundId, value) => {
+    const round = rounds.find(r => r.id === roundId);
+    return round.teamAMembers.some(p => p.firstShoot === value || p.secondShoot === value) ||
+      round.teamBMembers.some(p => p.firstShoot === value || p.secondShoot === value);
+  }
+
+  const check = () => {
+    if (true) {
+
+      const shootsA = getShootCount(match?.rounds, match?.rounds?.length)?.teamAShootCount
+      const shootsB = getShootCount(match?.rounds, match?.rounds?.length)?.teamBShootCount
+
+      const total = shootsA + shootsB
+
+      setTeamAShoots(shootsA)
+      setTeamBShoots(shootsB)
+
+      setTotalShoots(total)
+
+      const mingoOut = hasShoot(match?.rounds, match?.rounds?.length, 'F')
+      setIsMingoOut(mingoOut)
+
+      if (mingoOut) {
+        showWarningToast('¡Alguien ha sacado el mingo!')
+      }
+
+      console.log(hasShoot(match?.rounds, match?.rounds?.length, 'F'))
+      console.log(total)
+
+      setEndingRound(mingoOut || (total >= 9 && shootsA > 0 && shootsB > 0))
+
+      setIsChecked(true)
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      check()
+    }, [match])
+  )
 
   return (
     <Container
@@ -89,8 +170,17 @@ const PlayTeamBPage = ({ navigation, match }) => {
               minW='33%'
               minH='100%'
               maxH='100%'
+              justifyContent='center'
+              alignItems='flex-end'
             >
-
+              <Text
+                pr={5}
+                bold
+                fontSize='md'
+                color={colors.gray}
+              >
+                {`Tiro Nro. ${match?.rounds?.length}`}
+              </Text>
             </Stack>
 
           </HStack>
@@ -412,7 +502,8 @@ const PlayTeamBPage = ({ navigation, match }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.button.bgPrimary}
+              disabled={!endingRound}
+              bgColor={endingRound ? colors.button.bgPrimary : colors.gray2}
               _pressed={colors.bgSecondary}
               onPress={() => {
 
@@ -449,7 +540,7 @@ const PlayTeamBPage = ({ navigation, match }) => {
               <Text
                 bold
                 fontSize='md'
-                color={colors.white}
+                color={endingRound ? colors.white : colors.gray}
               >
                 Finalizar tiro
               </Text>

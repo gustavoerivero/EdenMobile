@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/creole/actions'
@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
+import { useFocusEffect } from '@react-navigation/native'
 
 const CreoleResult = ({ navigation, route, match }) => {
 
@@ -20,6 +21,12 @@ const CreoleResult = ({ navigation, route, match }) => {
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log(match)
+    }, [match])
+  )
 
   return (
     <Container

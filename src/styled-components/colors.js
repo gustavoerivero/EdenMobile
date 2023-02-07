@@ -15,7 +15,8 @@ const colors = {
     primary: '#d95f5f',
     secondary: '#f52556',
     bgError: '#fce1e1',
-    warning: '#f57f25',
+    warning: '#FDFD96',
+    warningText: '#CE8D09'
   },
   textField: {
     bgColor: '#f4f4f4',

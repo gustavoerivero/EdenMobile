@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { VStack, Text, Box, HStack, FlatList } from 'native-base'
 
@@ -6,15 +6,11 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import colors from '../../styled-components/colors'
 
-const RosterTeam = ({ teamID = 0, name = '', team = [], roster = [], add, remove}) => {
+const RosterTeam = ({ teamID = 0, name = '', team = [], roster = [], add, remove }) => {
 
   const layout = useWindowDimensions()
 
   const [checked, setChecked] = useState(false)
-
-  useEffect(() => {
-    console.log(team)
-  }, [])
 
   const renderItem = ({ item }) => {
     return (

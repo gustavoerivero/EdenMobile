@@ -97,7 +97,7 @@ const CreoleGameCard = ({
                 bold
                 color={colors.text.primary}
               >
-                Juego N°{id}
+                Juego Nro. {id}
               </Text>
               <Text
                 fontSize='2xs'
@@ -132,7 +132,7 @@ const CreoleGameCard = ({
                     fontSize='3xl'
                     textAlign='center'
                   >
-                    0
+                    {match.started && match.id === id ? match?.teamAScore : 0}
                   </Text>
                   <Text
                     color={colors.text.primary}
@@ -160,7 +160,7 @@ const CreoleGameCard = ({
                     textAlign='center'
                     color={colors.text.primary}
                   >
-                    0
+                    {match.started && match.id === id ? match?.teamBScore : 0}
                   </Text>
                   <Text
                     fontSize='md'

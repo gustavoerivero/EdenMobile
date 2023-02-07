@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
 import { addMatch } from '../../redux/creole/actions'
@@ -7,6 +7,8 @@ import { Box, HStack, Stack, VStack, Text, Divider } from 'native-base'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import colors from '../../styled-components/colors'
 import { cutText, getDate, getHour } from '../../utilities/functions'
+import useAuthContext from '../../hooks/useAuthContext'
+import { useFocusEffect } from '@react-navigation/native'
 
 const CreoleGameCard = ({
   navigation,
@@ -31,21 +33,33 @@ const CreoleGameCard = ({
 
   const dispatch = useDispatch()
 
+  const {
+    state: { user }
+  } = useAuthContext()
+
   const handleSubmit = (match = {}) => {
     dispatch(addMatch(match))
   }
+
+  const [isScorer, setIsScorer] = useState(false)
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsScorer(user?.user?.roles?.find(item => item === 'anotador') || false)
+    }, [match, user])
+  )
 
   return (
     <Box
       border='1'
       borderRadius='lg'
-      bgColor={match.started ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
+      bgColor={isScorer && match.started ? match.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
-        disabled={match.started ? match.id !== id : false}
+        disabled={!isScorer ? true : match.started ? match.id !== id : false}
         onPress={() => {
 
           const game = {

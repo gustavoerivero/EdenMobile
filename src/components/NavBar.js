@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
 import { deleteMatch } from '../redux/creole/actions'
@@ -16,6 +16,7 @@ import useCustomToast from '../hooks/useCustomToast'
 import Eden from '../assets/logo/eden.svg'
 import colors from '../styled-components/colors'
 import { useFocusEffect } from '@react-navigation/native'
+import TournamentService from '../services/tournaments/TournamentsService'
 
 const NavBar = ({ hidden = false, logout = true, match }) => {
 
@@ -25,28 +26,51 @@ const NavBar = ({ hidden = false, logout = true, match }) => {
 
   const reduxDispatch = useDispatch()
 
+  const Tournament = new TournamentService()
+
   const {
-    state: { isAuthenticated },
+    state: { isAuthenticated, user },
   } = useAuthContext()
 
   const layout = useWindowDimensions()
 
+  const [isScorer, setIsScorer] = useState(false)
+
+
   useFocusEffect(
     useCallback(() => {
-        if(match?.completed) {
-          showWarningToast('Aún no se ha registrado el partido.')
-          //console.log(match)
-        }
-      }, [match])
+      const scorer = user?.user?.roles?.find(item => item === 'anotador') || false
+      setIsScorer(scorer)
+      if (scorer && match?.completed) {
+        showWarningToast('Aún no se ha registrado el partido.')
+        //console.log(match)
+      }
+    }, [match, user])
   )
 
   const sendData = async () => {
     try {
-      showErrorToast('No se pudo registrar el partido.')
-      reduxDispatch(deleteMatch(match?.id))
+      Tournament.save(match)
+        .then(res => {
+          const { data, status } = res
+
+          console.log({ data, status })
+
+          if (status >= 200 && status <= 299) {
+            reduxDispatch(deleteMatch(match?.id))
+            showSuccessToast('El partido ha sido registrado con éxito.')
+          } else {
+            showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+          }
+        })
+        .catch(error => {
+          console.log(`Error scorer: ${error}`)
+          showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+        })
+
     } catch (error) {
       console.log(`Error sending data: ${error}`)
-      showErrorToast('No se pudo registrar el partido.')
+      showErrorToast('No se pudo registrar el partido. Intente más tarde.')
     }
   }
 
@@ -64,10 +88,9 @@ const NavBar = ({ hidden = false, logout = true, match }) => {
             justifyContent='center'
             minW={layout.width * .5}
           >
-            {match?.completed ?
+            {isScorer && match?.completed ?
               <TouchableOpacity
                 onPress={() => {
-                  console.log('Se tiene un torneo')
                   sendData()
                 }}
               >

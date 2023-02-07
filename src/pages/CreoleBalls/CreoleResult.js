@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { addMatch } from '../../redux/creole/actions'
+import { addMatch, deleteMatch } from '../../redux/creole/actions'
 
 import { useWindowDimensions } from 'react-native'
 
@@ -11,6 +11,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Container from '../../components/Container'
 import colors from '../../styled-components/colors'
 import { useFocusEffect } from '@react-navigation/native'
+import TournamentService from '../../services/tournaments/TournamentsService'
+import useCustomToast from '../../hooks/useCustomToast'
 
 const CreoleResult = ({ navigation, route, match }) => {
 
@@ -18,13 +20,36 @@ const CreoleResult = ({ navigation, route, match }) => {
 
   const dispatch = useDispatch()
 
+  const Tournament = new TournamentService()
+  const { showSuccessToast, showWarningToast, showErrorToast } = useCustomToast()
+
   const handleSubmit = (match = {}) => {
-    dispatch(addMatch(match))
+    Tournament.save(match)
+    .then(res => {
+      const { data, status } = res
+
+      console.log({ data, status })
+
+      if (status >= 200 && status <= 299) {
+        dispatch(deleteMatch(match?.id))
+        showSuccessToast('El partido ha sido registrado con éxito.')
+      } else {
+        showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+      }
+
+      navigation?.navigate('Home')
+
+    })
+    .catch(error => {
+      console.log(`Error scorer: ${error}`)
+      showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+      navigation?.navigate('Home')
+    })
   }
 
   useFocusEffect(
     useCallback(() => {
-      console.log(match)
+      //console.log(match)
     }, [match])
   )
 
@@ -268,9 +293,7 @@ const CreoleResult = ({ navigation, route, match }) => {
               alignItems='center'
               bgColor={colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
-              onPress={() => {
-                navigation?.navigate('Home')
-              }}
+              onPress={handleSubmit}
             >
               <Text
                 bold

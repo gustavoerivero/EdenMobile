@@ -3,6 +3,12 @@ import { http } from '../http'
 const BASE_URL = '/torneos'
 
 class TournamentService {
+
+  async save (match = {}) {
+    const { data, status } = await http.post(`anotar/bolas`, match)
+    return { data, status }
+  }
+
   async getAll (page = 1, search = '') {
     const { data, status } = await http.get(`${BASE_URL}?page=${page}&busqueda=${search}`)
     return { data, status }

@@ -144,6 +144,7 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                 >
                   <CreoleGameCard
                     id={item?.id}
+                    tournamentID={tournament.id}
                     title={tournament.title}
                     teamA={item?.equipo_a}
                     teamB={item?.equipo_b}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { VStack, Text, Box, HStack, FlatList } from 'native-base'
 
@@ -6,18 +6,21 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import colors from '../../styled-components/colors'
 
-const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], setRoster, add, remove, r }) => {
+const RosterTeam = ({ teamID = 0, name = '', team = [], roster = [], add, remove}) => {
 
   const layout = useWindowDimensions()
 
   const [checked, setChecked] = useState(false)
+
+  useEffect(() => {
+    console.log(team)
+  }, [])
 
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
           setChecked(!checked)
-
           if (roster.some(member => member?.usuario?.id === item?.usuario?.id)) {
             remove(item)
           } else {
@@ -84,7 +87,7 @@ const RosterTeam = ({ id = 0, teamID = 0, name = '', team = [], roster = [], set
           fontSize='lg'
           color={colors.creoleRoster.titleTextColor}
         >
-          Equipo {id}:
+          Equipo {teamID}:
         </Text>
         <Text
           bold

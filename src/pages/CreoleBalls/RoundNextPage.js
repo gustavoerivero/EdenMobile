@@ -13,8 +13,6 @@ const RoundNextPage = ({ navigation, route }) => {
 
   const game = route?.params
 
-  const [scoreTeamA, setScoreTeamA] = useState(0)
-  const [scoreTeamB, setScoreTeamB] = useState(0)
   const [selectedTeam, setSelectedTeam] = useState(null)
 
   return (

@@ -312,7 +312,7 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                   w="40%"
                   onPress={() => {
                     console.log('Comment button is pressed')
-                    navigation?.navigate('Comentarios', event)
+                    navigation?.navigate('Comentarios', { ...event, type: 'T' })
                   }}>
                   Comentar
                 </Button>

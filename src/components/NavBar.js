@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import { useDispatch, connect } from 'react-redux'
-import { deleteMatch } from '../redux/config/actions'
+import { deleteMatch, deleteDomino } from '../redux/config/actions'
 
 import { ActivityIndicator, TouchableOpacity, useWindowDimensions } from 'react-native'
 import { HStack, Stack, Text } from 'native-base'
@@ -44,8 +44,8 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
       setIsScorer(scorer)
       console.log(domino)
       if (scorer && (match?.completed || domino?.completed)) {
-        showWarningToast('Aún no se ha registrado el partido.')
-        //console.log(match)
+        showWarningToast(`El partido ${match?.id ? match?.title : domino?.id ? domino?.title : null} no se ha registrado aún.`)
+        console.log(match?.id ? match : domino?.id ? domino : 'No hay partidos')
       }
     }, [match, user, domino])
   )
@@ -54,27 +54,58 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
     try {
       console.log('Sending data...')
       setIsLoading(true)
-      Tournament.save(match)
-        .then(res => {
-          const { data, status } = res
 
-          console.log({ data, status })
+      if (match?.id) {
+        Tournament.save(match)
+          .then(res => {
+            const { data, status } = res
 
-          if (status >= 200 && status <= 299) {
-            reduxDispatch(deleteMatch(match?.id))
-            showSuccessToast('El partido ha sido registrado con éxito.')
+            console.log({ data, status })
 
-            setIsLoading(false)
-          } else {
+            if (status >= 200 && status <= 299) {
+              reduxDispatch(deleteMatch(match?.id))
+              showSuccessToast('El partido ha sido registrado con éxito.')
+
+              setIsLoading(false)
+            } else {
+              showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+              setIsLoading(false)
+            }
+          })
+          .catch(error => {
+            console.log(`Error scorer: ${error}`)
             showErrorToast('No se pudo registrar el partido. Intente más tarde.')
             setIsLoading(false)
-          }
-        })
-        .catch(error => {
-          console.log(`Error scorer: ${error}`)
-          showErrorToast('No se pudo registrar el partido. Intente más tarde.')
-          setIsLoading(false)
-        })
+          })
+      }
+
+      if (domino?.id) {
+        Tournament.saveDomino(domino)
+          .then(res => {
+            const { data, status } = res
+
+            console.log({ data, status })
+
+            if (status >= 200 && status <= 299) {
+              reduxDispatch(deleteDomino(domino?.id))
+              showSuccessToast('El partido ha sido registrado con éxito.')
+
+              setIsLoading(false)
+            } else {
+              showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+              setIsLoading(false)
+            }
+          })
+          .catch(error => {
+            console.log(`Error scorer: ${error}`)
+            showErrorToast('No se pudo registrar el partido. Intente más tarde.')
+            setIsLoading(false)
+          })
+      }
+
+
+
+
 
     } catch (error) {
       setIsLoading(false)

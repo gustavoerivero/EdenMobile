@@ -5,7 +5,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Button, HStack, Stack, Text, Tooltip, VStack} from 'native-base';
+import { Button, HStack, Stack, Text, Tooltip, VStack } from 'native-base';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Container from '../../components/Container';
@@ -13,9 +13,9 @@ import Container from '../../components/Container';
 import styles from './styled-components/styles';
 import colors from '../../styled-components/colors';
 
-import {cutText} from '../../utilities/functions';
+import { cutText } from '../../utilities/functions';
 
-const EventPage = ({navigation, route}) => {
+const EventPage = ({ navigation, route }) => {
   const layout = useWindowDimensions();
 
   const event = route?.params;
@@ -144,7 +144,7 @@ const EventPage = ({navigation, route}) => {
                 w="40%"
                 onPress={() => {
                   console.log('Comment button is pressed');
-                  navigation?.navigate('Comentarios', event);
+                  navigation?.navigate('Comentarios', { ...event, type: 'E' });
                 }}>
                 Comentar
               </Button>

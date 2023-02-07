@@ -62,6 +62,7 @@ const HomePage = ({ navigation }) => {
     setEvents([])
     setCurrentPage(1)
     setIsNextPage(true)
+    getData()
   }, [])
 
   const getData = async () => {

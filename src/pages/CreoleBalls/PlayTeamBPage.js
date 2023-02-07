@@ -459,7 +459,7 @@ const PlayTeamBPage = ({ navigation, match }) => {
 
                 const game = {
                   started: match?.started,
-                  completed: match?.completed,
+                  completed: true,
                   tournamentId: match?.tournamentId,
                   id: match?.id,
                   title: match?.title,

@@ -11,6 +11,8 @@ const colors = {
   gray3: '#ECF0F3',
   gray4: '#D9D9D9',
   soft1: '#C0F2F3',
+  soft2: '#55f1ea',
+  hard1: '#1e5753',
   error: {
     primary: '#d95f5f',
     secondary: '#f52556',

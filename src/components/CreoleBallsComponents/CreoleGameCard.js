@@ -45,7 +45,7 @@ const CreoleGameCard = ({
     >
 
       <TouchableOpacity
-        disabled={match.started ? /*match.id !== id */ false : false}
+        disabled={match.started ? match.id !== id : false}
         onPress={() => {
 
           const game = {

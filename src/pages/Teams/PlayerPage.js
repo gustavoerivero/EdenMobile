@@ -14,15 +14,21 @@ import PlayerProfileComponent from '../../components/TeamComponents/PlayerProfil
 import PlayerContactCard from '../../components/TeamComponents/PlayerContactCard'
 
 import UserService from '../../services/user/UserService'
+import StatisticService from '../../services/statistics/StatisticService'
 
 const PlayerPage = ({ navigation, route }) => {
 
   const player = route?.params
   const User = new UserService()
+  const Statistic = new StatisticService()
 
   const [isLoading, setIsLoading] = useState(true)
-  const [userData, setUserData] = useState()
   const [loaded, setLoaded] = useState(true)
+
+  const [userData, setUserData] = useState()
+  const [statisticDomino, setStatisticDomino] = useState()
+  const [statisticBalls, setStatisticBalls] = useState()
+
 
   const getData = async () => {
 
@@ -32,15 +38,22 @@ const PlayerPage = ({ navigation, route }) => {
       setIsLoading(true)
 console.log(player?.playerID)
       let { data } = await User.getUserByID(player?.playerID)
-
       setUserData(data?.data)
-      //console.log(data?.data)
+
+      //BALLS STATISTICS
+      const responseB = await Statistic.getBallStatisticByID(player?.playerID)
+      setStatisticBalls(responseB?.data)
+
+      //DOMINO STATISTICS
+      const respondeD = await Statistic.getDominoStatisticByID(player?.playerID)
+      setStatisticDomino(respondeD?.data)
+
       setIsLoading(false)
       setLoaded(false)
 
     } catch (error) {
       console.log(`User error: ${error}`)
-        showErrorToast('No se pudo obtener los datos del Usuario')
+        showErrorToast('No se pudo obtener los datos del jugador')
         setIsLoading(false)
         setLoaded(false)
     }
@@ -54,12 +67,8 @@ useFocusEffect(
 )
 
   return (
-    <Container
-      hiddenNavBar={true}
-    >
-      <ScrollView
-        minH='100%'
-      >
+    <Container hiddenNavBar={true}>
+      <ScrollView minH='100%'>
         {isLoading ? (
           <Stack
                       mt={2}
@@ -82,24 +91,31 @@ useFocusEffect(
             position={player?.playerPosition}
             navigation={navigation}
           />
-          <CreoleProfileCard
-            gamesPlayed={13}
-            gamesWon={10}
-            gamesLost={3}
-            arrimeBueno={12}
-            arrimeMalo={2}
-            bocheBueno={0}
-            bocheMalo={4}
-            marranaBuena={1}
-            marranaMala={0}
-            mingoFuera={1}
-          />
-          <DominoesProfileCard
-            gamesPlayed={20}
-            gamesWon={12}
-            gamesLost={8}
-            points={150}
-          />
+
+{statisticBalls.participados > 0 &&
+  <CreoleProfileCard
+            gamesPlayed={statisticBalls.participados || 0}
+            gamesWon={statisticBalls?.ganados || 0}
+            gamesLost={statisticBalls?.perdidos || 0}
+            arrimeBueno={statisticBalls?.lanzamientos?.A || 0}
+            arrimeMalo={statisticBalls?.lanzamientos?.a || 0}
+            bocheBueno={statisticBalls?.lanzamientos?.B || 0}
+            bocheMalo={statisticBalls?.lanzamientos?.b || 0}
+            marranaBuena={statisticBalls?.lanzamientos?.M || 0}
+            marranaMala={statisticBalls?.lanzamientos?.m || 0}
+            mingoFuera={statisticBalls?.lanzamientos?.F || 0}
+            />
+}
+
+{statisticDomino?.total_juegos > 0 &&
+              <DominoesProfileCard
+              gamesPlayed={statisticDomino?.total_juegos || 0}
+              gamesWon={statisticDomino?.total_juegos_ganados || 0}
+              gamesLost={statisticDomino?.total_juegos_perdidos || 0}
+              points={statisticDomino?.puntos_acumulados || 0}
+            />
+            }
+
           <PlayerContactCard
             playerProp={userData}
             playerEmail={userData?.email}

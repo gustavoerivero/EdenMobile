@@ -14,17 +14,24 @@ import colors from '../../styled-components/colors'
 import CreoleProfileCard from '../../components/ProfileComponents/CreoleProfileCard'
 import DominoesProfileCard from '../../components/ProfileComponents/DominoesProfileCard'
 import ContactCard from '../../components/ProfileComponents/ContactCard'
+import ChangePasswordCard from '../../components/ProfileComponents/ChangePasswordCard'
 import Modal from '../../components/Modal'
 
 import UserService from '../../services/user/UserService'
+import StatisticService from '../../services/statistics/StatisticService'
 
 const UserPage = ({ navigation }) => {
 
   const User = new UserService()
+  const Statistic = new StatisticService()
 
   const [isLoading, setIsLoading] = useState(true)
-  const [userData, setUserData] = useState()
   const [loaded, setLoaded] = useState(true)
+
+  const [userData, setUserData] = useState()
+  const [statisticDomino, setStatisticDomino] = useState()
+  const [statisticBalls, setStatisticBalls] = useState()
+  
 
   const {
     state: { isAuthenticated, user },
@@ -36,8 +43,16 @@ const UserPage = ({ navigation }) => {
         setIsLoading(true)
         console.log(user?.user?.usuario?.id)
         let { data } = await User.getUserByID(user?.user?.usuario?.id)
-
         setUserData(data)
+
+        //BALLS STATISTICS
+        const responseB = await Statistic.getBallStatisticByID(user?.user?.usuario?.id)
+        setStatisticBalls(responseB?.data)
+
+        //DOMINO STATISTICS
+        const respondeD = await Statistic.getDominoStatisticByID(user?.user?.usuario?.id)
+        setStatisticDomino(respondeD?.data)
+
         //console.log(data)
         setIsLoading(false)
         setLoaded(false)
@@ -78,25 +93,33 @@ const UserPage = ({ navigation }) => {
             loaded={loaded}
             setLoaded={setLoaded}
             />
-            <CreoleProfileCard
-              gamesPlayed={7}
-              gamesWon={3}
-              gamesLost={4}
-              arrimeBueno={12}
-              arrimeMalo={2}
-              bocheBueno={0}
-              bocheMalo={4}
-              marranaBuena={1}
-              marranaMala={0}
-              mingoFuera={1}
+            
+            {statisticBalls.participados > 0 &&
+              <CreoleProfileCard
+            gamesPlayed={statisticBalls.participados || 0}
+            gamesWon={statisticBalls?.ganados || 0}
+            gamesLost={statisticBalls?.perdidos || 0}
+            arrimeBueno={statisticBalls?.lanzamientos?.A || 0}
+            arrimeMalo={statisticBalls?.lanzamientos?.a || 0}
+            bocheBueno={statisticBalls?.lanzamientos?.B || 0}
+            bocheMalo={statisticBalls?.lanzamientos?.b || 0}
+            marranaBuena={statisticBalls?.lanzamientos?.M || 0}
+            marranaMala={statisticBalls?.lanzamientos?.m || 0}
+            mingoFuera={statisticBalls?.lanzamientos?.F || 0}
             />
-            <DominoesProfileCard
-              gamesPlayed={6}
-              gamesWon={4}
-              gamesLost={2}
-              points={250}
+            }
+            
+            {statisticDomino?.total_juegos > 0 &&
+              <DominoesProfileCard
+              gamesPlayed={statisticDomino?.total_juegos || 0}
+              gamesWon={statisticDomino?.total_juegos_ganados || 0}
+              gamesLost={statisticDomino?.total_juegos_perdidos || 0}
+              points={statisticDomino?.puntos_acumulados || 0}
             />
+            }
+            
             <ContactCard userProp={userData} />
+            <ChangePasswordCard/>
           </VStack>
         )
         }

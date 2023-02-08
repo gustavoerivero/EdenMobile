@@ -43,7 +43,7 @@ const ContactCard = ({userProp={}}) => {
       shadow={5}
       borderRadius={10}>
       <HStack w="100%">
-        <VStack w="90%" space={1}>
+        <VStack w="100%" space={1}>
           <Text bold fontSize="sm" color={colors.gray}>
             Contacto
           </Text>
@@ -70,151 +70,10 @@ const ContactCard = ({userProp={}}) => {
               ))}
               </VStack>
               )
-            /*activePhones && (
-              <HStack key={phones} alignItems="center" space={2}>
-                <Icon
-                  name="phone-portrait-outline"
-                  size={20}
-                  color={colors.gray}
-                />
-                <Text fontSize="xs" color={colors.gray}>
-                  {cutText(phones, 42)}
-                </Text>
-              </HStack>
-            )*/
             }
           </VStack>
         </VStack>
-        <TouchableOpacity
-          onPress={() => {
-            console.log('is Pressed');
-            setEditModal(true);
-          }}>
-          <Box
-            h={35}
-            w={35}
-            borderRadius={50}
-            bgColor={colors.navBar.activeColor}
-            justifyContent="center"
-            alignItems="center">
-            <Icon name="pencil" size={20} color={colors.white} />
-          </Box>
-        </TouchableOpacity>
       </HStack>
-      {editModal && (
-        <Modal top={1} animationType="slide">
-          <VStack maxW="80%" isOpened={editModal}>
-            <Text bold fontSize="sm" color={colors.gray}>
-              Editar información de contacto
-            </Text>
-            <Divider bgColor={colors.navBar.activeColor} borderRadius={50} />
-            <VStack p={2} pb={3} space={1}>
-              <HStack justifyContent="center" alignItems="center" space={1}>
-                <Stack w="20%" justifyContent="center" alignItems="center">
-                  <Text fontSize="xs" color={colors.gray}>
-                    Correo
-                  </Text>
-                </Stack>
-                <Stack w="80%" justifyContent="center" alignItems="center">
-                  <StyledField value={userProp?.data?.email} onChangeText={e => setEmail(e)} />
-                </Stack>
-              </HStack>
-
-              { phones?.length == 0 ? (
-                <HStack
-                justifyContent="center"
-                alignItems="center"
-                space={1}>
-                <Stack w="20%" justifyContent="center" alignItems="center">
-                    <Text fontSize="xs" color={colors.gray}>
-                      Teléfonos
-                    </Text>
-                </Stack>
-                <Stack w="60%" justifyContent="center" alignItems="center">
-                  <StyledField
-                    value={''}
-                    onChangeText={text => setPhones(text)}
-                  />
-                </Stack>
-                <Stack w="20%" justifyContent="center" alignItems="center">
-                  <StyledSwitch
-                    value={0}
-                    setValue={setActivePhones}
-                  />
-                </Stack>
-              </HStack>
-              ) : (
-                phones?.length > 0 && (
-                  <VStack>
-                  {phones
-                  ?.map((item, key) => (
-                  
-                  <HStack
-                  key={phones}
-                  justifyContent="center"
-                  alignItems="center"
-                  space={1}>
-                  <Stack w="20%" justifyContent="center" alignItems="center">
-                    {phones && (
-                      <Text fontSize="xs" color={colors.gray}>
-                        Teléfonos
-                      </Text>
-                    )}
-                  </Stack>
-                  <Stack w="60%" justifyContent="center" alignItems="center">
-                    <StyledField
-                      value={item?.numero}
-                      onChangeText={text => setPhones(text)}
-                    />
-                  </Stack>
-                  <Stack w="20%" justifyContent="center" alignItems="center">
-                    <StyledSwitch
-                      value={item?.es_publico === '1'}
-                      setValue={setActivePhones}
-                    />
-                  </Stack>
-                </HStack>
-
-                  ))}
-                  </VStack>
-                  )
-              )
-}
-              
-            
-            
-            </VStack>
-            <HStack minW="100%" justifyContent="space-around">
-              <Button
-                onPress={() => setEditModal(false)}
-                w="40%"
-                h="100%"
-                borderRadius={10}
-                shadow={3}
-                justifyContent="center"
-                alignItems="center"
-                bgColor={colors.gray2}>
-                <Text bold fontSize="md" color={colors.gray}>
-                  Cancelar
-                </Text>
-              </Button>
-              <Button
-                onPress={() => setEditModal(false)}
-                w="40%"
-                h="100%"
-                borderRadius={10}
-                shadow={3}
-                justifyContent="center"
-                alignItems="center"
-                bgColor={colors.button.bgPrimary}>
-                <Text bold fontSize="md" color={colors.white}>
-                  Guardar
-                </Text>
-              </Button>
-            </HStack>
-          </VStack>
-        </Modal>
-      )}
     </Box>
   );
 };

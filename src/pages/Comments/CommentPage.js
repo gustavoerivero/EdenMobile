@@ -1,10 +1,10 @@
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react'
 import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
   KeyboardAvoidingView,
-} from 'react-native';
+} from 'react-native'
 
 import {
   VStack,
@@ -15,61 +15,112 @@ import {
   FlatList,
   Box,
   Button,
-  Center,
-} from 'native-base';
-import Icon from 'react-native-vector-icons/Ionicons';
-import FontIcon from 'react-native-vector-icons/FontAwesome';
+} from 'native-base'
 
-import Container from '../../components/Container';
-import CommentCard from '../../components/CommentComponents/CommentCard';
+import { AirbnbRating } from '@rneui/themed'
 
-import colors from '../../styled-components/colors';
+import Icon from 'react-native-vector-icons/Ionicons'
+import FontIcon from 'react-native-vector-icons/FontAwesome'
 
-import {cutText} from '../../utilities/functions';
-import useLoading from '../../hooks/useLoading';
-import StyledArea from '../../components/CommentComponents/StyledArea';
-import StyledModal from '../../components/Modal';
-import StyledField from '../../components/CommentComponents/StyledField';
-import StyledSwitch from '../../components/StyledSwitch';
+import Container from '../../components/Container'
+import CommentCard from '../../components/CommentComponents/CommentCard'
 
-const CommentPage = ({navigation, route}) => {
-  const event = route?.params;
+import colors from '../../styled-components/colors'
 
-  const {isLoading, startLoading, stopLoading} = useLoading();
+import { cutText } from '../../utilities/functions'
+import useLoading from '../../hooks/useLoading'
+import StyledArea from '../../components/CommentComponents/StyledArea'
+import StyledModal from '../../components/Modal'
+import StyledField from '../../components/CommentComponents/StyledField'
+import StyledSwitch from '../../components/StyledSwitch'
+import useAuthContext from '../../hooks/useAuthContext'
+import { useFocusEffect } from '@react-navigation/native'
+import CommentService from '../../services/comments/CommentService'
+import useCustomToast from '../../hooks/useCustomToast'
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isNextPage, setIsNextPage] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+const CommentPage = ({ navigation, route }) => {
+  const event = route?.params
 
-  const [open, setOpen] = useState(false);
+  const Comment = new CommentService()
 
-  const [name, setName] = useState('');
-  const [year, setYear] = useState(0);
-  const [partner, setPartner] = useState(false);
+  const { isLoading, startLoading, stopLoading } = useLoading()
+  const [isCommentLoading, setIsCommentLoading] = useState(false)
+  const [comments, setComments] = useState([])
 
-  const [text, setText] = useState('');
+  const { showSuccessToast, showWarningToast, showErrorToast } = useCustomToast()
+
+  const {
+    state: { user }
+  } = useAuthContext()
+
+  const calculateAge = (date = new Date()) => {
+    let ageDifMs = Date.now() - date.getTime()
+    let ageDate = new Date(ageDifMs)
+    return Math.abs(ageDate.getUTCFullYear() - 1970)
+  }
+
+  const [age, setAge] = useState(calculateAge(new Date()))
+
+  const getData = async () => {
+    try {
+      startLoading()
+      const { data, status } = await Comment.getComment(event?.id, event?.type)
+
+      setComments(data)
+      status >= 200 && status <= 299 && stopLoading()
+
+    } catch (error) {
+      console.log(`Event page error: ${error}`)
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getData()
+      if (user?.token) {
+        setAge(calculateAge(new Date(user?.user?.usuario?.fecha_nacimiento)))
+      }
+      console.log(event?.type)
+    }, [user, isCommentLoading])
+  )
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isNextPage, setIsNextPage] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+
+  const [open, setOpen] = useState(false)
+
+  const [name, setName] = useState('')
+  const [year, setYear] = useState(0)
+  const [partner, setPartner] = useState(false)
+
+  const [text, setText] = useState('')
+
+  const [valoration, setValoration] = useState(5)
 
   const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setIsNextPage(true);
-    setCurrentPage(1);
-    setRefreshing(false);
-  }, []);
+    setRefreshing(true)
+    setIsNextPage(true)
+    setCurrentPage(1)
+    getData()
+    setRefreshing(false)
+  }, [])
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <Stack m={1}>
         <CommentCard
           userID={item.id}
-          name={item.username}
-          years={item.years}
-          partner={item.partner}
-          comment={item.comment}
-          date={item.date}
+          name={item.nombre}
+          years={item.edad}
+          partner={item.es_socio === '0' ? false : true}
+          comment={item.comentario}
+          valoration={item?.valoracion}
+          date={item?.creado || new Date()}
         />
       </Stack>
-    );
-  };
+    )
+  }
 
   const renderLoader = () => {
     return (
@@ -83,83 +134,65 @@ const CommentPage = ({navigation, route}) => {
           <ActivityIndicator size="large" color={colors.primary} />
         </Stack>
       )
-    );
-  };
+    )
+  }
 
   const loadMoreItem = () => {
-    setCurrentPage(currentPage + 1);
-  };
+    setCurrentPage(currentPage + 1)
+  }
 
   const submitValidation = () => {
-    return name?.length > 0 && year >= 12 && text?.length > 0;
-  };
-
-  const submit = () => {
-    if (submitValidation) {
-      setName('');
-      setYear(0);
-      setPartner(false);
-      setText('');
-      setOpen(false);
+    if (user?.token) {
+      return text?.length > 0
     }
-  };
+    return name?.length > 0 && year >= 12 && text?.length > 0
+  }
 
-  const comments = [
-    {
-      id: 0,
-      username: 'Gustavo Rivero',
-      years: 25,
-      partner: true,
-      date: '2023-01-30',
-      comment:
-        'El torneo de dominó de este fin de semana fue emocionante de seguir. Aunque no pude asistir, vi algunos vídeos en línea y pude ver la emoción en las caras de los jugadores mientras competían.',
-    },
-    {
-      id: 1,
-      username: 'Amber Lopéz',
-      years: 21,
-      partner: false,
-      date: '2023-01-29',
-      comment:
-        'El torneo de dominó de este fin de semana fue emocionante de seguir. Aunque no pude asistir, vi algunos vídeos en línea y pude ver la emoción en las caras de los jugadores mientras competían.',
-    },
-    {
-      id: 2,
-      username: 'José Medina',
-      years: 26,
-      partner: false,
-      date: '2023-01-29',
-      comment:
-        'Lamentablemente no pude asistir al torneo de dominó este fin de semana, pero he estado siguiendo los resultados en línea. ¡Felicidades a todos los ganadores!',
-    },
-    {
-      id: 3,
-      username: 'Leo Messi',
-      years: 35,
-      partner: true,
-      date: '2023-01-29',
-      comment:
-        '¡Acabé de regresar del torneo de dominó y fue increíble! Los niveles de habilidad eran impresionante y realmente disfruté ver a los mejores jugadores competir',
-    },
-    {
-      id: 4,
-      username: 'Luis Valladares',
-      years: 25,
-      partner: true,
-      date: '2023-01-29',
-      comment:
-        'El torneo de dominó fue impresionante, organizado y emocionante. Altamente recomendable para cualquier jugador de dominó...',
-    },
-    {
-      id: 5,
-      username: 'Christina Zanetti',
-      years: 23,
-      partner: false,
-      date: '2023-01-29',
-      comment:
-        '¡Qué increíble cómo se desempeñó el toreno! Fue verdaderamente impresionante. Estoy a la espera de un próximo torneo y que en esta pronta ocasión se habiliten más puestos para competir. El dinamismo, la estrategia, el mismo desempeño de los integrantes, realmente fue maravilloso.',
-    },
-  ];
+  const defaultValues = () => {
+    if (submitValidation) {
+      setName('')
+      setYear(0)
+      setPartner(false)
+      setText('')
+      setOpen(false)
+      setValoration(5)
+    }
+  }
+
+  const submit = async () => {
+
+    try {
+
+      setIsCommentLoading(true)
+
+      let auxComment = {
+        nombre: user?.token ? `${user?.user?.usuario?.nombres} ${user?.user?.usuario?.apellidos}` : name,
+        edad: user?.token ? calculateAge(new Date(user?.user?.usuario?.fecha_nacimiento)) : year,
+        comentario: text,
+        es_socio: partner,
+        valoracion: valoration
+      }
+
+      const { data, status } = await Comment.saveComment(event?.id, auxComment, event?.type)
+
+      console.log(data)
+
+      if (status >= 200 && status <= 299) {
+        showSuccessToast('El comentario ha sido registrado con éxito.')
+        defaultValues()
+        navigation?.navigate('Comentarios', event)
+        setIsCommentLoading(false)
+      } else {
+        showErrorToast('No se pudo registrar el comentario.')
+        setIsCommentLoading(false)
+      }
+
+    } catch (error) {
+      showErrorToast('No se pudo registrar el comentario.')
+      setIsCommentLoading(false)
+      console.log(`Comment save error: ${error}`)
+    }
+  }
 
   return (
     <Container hiddenNavBar={true}>
@@ -190,18 +223,25 @@ const CommentPage = ({navigation, route}) => {
         </KeyboardAvoidingView>
 
         <Stack h="85%" pb="6">
-          <FlatList
-            px={2}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            data={comments?.reverse()}
-            keyExtractor={item => item?.id}
-            renderItem={renderItem}
-            ListFooterComponent={renderLoader}
-            onEndReached={loadMoreItem}
-          />
+          {isLoading ?
+            <Stack my={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+              <ActivityIndicator size='large' color={colors.primary} />
+            </Stack>
+            :
+            <FlatList
+              px={2}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              data={comments}
+              keyExtractor={item => item?.id}
+              renderItem={renderItem}
+              ListFooterComponent={renderLoader}
+              onEndReached={loadMoreItem}
+            />
+          }
+
         </Stack>
 
         <Stack position="absolute" bottom="0">
@@ -213,7 +253,7 @@ const CommentPage = ({navigation, route}) => {
             InputRightElement={
               <TouchableOpacity
                 onPress={() => {
-                  setOpen(true);
+                  setOpen(true)
                 }}
                 disabled={text?.length <= 0}>
                 <Box pr={4}>
@@ -246,9 +286,13 @@ const CommentPage = ({navigation, route}) => {
               fontSize="xs"
               textAlign="justify"
               color={colors.gray}
-              lineHeight={13}>
-              Notamos que aún no eres usuario en nuestra aplicación, ¿Podrías
-              darnos más información para agregarla a tu comentario?
+              lineHeight={13}
+            >
+              {user?.token ?
+                `${user?.user?.usuario?.nombres} ${user?.user?.usuario?.apellidos}, ¿Podrías darnos más información para agregarla a tu comentario?`
+                :
+                'Notamos que aún no eres usuario en nuestra aplicación, ¿Podrías darnos más información para agregarla a tu comentario?'
+              }
             </Text>
             <HStack space={1} alignItems="center">
               <Stack w="20%">
@@ -262,8 +306,13 @@ const CommentPage = ({navigation, route}) => {
               </Stack>
               <Stack minW="80%">
                 <StyledField
-                  value={name}
-                  onChangeText={data => setName(data)}
+                  isDisabled={user?.token}
+                  value={user?.token ? `${user?.user?.usuario?.nombres} ${user?.user?.usuario?.apellidos}` : name}
+                  onChangeText={data => {
+                    if (!user?.token) {
+                      setName(data)
+                    }
+                  }}
                 />
               </Stack>
             </HStack>
@@ -279,11 +328,34 @@ const CommentPage = ({navigation, route}) => {
                 </Text>
               </Stack>
               <Stack w="25%">
-                <StyledField
-                  type="number"
-                  value={year}
-                  onChangeText={data => setYear(data)}
-                />
+                {user?.token ?
+                  <Box
+                    bgColor={colors.textField.bgSecondColor}
+                    borderColor={colors.base}
+                    borderRadius={12}
+                    h={7}
+                    m={1}
+                    px={2}
+                    alignItems='center'
+                    justifyContent='center'
+                  >
+                    <Text
+                      color={colors.gray}
+                      fontSize='sm'
+                    >
+                      {age}
+                    </Text>
+                  </Box>
+                  :
+                  <StyledField
+                    value={year}
+                    onChangeText={data => {
+                      if (!user?.token) {
+                        setYear(data)
+                      }
+                    }}
+                  />
+                }
               </Stack>
               <Stack w="25%">
                 <Text
@@ -323,11 +395,29 @@ const CommentPage = ({navigation, route}) => {
               value={text}
               onChangeText={data => setText(data)}
             />
+            <Text
+              bold
+              pl={1}
+              fontSize="xs"
+              lineHeight={12}
+              color={colors.text.description}>
+              Tu valoración
+            </Text>
+            <AirbnbRating
+              count={5}
+              showRating={false}
+              size={15}
+              defaultRating={valoration}
+              onFinishRating={(value) => setValoration(value)}
+              minValue={1}
+              selectedColor={colors.primary}
+              unSelectedColor={colors.gray2}
+            />
           </VStack>
           <HStack
             justifyContent="space-between"
             alignItems="center"
-            pt={1}
+            pt={3}
             pl={2}
             pr={1}>
             <Button
@@ -355,10 +445,12 @@ const CommentPage = ({navigation, route}) => {
               shadow={3}
               justifyContent="center"
               alignItems="center"
+              isLoading={isCommentLoading}
               bgColor={
-                name?.length > 0 && year >= 12 && year <= 99 && text?.length > 0
-                  ? colors.button.bgPrimary
-                  : colors.gray
+                user?.token && text?.length > 0 ? colors.button.bgPrimary :
+                  name?.length > 0 && year >= 12 && year <= 99 && text?.length > 0
+                    ? colors.button.bgPrimary
+                    : colors.gray
               }
               onPress={submit}>
               <Text bold fontSize="md" color={colors.white}>
@@ -369,7 +461,7 @@ const CommentPage = ({navigation, route}) => {
         </StyledModal>
       )}
     </Container>
-  );
-};
+  )
+}
 
-export default CommentPage;
+export default CommentPage

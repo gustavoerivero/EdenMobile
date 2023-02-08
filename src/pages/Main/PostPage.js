@@ -66,6 +66,50 @@ const PostPage = ({ navigation }) => {
     setIsNextPage(true)
   }, [])
 
+  const searchData = async (search = '') => {
+
+    try {
+
+      setEvents([])
+      setIsNextPage(true)
+      setCurrentPage(1)
+
+      if (isNextPage) {
+
+        setIsLoading(true)
+
+        let { data } = categoriesSelected.includes('Todo') ?
+          await Tournament.getAll(currentPage, search) :
+          categoriesSelected.includes('Bolas criollas') ?
+            await Tournament.getByTournamentType('B', currentPage, search) :
+            categoriesSelected.includes('Dominó') ?
+              await Tournament.getByTournamentType('D', currentPage, search) :
+              await Tournament.getByTournamentType('O', currentPage, search)
+
+        const aux = categoriesSelected.includes('Todo') ? data?.data?.data : data?.data || []
+        const auxEvents = []
+
+        aux?.forEach(element => {
+          if (!events?.find(item => item?.name === element?.name)) {
+            auxEvents.push(element)
+          }
+        })
+
+        const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
+
+        setIsNextPage(nextPage > currentPage)
+
+        setEvents(prevEvents => [...prevEvents, ...auxEvents])
+
+        setIsLoading(false)
+
+      }
+    } catch (error) {
+      console.log(`Event error: ${error}`)
+      setIsLoading(false)
+    }
+  }
+
   const getData = async () => {
 
     try {
@@ -110,7 +154,7 @@ const PostPage = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       getData()
-    }, [currentPage, search, categoriesSelected])
+    }, [currentPage, categoriesSelected])
   )
 
   const renderItem = ({ item }) => {
@@ -181,9 +225,7 @@ const PostPage = ({ navigation }) => {
               value={search}
               onChangeText={(text) => {
                 setSearch(text)
-                setEvents([])
-                setIsNextPage(true)
-                setCurrentPage(1)
+                searchData(text)
               }}
               InputRightElement={
                 <Box

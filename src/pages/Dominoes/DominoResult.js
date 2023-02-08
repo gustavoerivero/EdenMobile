@@ -19,20 +19,21 @@ const DominoResult = ({ navigation, route, match, domino }) => {
   const Tournament = new TournamentService()
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
-  const game = route?.params
+  const [isLoading, setIsLoading] = useState(false)
 
   const dispatch = useDispatch()
 
   const sendData = async (domino = {}) => {
-    
+
     setIsLoading(true)
     try {
-      const { data, status } = await Tournament.save(domino)
+      console.log(domino)
+      const { data, status } = await Tournament.saveDomino(domino)
 
       console.log({ data, status })
 
       if (status >= 200 && status <= 299) {
-        dispatch(deleteMatch(domino?.id))
+        dispatch(deleteDomino(domino?.id))
         showSuccessToast('El partido ha sido registrado con éxito.')
         navigation?.navigate('Home')
         setIsLoading(false)
@@ -262,8 +263,8 @@ const DominoResult = ({ navigation, route, match, domino }) => {
                   >
                     {domino?.teamAScore === domino?.teamBScore ? 'Empate' :
                       domino?.teamAScore > domino?.teamBScore ?
-                        `Equipo ${domino?.teamA}` :
-                        `Equipo ${domino?.teamB}`
+                        `Equipo ${domino?.teamA?.nombre}` :
+                        `Equipo ${domino?.teamB?.nombre}`
                     }
                   </Text>
                 </Stack>
@@ -296,16 +297,17 @@ const DominoResult = ({ navigation, route, match, domino }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={colors.button.bgPrimary}
+              bgColor={isLoading ? colors.gray2 : colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
-                navigation?.navigate('Home')
+                sendData(domino)
               }}
+              isLoading={isLoading}
             >
               <Text
                 bold
                 fontSize='md'
-                color={colors.white}
+                color={isLoading ? colors.gray : colors.white}
               >
                 Registrar juego
               </Text>

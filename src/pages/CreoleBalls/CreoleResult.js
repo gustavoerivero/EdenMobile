@@ -296,7 +296,7 @@ const CreoleResult = ({ navigation, match }) => {
               shadow={3}
               justifyContent='center'
               alignItems='center'
-              bgColor={isLoading ? colors.gray1 : colors.button.bgPrimary}
+              bgColor={isLoading ? colors.gray2 : colors.button.bgPrimary}
               _pressed={colors.bgSecondary}
               onPress={() => {
                 sendData(match)

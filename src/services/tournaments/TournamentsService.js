@@ -9,6 +9,11 @@ class TournamentService {
     return { data, status }
   }
 
+  async saveDomino (match = {}) {
+    const { data, status } = await http.post(`anotar/domino`, match)
+    return { data, status }
+  }
+
   async getAll (page = 1, search = '') {
     const { data, status } = await http.get(`${BASE_URL}?page=${page}&busqueda=${search}`)
     return { data, status }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
+import { AirbnbRating } from '@rneui/base'
 import { Box, VStack, Stack, HStack, Text } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -9,7 +10,7 @@ import useAuthContext from '../../hooks/useAuthContext'
 
 import { formatDate } from '../../utilities/functions'
 
-const CommentCard = ({ userID = null, name = '', years = 0, partner = false, date = new Date(), comment = '' }) => {
+const CommentCard = ({ userID = null, name = '', years = 0, partner = false, date = new Date(), comment = '', valoration = 5 }) => {
 
   const {
     state: { user }
@@ -68,27 +69,6 @@ const CommentCard = ({ userID = null, name = '', years = 0, partner = false, dat
             alignItems='center'
             space={3}
           >
-            {userID == user?.id &&
-              <HStack
-                alignItems='center'
-                space={1}
-              >
-                <TouchableOpacity>
-                  <Icon
-                    name='pencil'
-                    color={colors.text.description}
-                    size={15}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Icon
-                    name='trash-outline'
-                    color={colors.text.description}
-                    size={15}
-                  />
-                </TouchableOpacity>
-              </HStack>
-            }
             <Text
               fontSize='2xs'
               color={colors.text.description}
@@ -104,6 +84,20 @@ const CommentCard = ({ userID = null, name = '', years = 0, partner = false, dat
           >
             {comment}
           </Text>
+        </Stack>
+        <Stack
+          w='100%'
+          alignItems='center'
+        >
+          <AirbnbRating 
+            count={5}
+            showRating={false}
+            size={10}
+            defaultRating={valoration}
+            minValue={1}
+            selectedColor={colors.primary}
+            unSelectedColor={colors.gray2}
+          />
         </Stack>
       </VStack>
     </Box>

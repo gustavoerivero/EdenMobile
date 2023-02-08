@@ -78,22 +78,21 @@ const HomePage = ({ navigation }) => {
         let { data } = categoriesSelected?.find(item => item?.name === 'Todo') ?
           await Event.getFeed(currentPage, search) :
           categoriesSelected?.find(item => item?.name === 'Torneos') ?
-            await Tournament.getAll(currentPage, search) :
+            await Tournament.getFeed(currentPage, search) :
             categoriesSelected?.find(item => item?.name === 'Eventos') ?
               await Event.getAllEvents(currentPage, search) :
               categoriesSelected?.find(item => item?.name === 'Actividades') ?
                 await Event.getAllActivities(currentPage, search) :
                 await Event.getAllByType(categoriesSelected[0]?.id, currentPage, search)
 
-        const auxEvents = categoriesSelected?.find(item => item?.name === 'Torneos') ?
-          data?.data?.data : data?.data
+        const auxEvents = data?.data
 
         let aux = []
 
         for (const key in auxEvents) {
           let obj = auxEvents[key]
 
-          if (!events.find(item => item.name === obj.name)) {
+          if (!events.find(item => item.id === obj.id)) {
             aux.push(obj)
           }
         }
@@ -123,17 +122,24 @@ const HomePage = ({ navigation }) => {
         let { data } = categoriesSelected?.find(item => item?.name === 'Todo') ?
           await Event.getFeed(currentPage, search) :
           categoriesSelected?.find(item => item?.name === 'Torneos') ?
-            await Tournament.getAll(currentPage, search) :
+            await Tournament.getFeed(currentPage, search) :
             categoriesSelected?.find(item => item?.name === 'Eventos') ?
               await Event.getAllEvents(currentPage, search) :
               categoriesSelected?.find(item => item?.name === 'Actividades') ?
                 await Event.getAllActivities(currentPage, search) :
                 await Event.getAllByType(categoriesSelected[0]?.id, currentPage, search)
 
-        const auxEvents = categoriesSelected?.find(item => item?.name === 'Torneos') ?
-          data?.data?.data : data?.data
+        const auxEvents = data?.data
 
-        let aux = auxEvents || []
+        let aux = []
+
+        for (const key in auxEvents) {
+          let obj = auxEvents[key]
+
+          if (!events.find(item => item.id === obj.id)) {
+            aux.push(obj)
+          }
+        }
 
         const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
 

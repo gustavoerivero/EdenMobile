@@ -79,18 +79,18 @@ const PostPage = ({ navigation }) => {
         setIsLoading(true)
 
         let { data } = categoriesSelected.includes('Todo') ?
-          await Tournament.getAll(currentPage, search) :
+          await Tournament.getFeed(currentPage, search) :
           categoriesSelected.includes('Bolas criollas') ?
             await Tournament.getByTournamentType('B', currentPage, search) :
             categoriesSelected.includes('Dominó') ?
               await Tournament.getByTournamentType('D', currentPage, search) :
               await Tournament.getByTournamentType('O', currentPage, search)
 
-        const aux = categoriesSelected.includes('Todo') ? data?.data?.data : data?.data || []
+        const aux = data?.data || []
         const auxEvents = []
 
         aux?.forEach(element => {
-          if (!events?.find(item => item?.name === element?.name)) {
+          if (!events?.find(item => item?.id === element?.id)) {
             auxEvents.push(element)
           }
         })
@@ -118,18 +118,18 @@ const PostPage = ({ navigation }) => {
         setIsLoading(true)
 
         let { data } = categoriesSelected.includes('Todo') ?
-          await Tournament.getAll(currentPage, search) :
+          await Tournament.getFeed(currentPage, search) :
           categoriesSelected.includes('Bolas criollas') ?
             await Tournament.getByTournamentType('B', currentPage, search) :
             categoriesSelected.includes('Dominó') ?
               await Tournament.getByTournamentType('D', currentPage, search) :
               await Tournament.getByTournamentType('O', currentPage, search)
 
-        const aux = categoriesSelected.includes('Todo') ? data?.data?.data : data?.data || []
+        const aux = data?.data || []
         const auxEvents = []
 
         aux?.forEach(element => {
-          if (!events?.find(item => item?.name === element?.name)) {
+          if (!events?.find(item => item?.id === element?.id)) {
             auxEvents.push(element)
           }
         })

@@ -19,6 +19,11 @@ class TournamentService {
     return { data, status }
   }
 
+  async getFeed (page = 1, search = '') {
+    const { data, status } = await http.get(`/feed${BASE_URL}?page=${page}&busqueda=${search}`)
+    return { data, status }
+  }
+
   async get (ID = 0) {
     const { data, status } = await http.get(`${BASE_URL}/${ID}`)
     return { data, status }

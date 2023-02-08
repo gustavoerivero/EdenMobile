@@ -1,17 +1,29 @@
 
 <h1 align="center">
-  <img src="./public/assets/eden.png" alt="Eden" width="400" height="150" />
+  <img src="./public/assets/eden.svg" alt="Eden" width="400" height="150" />
 </h1>
 
-![dependencies](https://img.shields.io/depfu/dependencies/github/gustavoerivero/EdenMobile)
-![nodeV](https://img.shields.io/node/v/react-native)
-![size](https://img.shields.io/github/repo-size/gustavoerivero/EdenMobile)
-![version](https://img.shields.io/github/package-json/v/gustavoerivero/EdenMobile)
-![license](https://img.shields.io/github/license/gustavoerivero/EdenMobile)
-![collabs](https://img.shields.io/github/contributors/gustavoerivero/EdenMobile)
-![lastcommit](https://img.shields.io/github/last-commit/gustavoerivero/EdenMobile)
-![languages](https://img.shields.io/github/languages/count/gustavoerivero/EdenMobile)
-![porc](https://img.shields.io/github/languages/top/gustavoerivero/EdenMobile)
+<div align="center">
+  <img src="https://img.shields.io/depfu/dependencies/github/gustavoerivero/EdenMobile" alt="dependencies" />
+  <img src="https://img.shields.io/node/v/react-native" alt="node version" />
+  <img src="https://img.shields.io/github/repo-size/gustavoerivero/EdenMobile" alt="project size" />
+  <img src="https://img.shields.io/github/package-json/v/gustavoerivero/EdenMobile" alt="project version" />
+  <img src="https://img.shields.io/github/license/gustavoerivero/EdenMobile" alt="project license" />
+  <img src="https://img.shields.io/github/contributors/gustavoerivero/EdenMobile" alt="project collabs" />
+  <img src="https://img.shields.io/github/last-commit/gustavoerivero/EdenMobile" alt="project last commit" />
+  <img src="https://img.shields.io/github/languages/count/gustavoerivero/EdenMobile" alt="project languages" />
+  <img src="https://img.shields.io/github/languages/top/gustavoerivero/EdenMobile" alt="project major language percent" />
+</div>
+
+<div align="center">
+  <table>
+      <tr>
+          <!-- Do not translate this table -->
+          <td><a href="./README.md"> English </a></td>
+          <td><a href="./README-ES.md"> Spanish </a></td>
+      </tr>
+  </table>
+</div>
 
 
 "Edén: Servicio de juegos" is an information system structured by three components, 
@@ -148,4 +160,4 @@ carried out by the Thoteam subgroup, formed by;
 </p>
 
 ---
-⌨️ made with❤️ by [Thoteam] 
+⌨️ made with ❤️ by [Thoteam] 

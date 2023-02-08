@@ -1,4 +1,4 @@
-const loginData = (values) => {
+export const loginData = (values) => {
   return {
     email: values.email,
     password: values.password,

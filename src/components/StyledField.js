@@ -1,28 +1,28 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { Input } from 'native-base'
 
 import colors from '../styled-components/colors'
 
-const StyledField = ({ style = {}, ...props }) => {
+const StyledField = ({ style = {}, placeholderTextColor = 'rgba(40, 10, 57, .5)', textColor = colors.textField.text, size = 'md', h = 50, baseW = '95%', mdW = '25%', bgColor = colors.base, borderColor = colors.textField.borderColor, ...props }, ref) => {
   const inputStyle = {
     ...style
   }
   return (
     <Input
       style={inputStyle}
-      bgColor={colors.base}
-      borderColor={colors.textField.borderColor}
-      placeholderTextColor='rgba(40, 10, 57, .5)'
-      h={50}
+      bgColor={bgColor}
+      borderColor={borderColor}
+      placeholderTextColor={placeholderTextColor}
+      h={h}
       w={{
-        base: "95%",
-        md: "25%"
+        base: baseW,
+        md: mdW
       }}
-      size='md'
-      color={colors.textField.text}
+      size={size}
+      color={textColor}
       {...props}
     />
   )
 }
 
-export default StyledField
+export default forwardRef(StyledField)

@@ -162,7 +162,7 @@ const CreoleResult = ({ navigation, match }) => {
                   maxW='30%'
                 >
                   <Box
-                    bgColor={match?.teamA?.nombre !== match?.initialTeam?.nombre ? match?.colorTeamA : match?.colorTeamB}
+                    bgColor={match?.teamB?.nombre === match?.initialTeam?.nombre ? match?.colorTeamA : match?.colorTeamB}
                     borderRadius={10}
                     shadow={7}
                     w={150}

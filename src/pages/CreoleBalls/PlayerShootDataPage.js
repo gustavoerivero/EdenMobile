@@ -169,9 +169,7 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.initialTeam?.nombre === match?.selectedTeam?.nombre &&
-                  match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB
-                }
+                color={match?.selectedTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamA?.abreviatura}
               </Text>
@@ -200,9 +198,7 @@ const PlayerShootDataPage = ({ navigation, route, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.initialTeam?.nombre !== match?.selectedTeam?.nombre &&
-                  match?.initialTeam?.abreviatura === match?.teamB?.abreviatura ? match?.colorTeamB : match?.colorTeamA
-                }
+                color={match?.selectedTeam?.abreviatura === match?.teamB?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamB?.abreviatura}
               </Text>

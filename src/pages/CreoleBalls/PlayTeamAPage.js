@@ -205,7 +205,7 @@ const PlayTeamAPage = ({ navigation, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
+                color={match?.teamA?.abreviatura === match?.selectedTeam?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamA?.abreviatura}
               </Text>
@@ -234,7 +234,7 @@ const PlayTeamAPage = ({ navigation, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
+                color={match?.teamB?.abreviatura === match?.selectedTeam?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamB?.abreviatura}
               </Text>

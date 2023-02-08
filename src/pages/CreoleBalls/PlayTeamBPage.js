@@ -205,7 +205,7 @@ const PlayTeamBPage = ({ navigation, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.selectedTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
+                color={match?.selectedTeam?.abreviatura === match?.teamB?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamA?.abreviatura}
               </Text>

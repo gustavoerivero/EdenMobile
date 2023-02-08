@@ -5,7 +5,7 @@ import { addMatch } from '../../redux/config/actions'
 
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 
-import { VStack, HStack, Stack, Text, Divider, Box, Button, ScrollView, FlatList } from 'native-base'
+import { VStack, HStack, Stack, Text, Divider, Box, Button } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Container from '../../components/Container'
@@ -117,7 +117,7 @@ const RoundNextPage = ({ navigation, route, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.initialTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
+                color={match?.selectedTeam?.abreviatura === match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamA?.abreviatura}
               </Text>
@@ -146,7 +146,7 @@ const RoundNextPage = ({ navigation, route, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
+                color={match?.selectedTeam?.abreviatura === match?.teamB?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamB?.abreviatura}
               </Text>

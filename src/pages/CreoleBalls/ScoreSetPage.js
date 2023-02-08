@@ -153,7 +153,7 @@ const ScoreSetPage = ({ navigation, match }) => {
               <Text
                 bold
                 fontSize='4xl'
-                color={match?.initialTeam?.abreviatura !== match?.teamA?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
+                color={match?.initialTeam?.abreviatura === match?.teamB?.abreviatura ? match?.colorTeamA : match?.colorTeamB}
               >
                 {match?.teamB?.abreviatura}
               </Text>

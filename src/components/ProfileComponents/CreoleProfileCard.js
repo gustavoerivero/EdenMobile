@@ -173,9 +173,8 @@ const CreoleProfileCard = ({
                 color={colors.gray}
                 textAlign='center'
               >
-                Capitán de equipo
+                {false && 'Capitán de equipo'}
               </Text>
-
 
             </Stack>
             <Stack
@@ -184,8 +183,8 @@ const CreoleProfileCard = ({
               alignItems='center'
             >
               <DetailedData
-                title='Jugador del equipo'
-                data='DCyT'
+                title=''
+                data=''
               />
             </Stack>
             <Stack

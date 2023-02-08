@@ -42,7 +42,6 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
     useCallback(() => {
       const scorer = user?.user?.roles?.find(item => item === 'anotador') || false
       setIsScorer(scorer)
-      console.log(domino)
       if (scorer && (match?.completed || domino?.completed)) {
         showWarningToast(`El partido ${match?.id ? match?.title : domino?.id ? domino?.title : null} no se ha registrado aún.`)
         console.log(match?.id ? match : domino?.id ? domino : 'No hay partidos')
@@ -58,6 +57,7 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
       if (match?.id) {
         Tournament.save(match)
           .then(res => {
+            console.log(res)
             const { data, status } = res
 
             console.log({ data, status })

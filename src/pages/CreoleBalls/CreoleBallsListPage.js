@@ -165,7 +165,7 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                     title={tournament.title}
                     teamA={item?.equipo_a}
                     teamB={item?.equipo_b}
-                    date={item?.fecha}
+                    date={item?.fecha || new Date().toDateString()}
                     status={item?.estado}
                     maxTime={Number(item?.modalidad?.modalidad?.tiempo_maximo_minutos) || 0}
                     forfeit={Number(item?.modalidad?.modalidad?.tiempo_forfeit_minutos) || 0}

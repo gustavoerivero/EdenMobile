@@ -5,12 +5,12 @@ const BASE_URL = '/torneos'
 class TournamentService {
 
   async save (match = {}) {
-    const { data, status } = await http.post(`anotar/bolas`, match)
+    const { data, status } = await http.post(`/bolas`, match)
     return { data, status }
   }
 
   async saveDomino (match = {}) {
-    const { data, status } = await http.post(`anotar/domino`, match)
+    const { data, status } = await http.post(`/domino`, match)
     return { data, status }
   }
 

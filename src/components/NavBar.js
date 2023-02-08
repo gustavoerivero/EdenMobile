@@ -73,7 +73,7 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
             }
           })
           .catch(error => {
-            console.log(`Error scorer: ${error}`)
+            console.log(`Error creole scorer: ${error}`)
             showErrorToast('No se pudo registrar el partido. Intente más tarde.')
             setIsLoading(false)
           })
@@ -97,7 +97,7 @@ const NavBar = ({ hidden = false, logout = true, match, domino }) => {
             }
           })
           .catch(error => {
-            console.log(`Error scorer: ${error}`)
+            console.log(`Error dominoes scorer: ${error}`)
             showErrorToast('No se pudo registrar el partido. Intente más tarde.')
             setIsLoading(false)
           })

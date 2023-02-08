@@ -57,7 +57,7 @@ const CreoleGameCard = ({
     <Box
       border='1'
       borderRadius='lg'
-      bgColor={status !== 'D' ? true : isScorer && domino?.started ? colors.gray1 : isScorer && match?.started ? match?.id === id ? colors.soft1 : colors.gray1 : 'white'}
+      bgColor={status !== 'D' ? colors.gray1 : isScorer && domino?.started ? colors.gray1 : isScorer && match?.started ? match?.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >

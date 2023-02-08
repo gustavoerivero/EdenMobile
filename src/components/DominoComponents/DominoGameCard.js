@@ -58,13 +58,13 @@ const DominoGameCard = ({
     <Box
       border='1'
       borderRadius='lg'
-      bgColor={isScorer && match?.started ? colors.gray1 : isScorer && domino?.started ? domino?.id === id ? colors.soft1 : colors.gray1 : 'white'}
+      bgColor={status !== 'D' ? colors.gray1 : isScorer && match?.started ? colors.gray1 : isScorer && domino?.started ? domino?.id === id ? colors.soft1 : colors.gray1 : 'white'}
       shadow={1}
       minH={130}
     >
 
       <TouchableOpacity
-        disabled={!isScorer ? true : match?.started ? true : domino?.started ? domino?.id !== id : false}
+        disabled={status !== 'D' ? true : !isScorer ? true : match?.started ? true : domino?.started ? domino?.id !== id : false}
         onPress={() => {
 
           const game = {

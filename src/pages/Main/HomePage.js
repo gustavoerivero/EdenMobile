@@ -133,21 +133,17 @@ const HomePage = ({ navigation }) => {
         const auxEvents = categoriesSelected?.find(item => item?.name === 'Torneos') ?
           data?.data?.data : data?.data
 
-        let aux = []
-
-        for (const key in auxEvents) {
-          let obj = auxEvents[key]
-
-          if (!events.find(item => item.name === obj.name)) {
-            aux.push(obj)
-          }
-        }
+        let aux = auxEvents || []
 
         const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
 
         setIsNextPage(nextPage > currentPage)
 
-        setEvents(prevEvents => [...prevEvents, ...aux])
+        console.log(aux)
+        setEvents([...events, ...aux])
+        console.log(currentPage)
+        console.log(nextPage)
+        console.log(nextPage > currentPage)
 
         setIsLoading(false)
 
@@ -217,9 +213,7 @@ const HomePage = ({ navigation }) => {
   }
 
   const loadMoreItem = () => {
-    if (!isLoading && isNextPage) {
-      setCurrentPage(currentPage + 1)
-    }
+    setCurrentPage(currentPage + 1)
   }
 
   return (

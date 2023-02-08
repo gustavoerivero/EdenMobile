@@ -35,11 +35,27 @@ const DominoTournamentPage = ({ navigation, route }) => {
           let { data } = res
 
           setWinner(data?.data?.ganador_torneo || null)
-          setCalendar(data?.data?.fase_de_torneo[0]?.calendario?.length > 0 || false)
 
-          data = data?.data?.fase_de_torneo[0]?.equipo
+          let calendar = []
+          let auxTeams = []
 
-          setTeams(data)
+          data?.data?.fase_de_torneo?.forEach(item => {
+            calendar = [...calendar, ...item?.calendario]
+            auxTeams = [...auxTeams, ...item?.equipo]
+          })
+
+          const uniqueTeams = auxTeams.reduce((acc, curr) => {
+            if (!acc.find(obj => obj.id === curr.id)) {
+              acc.push(curr)
+            }
+            return acc
+          }, [])
+
+
+          setCalendar(calendar)
+
+          setTeams(uniqueTeams)
+
           setIsLoading(false)
           setWinnerLoading(false)
           setIsLoading(false)

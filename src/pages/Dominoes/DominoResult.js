@@ -33,7 +33,7 @@ const DominoResult = ({ navigation, route, match, domino }) => {
       console.log({ data, status })
 
       if (status >= 200 && status <= 299) {
-        dispatch(deleteMatch(domino?.id))
+        dispatch(deleteDomino(domino?.id))
         showSuccessToast('El partido ha sido registrado con éxito.')
         navigation?.navigate('Home')
         setIsLoading(false)

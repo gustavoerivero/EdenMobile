@@ -164,7 +164,8 @@ const CreoleBallsTournamentPage = ({ navigation, route }) => {
                     minW="100%"
                     maxW="100%"
                     alignItems="center"
-                    bgColor={styles.winnerInfo.backgroundColor}>
+                    bgColor={styles.winnerInfo.backgroundColor}
+                  >
                     {winnerLoading ?
                       <Stack
                         alignItems="center"

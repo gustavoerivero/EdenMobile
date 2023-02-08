@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { ActivityIndicator, ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, ImageBackground, TouchableOpacity } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 
 import LinearGradient from 'react-native-linear-gradient'
@@ -23,6 +23,8 @@ const DominoTournamentPage = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [teams, setTeams] = useState([])
   const [calendar, setCalendar] = useState(false)
+  const [winnerLoading, setWinnerLoading] = useState(true)
+  const [winner, setWinner] = useState(null)
 
   const event = route?.params
 
@@ -32,15 +34,20 @@ const DominoTournamentPage = ({ navigation, route }) => {
         .then(res => {
           let { data } = res
 
+          setWinner(data?.data?.ganador_torneo || null)
           setCalendar(data?.data?.fase_de_torneo[0]?.calendario?.length > 0 || false)
 
           data = data?.data?.fase_de_torneo[0]?.equipo
 
           setTeams(data)
           setIsLoading(false)
+          setWinnerLoading(false)
+          setIsLoading(false)
         })
         .catch(error => {
           console.log(`Tournament error: ${error}`)
+          setIsLoading(false)
+          setWinnerLoading(false)
           setIsLoading(false)
         })
     }
@@ -188,13 +195,22 @@ const DominoTournamentPage = ({ navigation, route }) => {
                     alignItems='center'
                     bgColor={styles.winnerInfo.backgroundColor}
                   >
-                    <Text
-                      fontSize='lg'
-                      fontColor={colors.gray}
-                      fontWeight='thin'
-                    >
-                      No definido
-                    </Text>
+                    {winnerLoading ?
+                      <Stack
+                        alignItems="center"
+                        justifyContent="center"
+                        alignContent="center"
+                        alignSelf="center">
+                        <ActivityIndicator size="large" color={colors.primary} />
+                      </Stack>
+                      :
+                      <Text
+                        fontSize="lg"
+                        fontColor={colors.gray}
+                        fontWeight="thin">
+                        {winner ? winner?.nombre : 'No definido'}
+                      </Text>
+                    }
                   </Stack>
 
                 </VStack>

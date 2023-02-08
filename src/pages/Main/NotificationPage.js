@@ -82,28 +82,30 @@ const NotificationPage = ({ navigation }) => {
     if (isNextPage) {
 
       startLoading()
-/*
-      getEvents(currentPage)
-        .then(res => {
-          const { data, status } = res
+      /*
+            getEvents(currentPage)
+              .then(res => {
+                const { data, status } = res
+      
+                setEvents(status === 200 ? data?.data?.data : [])
+      
+                console.log(data?.data?.data)
+      
+                console.log(notification)
+      
+                setIsNextPage(data?.links?.next ? true : false)
+                console.log(`Events: ${notification}`)
+                console.log(`Next page: ${isNextPage}`)
+              })
+              .catch(error => {
+                console.log(`Event error: ${error}`)
+              })
+              .finally(() => {
+                stopLoading()
+              })
+              */
 
-          setEvents(status === 200 ? data?.data?.data : [])
-
-          console.log(data?.data?.data)
-
-          console.log(notification)
-
-          setIsNextPage(data?.links?.next ? true : false)
-          console.log(`Events: ${notification}`)
-          console.log(`Next page: ${isNextPage}`)
-        })
-        .catch(error => {
-          console.log(`Event error: ${error}`)
-        })
-        .finally(() => {
-          stopLoading()
-        })
-        */
+      stopLoading()
 
     }
 
@@ -122,7 +124,7 @@ const NotificationPage = ({ navigation }) => {
         py={2}
         alignItems='center'
       >
-        <NotificationItem 
+        <NotificationItem
           id={item.id}
           name={item.name}
           date={item.date}

@@ -65,7 +65,55 @@ const HomePage = ({ navigation }) => {
     getData()
   }, [])
 
-  const getData = async () => {
+  const searchData = async (search = search) => {
+    try {
+
+      setEvents([])
+      setIsNextPage(true)
+      setCurrentPage(1)
+
+      if (isNextPage) {
+        setIsLoading(true)
+
+        let { data } = categoriesSelected?.find(item => item?.name === 'Todo') ?
+          await Event.getFeed(currentPage, search) :
+          categoriesSelected?.find(item => item?.name === 'Torneos') ?
+            await Tournament.getAll(currentPage, search) :
+            categoriesSelected?.find(item => item?.name === 'Eventos') ?
+              await Event.getAllEvents(currentPage, search) :
+              categoriesSelected?.find(item => item?.name === 'Actividades') ?
+                await Event.getAllActivities(currentPage, search) :
+                await Event.getAllByType(categoriesSelected[0]?.id, currentPage, search)
+
+        const auxEvents = categoriesSelected?.find(item => item?.name === 'Torneos') ?
+          data?.data?.data : data?.data
+
+        let aux = []
+
+        for (const key in auxEvents) {
+          let obj = auxEvents[key]
+
+          if (!events.find(item => item.name === obj.name)) {
+            aux.push(obj)
+          }
+        }
+
+        const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
+
+        setIsNextPage(nextPage > currentPage)
+
+        setEvents(prevEvents => [...prevEvents, ...aux])
+
+        setIsLoading(false)
+
+      }
+    } catch (error) {
+      console.log(`Event error: ${error}`)
+      setIsLoading(false)
+    }
+  }
+
+  const getData = async (search = search) => {
 
     try {
 
@@ -128,7 +176,7 @@ const HomePage = ({ navigation }) => {
     useCallback(() => {
       getTypeEvents()
       getData()
-    }, [currentPage, search, categoriesSelected])
+    }, [currentPage, categoriesSelected])
   )
 
   const renderItem = ({ item }) => {
@@ -200,9 +248,7 @@ const HomePage = ({ navigation }) => {
               value={search}
               onChangeText={(text) => {
                 setSearch(text)
-                setEvents([])
-                setIsNextPage(true)
-                setCurrentPage(1)
+                searchData(text)
               }}
               InputRightElement={
                 <Box

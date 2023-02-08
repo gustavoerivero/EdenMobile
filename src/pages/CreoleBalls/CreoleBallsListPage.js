@@ -31,6 +31,16 @@ const CreoleBallsListPage = ({ navigation, route }) => {
     setRefreshing(false)
   }, [])
 
+  const getPoints = (array = [], element) => {
+    let points = 0
+
+    array.forEach(item => {
+      points += Number(item[element]) || 0
+    })
+
+    return points
+  }
+
   const getData = async () => {
     try {
 
@@ -39,9 +49,16 @@ const CreoleBallsListPage = ({ navigation, route }) => {
       const { data } = await Tournament.get(tournament?.id)
 
       let auxData = data?.data
-      let calendar = auxData?.fase_de_torneo[0]?.calendario
 
-      setModality(auxData?.fase_de_torneo[0]?.modalidad)
+      let calendar = []
+
+      auxData?.fase_de_torneo?.forEach(item => {
+        calendar = [...calendar, ...item?.calendario]
+      })
+
+      console.log(tournament.id)
+      console.log(calendar)
+
       setEvents(calendar)
 
       setIsLoading(false)
@@ -150,17 +167,17 @@ const CreoleBallsListPage = ({ navigation, route }) => {
                     teamB={item?.equipo_b}
                     date={item?.fecha}
                     status={item?.estado}
-                    maxTime={modality?.tiempo_maximo_minutos}
-                    forfeit={modality?.tiempo_forfeit_minutos}
-                    maxPoints={modality?.puntuacion_maxima}
+                    maxTime={Number(item?.modalidad?.modalidad?.tiempo_maximo_minutos) || 0}
+                    forfeit={Number(item?.modalidad?.modalidad?.tiempo_forfeit_minutos) || 0}
+                    maxPoints={Number(item?.modalidad?.modalidad?.puntuacion_maxima) || 0}
                     navigation={navigation}
                     playersTeamA={item?.equipo_a?.jugadores || []}
                     playersTeamB={item?.equipo_b?.jugadores || []}
                     teamAScore={item?.ronda?.length > 0 ? 
-                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_a) : 0
+                      getPoints(item?.ronda, 'puntuacion_equipo_a') : 0
                     }
                     teamBScore={item?.ronda?.length > 0 ? 
-                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_b) : 0
+                      getPoints(item?.ronda, 'puntuacion_equipo_b') : 0
                     }
                   />
                 </Stack>

@@ -47,19 +47,12 @@ const CalendarPage = ({ navigation }) => {
         let { data } = await Calendar.get(currentPage)
 
         const auxEvents = data?.data
-        let aux = []
-
-        for (const key in auxEvents) {
-          let obj = auxEvents[key]
-
-          if (!events.find(item => item.name === obj.name)) {
-            aux.push(obj)
-          }
-        }
+        let aux = auxEvents || []
 
         const nextPage = Number(data?.next_page_url?.slice(-1)) || 1
 
         setIsNextPage(nextPage > currentPage)
+        console.log(nextPage > currentPage)
 
         setEvents(prevEvents => [...prevEvents, ...aux])
 
@@ -82,8 +75,6 @@ const CalendarPage = ({ navigation }) => {
   )
 
   const renderItem = ({ item }) => {
-
-    const { dayWeek, day, month, year } = item?.fecha_inicio ? getDate(item?.fecha_inicio) : getDate(item?.creado)
 
     const type = item?.disciplina ? item?.disciplina : item?.es_actividad === '0' ? 'E' : 'A'
 

@@ -30,6 +30,16 @@ const DominoListPage = ({ navigation, route }) => {
     setRefreshing(false)
   }, [])
 
+  const getPoints = (array = [], element) => {
+    let points = 0
+
+    array.forEach(item => {
+      points += Number(item[element]) || 0
+    })
+
+    return points
+  }
+
   const getData = async () => {
     try {
 
@@ -38,11 +48,16 @@ const DominoListPage = ({ navigation, route }) => {
       const { data } = await Tournament.get(tournament?.id)
 
       let auxData = data?.data
-      let calendar = auxData?.fase_de_torneo[0]?.calendario
+
+      let calendar = []
+
+      auxData?.fase_de_torneo?.forEach(item => {
+        calendar = [...calendar, ...item?.calendario]
+      })
+
       console.log(tournament.id)
       console.log(calendar)
 
-      setModality(auxData?.fase_de_torneo[0]?.modalidad)
       setEvents(calendar)
 
       setIsLoading(false)
@@ -150,15 +165,15 @@ const DominoListPage = ({ navigation, route }) => {
                     teamBMembers={item?.equipo_b?.jugadores}
                     date={item?.fecha}
                     rounds={item?.rounds || []}
-                    maxTime={modality?.tiempo_maximo_minutos}
-                    maxPoints={modality?.puntuacion_maxima}
+                    maxTime={Number(item?.modalidad?.modalidad?.tiempo_maximo_minutos) || 0}
+                    maxPoints={Number(item?.modalidad?.modalidad?.puntuacion_maxima) || 0}
                     status={item?.estado}
                     navigation={navigation}
                     teamAScore={item?.ronda?.length > 0 ? 
-                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_a) : 0
+                      getPoints(item?.ronda, 'puntuacion_equipo_a') : 0
                     }
                     teamBScore={item?.ronda?.length > 0 ? 
-                      Number(item?.ronda[item?.ronda?.length - 1]?.puntuacion_equipo_b) : 0
+                      getPoints(item?.ronda, 'puntuacion_equipo_b') : 0
                     }
                   />
                 </Stack>

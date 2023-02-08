@@ -143,7 +143,6 @@ However, for the development of the mobile application, the development was
 carried out by the Thoteam subgroup, formed by;
 
 *  @gustavoerivero  - [gustavoerivero](https://github.com/gustavoerivero)
-*  @joseriveroc - [joseriveroc](https://github.com/joseriveroc)
 *  @luisv98   - [luisv98](https://github.com/luisv98)
 
 ---

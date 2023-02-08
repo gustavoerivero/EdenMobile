@@ -118,6 +118,7 @@ const UserPage = ({ navigation }) => {
             />
             }
             
+            
             <ContactCard userProp={userData} />
             <ChangePasswordCard/>
           </VStack>

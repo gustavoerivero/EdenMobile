@@ -30,7 +30,7 @@
     "mime": "^3.0.0",
     "moment": "^2.29.4",
     "moment-es6": "^1.0.0",
-    "native-base": "^3.4.25",
+    "native-base": "^3.4.28",
     "react": "18.1.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.1",
